@@ -10,9 +10,9 @@
 LIBS = -lm
 OBJS = hello.o
 
-INCLUDE_DIR = inc
-OUTPUT_DIR = out
-SOURCE_DIR = src
+INCLUDE_DIR = source
+OUTPUT_DIR = build
+SOURCE_DIR = source
 LIBRARY_DIR = lib
 
 ################################################################################
