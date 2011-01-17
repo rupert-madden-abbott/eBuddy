@@ -5,7 +5,7 @@ char *conf_read(char *filename, char *section, char *key) {
   FILE  *conf_file;
   char  line[MAX_CHARS], section_heading[MAX_CHARS] = "[", file_key[MAX_CHARS],
         path[MAX_CHARS] = CONF_DIR;
-  char static value[MAX_CHARS];
+  char  *value = (char *)malloc(MAX_CHARS*sizeof(char));
   
   strcat(section_heading, section);
   strcat(section_heading, "]");
