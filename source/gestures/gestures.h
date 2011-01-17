@@ -17,14 +17,10 @@
 
 CPhidgetAdvancedServoHandle gs_get_servo_handle(void);
 
-int gs_servo_DetachHandler(CPhidgetHandle phidget_servo, void *p);
-//int gestures_servo_AttachHandler(CPhidgetHandle phidget_servo, void *p);
-int gs_servo_ErrorHandler(CPhidgetHandle phidget_servo, void *p, int ErrorCode, const char *Description);
-
 int gs_set_pos(CPhidgetAdvancedServoHandle servo);
 extern int gs_dance_basic(void);
 extern int gs_sound(int sound, int itineration);
 
-extern CPhidgetAdvancedServoHandle gs_servo_initialise(void);
+
 
 
