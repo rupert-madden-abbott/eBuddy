@@ -10,6 +10,11 @@ int ph_initialise(void)
     return 0;
 }
 
+int ph_destruct(void)
+{
+    return 0;
+}
+
 
 CPhidgetAdvancedServoHandle ph_get_servo_handle(void)
 {
@@ -67,7 +72,7 @@ CPhidgetAdvancedServoHandle ph_servo_initialise(void)
 int ph_servo_DetachHandler(CPhidgetHandle phidget_servo, void *p)
 {
 
-    printf("eBuddy detatched");
+    printf("eBuddy servo detatched");
 
 	return 0;
 }
@@ -87,3 +92,4 @@ int ph_servo_ErrorHandler(CPhidgetHandle phidget_servo, void *p, int ErrorCode, 
 
 	return 0;
 }
+

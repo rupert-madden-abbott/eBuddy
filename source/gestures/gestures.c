@@ -26,12 +26,10 @@ int gs_set_pos(CPhidgetAdvancedServoHandle servo)
     return 0;
 }
 
-int gs_dance_basic(void)
+int gs_dance_basic(CPhidgetAdvancedServoHandle servo)
 {
     int i;
 
-
-    CPhidgetAdvancedServoHandle servo = ph_get_servo_handle();
 
     GS_SETENG(servo, GS_SERVO_HEAD, 1);
 	GS_SETENG(servo, GS_SERVO_TORSO, 1);
@@ -77,16 +75,15 @@ int gs_dance_basic(void)
 
 }
 
-int gs_dance_advanced(void)
+int gs_dance_advanced(CPhidgetAdvancedServoHandle servo)
 {
-    CPhidgetAdvancedServoHandle servo = ph_get_servo_handle();
+
 
     return 0;
 }
 
-int gs_raise_arms(void)
+int gs_raise_arms(CPhidgetAdvancedServoHandle servo)
 {
-    CPhidgetAdvancedServoHandle servo = ph_get_servo_handle();
     GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
 	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
     GS_SETPOS (servo, GS_SERVO_LEFTARM, 200);
