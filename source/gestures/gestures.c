@@ -24,7 +24,7 @@ CPhidgetAdvancedServoHandle gs_servo_initialise(void)
     const char *servo_attach_error;
     CPhidgetAdvancedServoHandle servo = 0;
     CPhidgetAdvancedServo_create(&servo);
-    //CPhidget_set_OnAttach_Handler((CPhidgetHandle)servo, gestures_servo_AttachHandler, NULL);
+    //CPhidget_GS_SET_OnAttach_Handler((CPhidgetHandle)servo, gestures_servo_AttachHandler, NULL);
 	CPhidget_set_OnDetach_Handler((CPhidgetHandle)servo, gs_servo_DetachHandler, NULL);
 	CPhidget_set_OnError_Handler((CPhidgetHandle)servo, gs_servo_ErrorHandler, NULL);
 
@@ -84,21 +84,21 @@ int gs_set_pos(CPhidgetAdvancedServoHandle servo)
 {
 
 
-    SETPOS (servo, SERVO_HEAD, STARTPOS_HEAD);
+    GS_SETPOS (servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
 
 
-	SETENG(servo, SERVO_HEAD, 1);
-	SETENG(servo, SERVO_TORSO, 1);
-	SETENG(servo, SERVO_LEFTARM, 1);
-	SETENG(servo, SERVO_RIGHTARM, 1);
+	GS_SETENG(servo, GS_SERVO_HEAD, 1);
+	GS_SETENG(servo, GS_SERVO_TORSO, 1);
+	GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
+	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
 	sleep(1);
 
 
 
-	SETENG(servo, SERVO_HEAD, 0);
-	SETENG(servo, SERVO_TORSO, 0);
-	SETENG(servo, SERVO_LEFTARM, 0);
-	SETENG(servo, SERVO_RIGHTARM, 0);
+	GS_SETENG(servo, GS_SERVO_HEAD, 0);
+	GS_SETENG(servo, GS_SERVO_TORSO, 0);
+	GS_SETENG(servo, GS_SERVO_LEFTARM, 0);
+	GS_SETENG(servo, GS_SERVO_RIGHTARM, 0);
 
     return 0;
 }
@@ -110,39 +110,39 @@ int gs_dance_basic(void)
 
     CPhidgetAdvancedServoHandle servo = gs_get_servo_handle();
 
-    SETENG(servo, SERVO_HEAD, 1);
-	SETENG(servo, SERVO_TORSO, 1);
-	SETENG(servo, SERVO_LEFTARM, 1);
-	SETENG(servo, SERVO_RIGHTARM, 1);
+    GS_SETENG(servo, GS_SERVO_HEAD, 1);
+	GS_SETENG(servo, GS_SERVO_TORSO, 1);
+	GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
+	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
 
-    SETACC(servo, SERVO_HEAD, 160000 );
-	SETVEL(servo, SERVO_HEAD, 1600);
-	SETACC(servo, SERVO_LEFTARM, 160000 );
-	SETVEL(servo, SERVO_LEFTARM, 1600);
-	SETACC(servo, SERVO_RIGHTARM, 160000 );
-	SETVEL(servo, SERVO_RIGHTARM, 1600);
+    GS_SETACC(servo, GS_SERVO_HEAD, 160000 );
+	GS_SETVEL(servo, GS_SERVO_HEAD, 1600);
+	GS_SETACC(servo, GS_SERVO_LEFTARM, 160000 );
+	GS_SETVEL(servo, GS_SERVO_LEFTARM, 1600);
+	GS_SETACC(servo, GS_SERVO_RIGHTARM, 160000 );
+	GS_SETVEL(servo, GS_SERVO_RIGHTARM, 1600);
 
 	for(i = 0; i < 2; i++){
 
-	SETPOS (servo, SERVO_LEFTARM, 100);
+	GS_SETPOS (servo, GS_SERVO_LEFTARM, 100);
 	sleep(1);
-	SETPOS (servo, SERVO_LEFTARM, STARTPOS_ARM);
+	GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_ARM);
 	sleep(1);
-	SETPOS (servo, SERVO_RIGHTARM, 100);
+	GS_SETPOS (servo, GS_SERVO_RIGHTARM, 100);
 	sleep(1);
-	SETPOS (servo, SERVO_RIGHTARM, STARTPOS_ARM);
+	GS_SETPOS (servo, GS_SERVO_RIGHTARM, GS_STARTPOS_ARM);
 	sleep(1);
-	SETPOS (servo, SERVO_HEAD, 100);
-	SETPOS (servo, SERVO_LEFTARM, 100);
+	GS_SETPOS (servo, GS_SERVO_HEAD, 100);
+	GS_SETPOS (servo, GS_SERVO_LEFTARM, 100);
 	sleep(1);
-	SETPOS (servo, SERVO_HEAD, STARTPOS_HEAD);
-	SETPOS (servo, SERVO_LEFTARM, STARTPOS_ARM);
+	GS_SETPOS (servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
+	GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_ARM);
 	sleep(1);
-	SETPOS (servo, SERVO_HEAD, 200);
-	SETPOS (servo, SERVO_RIGHTARM, 100);
+	GS_SETPOS (servo, GS_SERVO_HEAD, 200);
+	GS_SETPOS (servo, GS_SERVO_RIGHTARM, 100);
 	sleep(1);
-	SETPOS (servo, SERVO_HEAD, STARTPOS_HEAD);
-	SETPOS (servo, SERVO_LEFTARM, STARTPOS_ARM);
+	GS_SETPOS (servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
+	GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_ARM);
 	sleep(1);
 	}
 
@@ -164,10 +164,10 @@ int gs_dance_advanced(void)
 int gs_raise_arms(void)
 {
     CPhidgetAdvancedServoHandle servo = gs_get_servo_handle();
-    SETENG(servo, SERVO_LEFTARM, 1);
-	SETENG(servo, SERVO_RIGHTARM, 1);
-    SETPOS (servo, SERVO_LEFTARM, 200);
-    SETPOS (servo, SERVO_RIGHTARM, 200);
+    GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
+	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
+    GS_SETPOS (servo, GS_SERVO_LEFTARM, 200);
+    GS_SETPOS (servo, GS_SERVO_RIGHTARM, 200);
     sleep(1);
     gs_set_pos(servo);
 
