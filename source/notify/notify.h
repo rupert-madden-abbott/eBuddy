@@ -1,4 +1,6 @@
-#include <stdio.h>
+#include "main.h"
 #include <pthread.h>
 
-void noti_initialize(void);
+#define NOTI_CONF_FILE "notify.conf"
+
+int noti_initialize(void);
