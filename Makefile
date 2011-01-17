@@ -1,14 +1,14 @@
 CC          := gcc
 CFLAGS      := -Wall -pedantic -std=c99
 
-MODULE_DIR  := main notify config
+MODULE_DIR  := main notify config gestures
 SOURCE_DIR  := $(addprefix source/,$(MODULE_DIR))
 BUILD_DIR   := $(addprefix build/,$(MODULE_DIR))
 
 SOURCE      := $(foreach temp, $(SOURCE_DIR), $(wildcard $(temp)/*.c))
 OBJECTS     := $(patsubst source/%.c, build/%.o, $(SOURCE))
 INCLUDES    := $(addprefix -I,$(SOURCE_DIR))
-LIBRARIES   := -lssl -loauth
+LIBRARIES   := -lssl -loauth -lm -lphidget21
 
 vpath %.c $(SOURCE_DIR)
 
