@@ -22,6 +22,7 @@ extern int gs_dance_basic(CPhidgetAdvancedServoHandle servo);
 extern int gs_sound(int sound, int itineration);
 extern int gs_dance_advanced(CPhidgetAdvancedServoHandle servo);
 extern int gs_raise_arms(CPhidgetAdvancedServoHandle servo);
+extern int gs_shake_head(CPhidgetAdvancedServoHandle servo);
 
 
 

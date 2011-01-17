@@ -1,5 +1,7 @@
 #include "gestures.h"
 #include "main.h"
+#include <time.h>
+
 
 
 
@@ -101,19 +103,34 @@ int gs_sound(int sound, int itineration)
         i++;
         switch(sound){
             case 0:
-                system("mpg123 -q beep1.mp3");
+                system("mpg123 -q $/assets/beep1.mp3");
                 break;
             case 1:
-                system("mpg123 -q robotsound1.mp3");
+                system("mpg123 -q $/assets/robotsound1.mp3");
                 break;
             case 2:
-                system("mpg123 -q tinkle.mp3");
+                system("mpg123 -q $/assets/tinkle.mp3");
                 break;
         }
 
 
 
     }
+    return 0;
+}
+
+int gs_shake_head(CPhidgetAdvancedServoHandle servo)
+{
+    GS_SETENG(servo, GS_SERVO_HEAD, 1);
+    GS_SETPOS (servo, GS_SERVO_HEAD, 200);
+    sleep(1);
+    GS_SETPOS (servo, GS_SERVO_HEAD, 20);
+    sleep(1);
+    GS_SETPOS (servo, GS_SERVO_HEAD, 200);
+    GS_SETPOS (servo, GS_SERVO_HEAD, 20);
+    sleep(1);
+    gs_set_pos(servo);
+
     return 0;
 }
 
