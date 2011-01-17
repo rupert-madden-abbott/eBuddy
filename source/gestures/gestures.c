@@ -1,4 +1,5 @@
 #include "gestures.h"
+#include "main.h"
 
 
 CPhidgetAdvancedServoHandle gs_get_servo_handle(void)

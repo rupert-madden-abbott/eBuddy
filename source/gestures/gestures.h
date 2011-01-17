@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "phidget21.h"
-#include <unistd.h>
+#include "phidget.h"
 
 #define GS_SERVO_HEAD 0
 #define GS_SERVO_TORSO 1
@@ -14,17 +11,17 @@
 #define GS_STARTPOS_ARM 60
 
 #define GS_SETPOS(a, b, c) CPhidgetAdvancedServo_setPosition (a, b, c)
-#define GS_SETENG(a, b, c) CPhidgetAdvancedServo_setEngaged(a, b, c);
+#define GS_SETENG(a, b, c) CPhidgetAdvancedServo_setEngaged(a, b, c)
 #define GS_SETACC(a, b, c) CPhidgetAdvancedServo_setAcceleration(a, b, c)
-#define GS_SETVEL(a, b, c) CPhidgetAdvancedServo_setVelocityLimit(a, b, c);
+#define GS_SETVEL(a, b, c) CPhidgetAdvancedServo_setVelocityLimit(a, b, c)
 
-CPhidgetAdvancedServoHandle gestures_get_servo_handle(void);
+CPhidgetAdvancedServoHandle gs_get_servo_handle(void);
 
 int gs_servo_DetachHandler(CPhidgetHandle phidget_servo, void *p);
 //int gestures_servo_AttachHandler(CPhidgetHandle phidget_servo, void *p);
 int gs_servo_ErrorHandler(CPhidgetHandle phidget_servo, void *p, int ErrorCode, const char *Description);
 
-int gs_pos(CPhidgetAdvancedServoHandle servo);
+int gs_set_pos(CPhidgetAdvancedServoHandle servo);
 extern int gs_dance_basic(void);
 extern int gs_sound(int sound, int itineration);
 
