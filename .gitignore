@@ -1,3 +1,4 @@
 conf/
 lib/
 out/
+.DS_Store
