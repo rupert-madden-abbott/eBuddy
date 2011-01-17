@@ -8,6 +8,7 @@ BUILD_DIR   := $(addprefix build/,$(MODULE_DIR))
 SOURCE      := $(foreach temp, $(SOURCE_DIR), $(wildcard $(temp)/*.c))
 OBJECTS     := $(patsubst source/%.c, build/%.o, $(SOURCE))
 INCLUDES    := $(addprefix -I,$(SOURCE_DIR))
+LIBRARIES   := -lssl -loauth
 
 vpath %.c $(SOURCE_DIR)
 
@@ -21,7 +22,7 @@ endef
 all: checkdirs build/ebuddy.exe
 
 build/ebuddy.exe: $(OBJECTS)
-	$(CC) $^ -o $@
+	$(CC) $(LIBRARIES) $^ -o $@
 
 checkdirs: $(BUILD_DIR)
 
