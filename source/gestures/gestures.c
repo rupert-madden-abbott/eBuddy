@@ -111,7 +111,7 @@ int gs_sound(int sound, int itineration)
     }
     command[0] ='\0';
     strcpy(command, "mpg123 -q ");
-    strcpy(command, filepath);
+    strcat(command, filepath);
     while(i < itineration){
         system(command);
         i++;
