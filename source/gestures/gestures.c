@@ -1,6 +1,7 @@
 #include "gestures.h"
 #include "main.h"
-#include <time.h>
+#include "config.h"
+
 
 
 
@@ -99,21 +100,21 @@ int gs_raise_arms(CPhidgetAdvancedServoHandle servo)
 int gs_sound(int sound, int itineration)
 {
     int i = 0;
+    char *filepath;
+    char command[110];
+    char num[10];
+    filepath = (char *) malloc(sizeof(char) * 100);
+    sprintf(num, "%d", sound);
+    filepath = conf_read("sound.conf", "sound", num);
+    if(filepath == ""){
+        return 1;
+    }
+    command[0] ='\0';
+    strcpy(command, "mpg123 -q ");
+    strcpy(command, filepath);
     while(i < itineration){
+        system(command);
         i++;
-        switch(sound){
-            case 0:
-                system("mpg123 -q $/assets/beep1.mp3");
-                break;
-            case 1:
-                system("mpg123 -q $/assets/robotsound1.mp3");
-                break;
-            case 2:
-                system("mpg123 -q $/assets/tinkle.mp3");
-                break;
-        }
-
-
 
     }
     return 0;
