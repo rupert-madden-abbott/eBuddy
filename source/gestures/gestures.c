@@ -135,3 +135,19 @@ int gs_shake_head(CPhidgetAdvancedServoHandle servo)
     return 0;
 }
 
+int gs_move_arms(CPhidgetAdvancedServoHandle servo)
+{
+    GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
+	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
+    GS_SETPOS (servo, GS_SERVO_LEFTARM, 20);
+    GS_SETPOS (servo, GS_SERVO_RIGHTARM, 200);
+    sleep(1);
+    GS_SETPOS (servo, GS_SERVO_LEFTARM, 200);
+    GS_SETPOS (servo, GS_SERVO_RIGHTARM, 20);
+    sleep(1);
+    GS_SETPOS (servo, GS_SERVO_LEFTARM, 200);
+    GS_SETPOS (servo, GS_SERVO_RIGHTARM, 20);
+    sleep(1);
+    gs_set_pos(servo);
+}
+
