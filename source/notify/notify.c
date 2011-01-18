@@ -4,11 +4,11 @@
 #include <string.h>
 
 int noti_initialize(void) {
-  int ask_details, have_details;
+  char *ask_details = NULL, *have_details = NULL;
   //char username[100], password[100];
   
-  ask_details = atoi(conf_read(NOTI_CONF_FILE, "twitter", "ask_details"));
-  have_details = atoi(conf_read(NOTI_CONF_FILE, "twitter", "have_details"));
+  conf_read(NOTI_CONF_FILE, "twitter", "ask_details", ask_details);
+  conf_read(NOTI_CONF_FILE, "twitter", "have_details", have_details);
   
   if(!have_details && ask_details) {
     noti_authenticate();
@@ -33,13 +33,16 @@ int noti_initialize(void) {
 }
 
 int noti_authenticate(void) {
-  const char *request_uri = conf_read(NOTI_CONF_FILE, "twitter", "request_uri"),
-             *access_uri = conf_read(NOTI_CONF_FILE, "twitter", "access_uri"),
-             *authorize_uri = conf_read(NOTI_CONF_FILE, "twitter", "authorize_uri"),
-             *consumer_key = conf_read(NOTI_CONF_FILE, "twitter", "consumer_key"),
-             *consumer_secret = conf_read(NOTI_CONF_FILE, "twitter", "consumer_secret");
-  char *request_url = NULL, *response = NULL, *oauth_token = NULL, pin[50],
-       *oauth_secret = NULL, oauth_uri[100], *postargs = NULL;
+  char *request_uri = NULL, *access_uri = NULL, *authorize_uri = NULL, 
+       *consumer_key = NULL, *consumer_secret = NULL, *request_url = NULL, 
+       *response = NULL, pin[50], *oauth_token = NULL, *oauth_secret = NULL, 
+       oauth_uri[100], *postargs = NULL;
+  
+  conf_read(NOTI_CONF_FILE, "twitter", "request_uri", request_uri);
+  conf_read(NOTI_CONF_FILE, "twitter", "access_uri", access_uri);
+  conf_read(NOTI_CONF_FILE, "twitter", "authorize_uri", authorize_uri);
+  conf_read(NOTI_CONF_FILE, "twitter", "consumer_key", consumer_key);
+  conf_read(NOTI_CONF_FILE, "twitter", "consumer_secret", consumer_secret);
   
   //Get request token
   printf("Step 1: Get an access token:\n\n");

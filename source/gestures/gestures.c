@@ -1,5 +1,4 @@
 #include "gestures.h"
-#include "main.h"
 #include "config.h"
 
 
@@ -105,8 +104,7 @@ int gs_sound(int sound, int itineration)
     char num[10];
     filepath = (char *) malloc(sizeof(char) * 100);
     sprintf(num, "%d", sound);
-    filepath = conf_read("sound.conf", "sound", num);
-    if(filepath == ""){
+    if(conf_read("sound.conf", "sound", num, filepath)) {
         return 1;
     }
     command[0] ='\0';
@@ -149,5 +147,7 @@ int gs_move_arms(CPhidgetAdvancedServoHandle servo)
     GS_SETPOS (servo, GS_SERVO_RIGHTARM, 20);
     sleep(1);
     gs_set_pos(servo);
+    
+    return 1;
 }
 

@@ -1,21 +1,18 @@
 #include "config.h"
 
-char *conf_read(char *filename, char *section, char *key) {
+int conf_read(char *filename, char *section, char *key, char *returned) {
   int   in_section = 0;
   FILE  *conf_file;
-  char  line[MAX_CHARS], section_heading[MAX_CHARS] = "[", file_key[MAX_CHARS],
+  char  line[MAX_CHARS], section_heading[MAX_CHARS], file_key[MAX_CHARS],
         path[MAX_CHARS] = CONF_DIR;
   char  *value = (char *)malloc(MAX_CHARS*sizeof(char));
   
-  strcat(section_heading, section);
-  strcat(section_heading, "]");
-  
+  sprintf(section_heading, "[%s]", section);
   strcat(path, filename);
   
   conf_file = fopen(path, "r");
   if(conf_file == NULL) {
-    perror("Error");
-    exit(1);
+    return 1;
   }
   else {
     while(fgets(line, MAX_CHARS, conf_file)) {
@@ -27,7 +24,7 @@ char *conf_read(char *filename, char *section, char *key) {
           sscanf(line, "%s %[^\t\n]", file_key, value);
           if(strcmp(key, file_key) == 0) {
             fclose(conf_file);
-            return value;
+            return 0;
           }
         }
       }
@@ -36,7 +33,7 @@ char *conf_read(char *filename, char *section, char *key) {
       }
     }
   }
-  return "";
+  return -1;
 }
 
 int conf_update(char* filename, char* section, char* key) {
