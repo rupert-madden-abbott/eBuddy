@@ -104,7 +104,7 @@ int gs_sound(int sound, int itineration)
     char num[10];
     filepath = (char *) malloc(sizeof(char) * 100);
     sprintf(num, "%d", sound);
-    if(conf_read("sound.conf", "sound", num, filepath)) {
+    if(conf_read("sound.conf", "sound", num, &filepath)) {
         return 1;
     }
     command[0] ='\0';
