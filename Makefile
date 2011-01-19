@@ -1,5 +1,5 @@
 CC          := gcc
-CFLAGS      := -Wall -pedantic -std=c99
+CFLAGS      := -Wall -pedantic -std=gnu99
 
 MODULE_DIR  := main notify config gestures phidgets
 SOURCE_DIR  := $(addprefix source/,$(MODULE_DIR))
