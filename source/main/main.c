@@ -6,5 +6,22 @@
 int main(void) {
   noti_initialize();
   ph_initialise();
-  return 1;
+  main_loop();
+  return 0;
+}
+
+
+int main_loop(void)
+{
+    while(1){
+
+
+    }
+    return 0;
+}
+
+void end(void)
+{
+    ph_destruct
+    exit(0);
 }
