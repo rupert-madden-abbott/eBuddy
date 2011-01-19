@@ -33,62 +33,35 @@ int noti_initialize(void) {
 }
 
 int noti_authenticate(void) {
-  char *request_uri = NULL, *access_uri = NULL, *authorize_uri = NULL, 
-       *consumer_key = NULL, *consumer_secret = NULL, *request_url = NULL, 
-       *response = NULL, pin[50], *oauth_token = NULL, *oauth_secret = NULL, 
-       oauth_uri[100], *postargs = NULL;
+  char *request_url = NULL, *response = NULL, pin[50], *oauth_token = NULL, 
+  *oauth_secret = NULL, oauth_uri[100], *postargs = NULL;
   
-  conf_read(NOTI_CONF_FILE, "twitter", "request_uri", &request_uri);
-  conf_read(NOTI_CONF_FILE, "twitter", "access_uri", &access_uri);
-  conf_read(NOTI_CONF_FILE, "twitter", "authorize_uri", &authorize_uri);
-  conf_read(NOTI_CONF_FILE, "twitter", "consumer_key", &consumer_key);
-  conf_read(NOTI_CONF_FILE, "twitter", "consumer_secret", &consumer_secret);
-  
-  //Get request token
-  printf("Step 1: Get an access token:\n\n");
-  
-  request_url = oauth_sign_url2(request_uri, NULL, OA_HMAC, NULL, consumer_key, consumer_secret, NULL, NULL);
-  printf("Request URL: %s\n\n", request_url);
- 
+  //Get access token  
+  request_url = oauth_sign_url2(NOTI_TWITTER_REQUEST, NULL, OA_HMAC, NULL, NOTI_TWITTER_KEY, NOTI_TWITTER_SECRET, NULL, NULL);
   response = oauth_http_get(request_url, NULL);
-  printf("Request response: %s\n\n", response);
- 
   noti_parse_response(response, &oauth_token, &oauth_secret); 
-  printf("Request Token: %s\nRequest Secret: %s\n\n", oauth_token, oauth_secret);
   
   //Get authorization
-  printf("Step 2: Get an authorization PIN:\n\n");
-  sprintf(request_url, "xdg-open %s?oauth_token=%s", authorize_uri, oauth_token);
+  sprintf(request_url, "xdg-open %s?oauth_token=%s", NOTI_TWITTER_AUTHORIZE, oauth_token);
   printf("Authorize URL: %s\n\n", request_url);
-  
   printf("In a moment, your browser will open. Please grant access to this application. You may need to login to your account. Once you have done so, enter the PIN below\n");
   system(request_url);
   scanf("%s", pin);
-  printf("\nReceived PIN: %s\n\n", pin);
   
   //Get access token
-  printf("Step 3: Get an access token:\n\n");
-  
-  sprintf(oauth_uri, "%s?oauth_verifier=%s", access_uri, pin);
-  
-  request_url = oauth_sign_url2(oauth_uri, NULL, OA_HMAC, NULL, consumer_key, consumer_secret, oauth_token, oauth_secret);
-
-  printf("Request URL: %s\n\n", request_url);
-  
+  sprintf(oauth_uri, "%s?oauth_verifier=%s", NOTI_TWITTER_ACCESS, pin);
+  request_url = oauth_sign_url2(oauth_uri, NULL, OA_HMAC, NULL, NOTI_TWITTER_KEY, NOTI_TWITTER_SECRET, oauth_token, oauth_secret);
   response = oauth_http_get(request_url, NULL);
-  printf("Request response: %s\n\n", response);
-  
   noti_parse_response(response, &oauth_token, &oauth_secret);
-  printf("Access Token: %s\nRequest Secret: %s\n\n", oauth_token, oauth_secret);
   
   //Update Twitter status
   printf("Step 4: Update Twitter status:\n\n");
-  request_url = oauth_sign_url2("http://api.twitter.com/1/statuses/update.json&status=test", &postargs, OA_HMAC, NULL, consumer_key, consumer_secret, oauth_token, oauth_secret);
+  request_url = oauth_sign_url2("http://api.twitter.com/1/statuses/update.json&status=test", &postargs, OA_HMAC, NULL, NOTI_TWITTER_KEY, NOTI_TWITTER_SECRET, oauth_token, oauth_secret);
   printf("Request URL: %s\n\n", request_url);
   
   response = oauth_http_post(request_url, postargs);
   printf("Request response: %s\n\n", response);
-  return 1;
+  return 0;
 }
 
 void noti_parse_response(char *response, char **token, char **secret) {
