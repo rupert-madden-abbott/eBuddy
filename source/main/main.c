@@ -4,9 +4,7 @@
 #include "gesture_interface.h"
 
 int main(void) {
-  noti_initialize();
-  ph_initialise();
-  main_loop();
+	gsi_happy_level1();
   return 0;
 }
 
@@ -22,6 +20,6 @@ int main_loop(void)
 
 void end(void)
 {
-    ph_destruct
+	ph_destruct();
     exit(0);
 }
