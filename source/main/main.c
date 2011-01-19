@@ -4,7 +4,9 @@
 #include "gesture_interface.h"
 
 int main(void) {
-	gsi_happy_level1();
+  noti_initialize();
+  ph_initialise();
+  main_loop();
   return 0;
 }
 
