@@ -1,5 +1,5 @@
 #include "gestures.h"
-#include "config.h"
+
 
 
 

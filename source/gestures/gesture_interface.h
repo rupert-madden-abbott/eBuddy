@@ -1,3 +1,5 @@
+#include "gestures.h"
+
 #define GSI_PHER 1
 #define GSI_OK 0
 

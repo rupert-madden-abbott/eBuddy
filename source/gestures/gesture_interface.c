@@ -1,6 +1,6 @@
 #include "gesture_interface.h"
 #include "main.h"
-#include "gestures.h"
+
 
 int gsi_happy_level1(void)
 {

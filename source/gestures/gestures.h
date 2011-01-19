@@ -1,4 +1,5 @@
 #include "phidget.h"
+#include "config.h"
 
 #define GS_SERVO_HEAD 0
 #define GS_SERVO_TORSO 1
