@@ -72,7 +72,7 @@ CPhidgetAdvancedServoHandle ph_servo_initialise(void)
 int ph_servo_DetachHandler(CPhidgetHandle phidget_servo, void *p)
 {
 
-    printf("eBuddy servo detatched");
+    printf("eBuddy servo detatched\n");
 
 	return 0;
 }
@@ -80,7 +80,7 @@ int ph_servo_DetachHandler(CPhidgetHandle phidget_servo, void *p)
 int ph_servo_AttachHandler(CPhidgetHandle phidget_servo, void *p)
 {
 
-    printf("eBuddy servo attached");
+    printf("eBuddy servo attached\n");
 
 	return 0;
 }

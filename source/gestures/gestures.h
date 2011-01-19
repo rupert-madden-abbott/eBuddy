@@ -11,6 +11,8 @@
 #define GS_STARTPOS_ARM 60
 #define GS_STARTPOS_ARM 60
 
+#define GS_MICRO 1000
+
 #define GS_SETPOS(a, b, c) CPhidgetAdvancedServo_setPosition (a, b, c)
 #define GS_SETENG(a, b, c) CPhidgetAdvancedServo_setEngaged(a, b, c)
 #define GS_SETACC(a, b, c) CPhidgetAdvancedServo_setAcceleration(a, b, c)
