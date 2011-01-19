@@ -6,7 +6,7 @@
 int main(void) {
   noti_initialize();
   ph_initialise();
-  main_loop();
+  //main_loop();
   return 0;
 }
 
