@@ -1,3 +1,6 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
 #include "main.h"
 
 #ifdef DEBUG
@@ -11,3 +14,5 @@
 int conf_read(char *filename, char *section, char *key, char **returned);
 int conf_update(char *filename, char *section, char *key, char *value);
 int conf_is_section(char line[MAX_CHARS]);
+
+#endif
