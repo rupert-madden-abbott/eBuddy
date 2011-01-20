@@ -2,27 +2,170 @@
 #include "notify.h"
 #include "phidget.h"
 #include "gesture_interface.h"
+#include "emotion.h"
 
-int main(void) 
-{
-  noti_initialize();
-  ph_initialise();
-  //main_loop();
-  return 0;
+
+int main(int argc, char *argv[]) {
+  Config *config;
+  PhidgitHandle *phidgits;
+  int *input_buffer;
+  int rc;
+  
+  /* load config */
+  rc = load_conf(conf, CONFIG_PATH);
+  
+  /* check for errors */
+  if(rc == 2) {
+  }
+  
+  /* initialise the phidgits */
+  rc = phi_init(*phidgits, config);
+  
+  /* check for errors */
+  if(rc == 2) {
+  }
+  
+  /* initialise the gesture library */
+  rc = ges_init(phidgits, config);
+  
+  /* check for errors */
+  if(rc == 2) {
+  }
+  
+  rc = not_init(config);
+  
+  /* check for errors */
+  if(rc == 2) {
+  }
+  
+  rc = em_init(config);
+  
+  /* check for errors */
+  if(rc == 2) {
+  }
+  
+  /* initialise the input library */
+  rc = inp_init(phidgits, config)
+  
+  /* check for errors */
+  if(rc == 2) {
+  }
+
+  rc = run_mode(config, input_buffer, emotions, notifications, mode_interactive);
+  
+  /* check for errors */
+  if(rc == 2) {
+  }
+  
+  /* finalise and unload all modules */
 }
 
+/* hooks to different modes go here */
+int run_mode(Config *config, int *input_buffer, em_State *emotions, not_Queue notifications, mode) {
+	
+  /* interactive (normal) mode */
+  if(mode == mode_interactive) {
+    return interactive_mode(config, input, emotions, notifications);
+  }
+  
+  /* guessing game */
+  else if(mode == mode_guess) {
+    return game_run_guess(config, input, emotions, notifications);
+  }
+}
 
-int main_loop(void)
-{
-    while(1){
+int interactive_mode(Config *config, int *input_buffer, em_State *emotions, not_Queue notifications) {
+  EmotionReaction *emotion_reaction;
+  GestureReaction *gesture_reaction;
+  em_condition condition;
+  em_Event emotion_event; 
+  int input_event;
 
-
+  /* look for input events */
+  rc = inp_check(input_buffer, input_event);
+  
+  /* react to events */
+  if(!rc) {
+  	
+  	/* get action from table */
+  	input_reaction = input_action[input_event]);
+  	
+  	/* get current condition */
+  	condition = em_get_condition(state, input_reaction->primary_emotion->emotion);
+  	
+  	/* update emotions */
+  	rc = em_react(input_reaction->primary_emotion);
+  	
+  	/* check for errors */
+  	if(rc) {
+  	  return err_bad_update;
+  	}
+  	
+    rc = em_react(input_reaction->secondary_emotion);
+    
+    /* check for errors */
+  	if(rc) {
+  	  return err_bad_update;
+  	}
+    
+    /* if emotion was full do full gesture */
+    if(condition == em_cond_full) {
+      ges_react(input_reaction->full_gesture);
     }
-    return 0;
-}
-
-void end(void)
-{
-	ph_destruct();
-    exit(0);
+    
+    /* if it was normal do normal gesture */
+    else if(condition == em_cond_normal) {
+      ges_react(input_reaction->normal_gesture);
+    }
+    
+    /* otherwise do low gesture */
+    else {
+      ges_react(input_reaction->low_gesture);
+    }
+    
+    /* if the input triggers a mode change switch to that mode */
+    if(input_reaction->mode) {
+      rc = do_mode(input_reaction->mode)
+      
+      /* return errors */
+      if(rc) {
+        return rc;
+      }
+    }
+  }
+  
+  /* look for emotion events */
+  rc = em_check(emotions, &emotion_event);
+  
+  /* react to events if there was one */
+  if(!rc) {
+  	
+  	/* get the correct set of reations */
+  	emotion_reaction = emotion_action[emotion_event.emotion];
+  	
+  	/* do full gesture if condition is full */
+    if(emotion_event.type == em_cond_full) {
+      ges_react(emotion_reaction->full_gesture);
+    }
+    
+    /* do low gesture if condition is low */
+    else if(emotion_event.type == em_cond_low) {
+      ges_react(emotion_reaction->low_gesture);
+    }
+    
+    /* do critical gesture if condition is critical */
+    else {
+      ges_react(emotion_reaction->low_gesture);
+    }
+  }
+  
+  /* get notification events */
+  rc = not_check(notifications, gesture_reaction);
+  
+  /* run the reaction directly */
+  if(rc) {
+    ges_react(gesture_reaction);
+  }
+  
+  sleep(1)
 }
