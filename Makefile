@@ -1,5 +1,5 @@
 CC          := gcc
-CFLAGS      := -Wall -pedantic -std=gnu99
+CFLAGS      := -Wall -pedantic -std=gnu99 -g
 
 MODULE_DIR  := main notify config gestures phidgets
 SOURCE_DIR  := $(addprefix source/,$(MODULE_DIR))
@@ -8,8 +8,8 @@ BUILD_DIR   := $(addprefix build/,$(MODULE_DIR))
 SOURCE      := $(foreach temp, $(SOURCE_DIR), $(wildcard $(temp)/*.c))
 OBJECTS     := $(patsubst source/%.c, build/%.o, $(SOURCE))
 INCLUDES    := $(addprefix -I,$(SOURCE_DIR))
-LIBRARIES   := -lssl -loauth -lm -lphidget21
-LIBRARIES_MAC:= -lssl -loauth -lm -framework Phidget21
+LIBRARIES   := -lssl -loauth -lm -lphidget21 -ljansson
+LIBRARIES_MAC:= -lssl -loauth -lm -ljansson -framework Phidget21
 
 vpath %.c $(SOURCE_DIR)
 
@@ -18,7 +18,7 @@ $1/%.o: %.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c $$< -o $$@
 endef
 
-.PHONY: all checkdirs clean
+.PHONY: all checkdirs clean mac debug
 
 all: checkdirs build/ebuddy.exe
 	
