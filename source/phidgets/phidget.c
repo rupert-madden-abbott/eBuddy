@@ -7,7 +7,9 @@ int ph_initialise(void)
 {
     ph_get_servo_handle();
 
-    ph_get_RFID_handle();	
+    ph_get_RFID_handle();
+
+    ph_get_kit_handle();	
 
     return 0;
 }
@@ -15,6 +17,8 @@ int ph_initialise(void)
 int ph_destruct(void)
 {
     ph_RFID_closerfid();
+
+    ph_kit_closekit();
     return 0;
 }
 
@@ -232,5 +236,122 @@ if(tagv==601)
 
 }
 
+
+/*Interface Kit*/
+CPhidgetInterfaceKitHandle ph_get_kit_handle (void)
+{
+	static int kit_initialised=0;
+	static CPhidgetInterfaceKitHandle ifKit =0;
+	if(kit_initialised ==0)
+		{
+			kit_initialised=1;
+			ifKit=ph_kit_openkit();
+			
+		}
+	return ifKit;
+}
+
+CPhidgetInterfaceKitHandle ph_kit_openkit(void)
+{
+	int result;
+	const char *err;
+	CPhidgetInterfaceKitHandle ifKit = 0;
+	CPhidgetInterfaceKit_create(&ifKit);
+
+	CPhidget_set_OnAttach_Handler((CPhidgetHandle)ifKit, ph_kit_AttachHandler, NULL);
+	CPhidget_set_OnDetach_Handler((CPhidgetHandle)ifKit, ph_kit_DetachHandler, NULL);
+	CPhidget_set_OnError_Handler((CPhidgetHandle)ifKit, ph_kit_ErrorHandler, NULL);
+
+
+	CPhidgetInterfaceKit_set_OnInputChange_Handler (ifKit, ph_kit_InputChangeHandler, NULL);
+
+
+	CPhidgetInterfaceKit_set_OnSensorChange_Handler (ifKit, ph_kit_SensorChangeHandler, NULL);
+
+	CPhidgetInterfaceKit_set_OnOutputChange_Handler (ifKit, ph_kit_OutputChangeHandler, NULL);
+
+	CPhidget_open((CPhidgetHandle)ifKit, -1);
+
+	if((result = CPhidget_waitForAttachment((CPhidgetHandle)ifKit, 10000)))
+	{
+		CPhidget_getErrorDescription(result, &err);
+		printf("ebuddy interface kit not connected: %s\n", err);
+		ph_kit_closekit();
+		exit(1);
+	}
+
+	
+return ifKit;
+}
+
+void ph_kit_closekit(void)
+{
+	CPhidgetInterfaceKitHandle ifKit;
+	ifKit=ph_get_kit_handle();
+	CPhidget_close((CPhidgetHandle)ifKit);
+	CPhidget_delete((CPhidgetHandle)ifKit);
+
+}
+
+int ph_kit_AttachHandler(CPhidgetHandle IFK, void *userptr)
+{
+	int serialNo;
+	const char *name;
+
+	CPhidget_getDeviceName(IFK, &name);
+	CPhidget_getSerialNumber(IFK, &serialNo);
+
+	printf("ebuddy interface kit attached!\n");
+
+	return 0;
+}
+
+int ph_kit_DetachHandler(CPhidgetHandle IFK, void *userptr)
+{
+	int serialNo;
+	const char *name;
+
+	CPhidget_getDeviceName (IFK, &name);
+	CPhidget_getSerialNumber(IFK, &serialNo);
+
+	printf("ebuddy interface kit detached!\n");
+
+	return 0;
+}
+
+int ph_kit_ErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const char *unknown)
+{
+	printf("ebuddy interface kit Error handled. %d - %s", ErrorCode, unknown);
+	return 0;
+}
+
+int ph_kit_InputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int State)
+{
+	//printf("Digital Input: %d > State: %d\n", Index, State);
+	return 0;
+}
+
+int ph_kit_OutputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int State)
+{
+	//printf("Digital Output: %d > State: %d\n", Index, State);
+	return 0;
+}
+
+
+int ph_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int Value)
+{
+	//printf("Sensor: %d > Value: %d\n", Index, Value);
+	ph_kit_laugh(Index,Value);
+	return 0;
+}
+
+
+void ph_kit_laugh(int sindex, int svalue)
+{
+	if(svalue > 0)
+		{
+			printf("I am Laughing\n");
+		}
+}
 
 
