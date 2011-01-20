@@ -1,3 +1,6 @@
+#ifndef MAIN_H
+#define MAIN_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,14 +13,13 @@
 #define ONE_DAY (24*60*60)
 
 #ifdef __linux__
-#define OS "linux"
+#define OS LINUX
 #endif
 #ifndef NeXTBSD
 #ifdef __APPLE__
-#define OS "mac"
+#define OS OSX
 #endif
 #endif
-
 
 /* representation of a gesture [needs to go in gesture] */
 typedef struct ges_response {
@@ -67,5 +69,9 @@ const InputAction input_actions[] = {
 }
 
 
+enum os { LINUX, OSX, WINDOWS };
+
 void end(void);
 int main_loop(void);
+
+#endif
