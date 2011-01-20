@@ -15,8 +15,8 @@ int gs_set_pos(CPhidgetAdvancedServoHandle servo)
 	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
 
 	GS_SETPOS (servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
-    GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_ARM);
-    GS_SETPOS (servo, GS_SERVO_RIGHTARM, GS_STARTPOS_ARM);
+    GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_LEFTARM);
+    GS_SETPOS (servo, GS_SERVO_RIGHTARM, GS_STARTPOS_RIGHTARM);
     GS_SETPOS (servo, GS_SERVO_TORSO, GS_STARTPOS_TORSO);
 
 
@@ -54,23 +54,23 @@ int gs_dance_basic(CPhidgetAdvancedServoHandle servo)
 
 	GS_SETPOS (servo, GS_SERVO_LEFTARM, 100);
 	usleep(GS_MICRO * 500);
-	GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_ARM);
+	GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_LEFTARM);
 	usleep(GS_MICRO * 500);
 	GS_SETPOS (servo, GS_SERVO_RIGHTARM, 100);
 	usleep(GS_MICRO * 500);
-	GS_SETPOS (servo, GS_SERVO_RIGHTARM, GS_STARTPOS_ARM);
+	GS_SETPOS (servo, GS_SERVO_RIGHTARM, GS_STARTPOS_RIGHTARM);
 	usleep(GS_MICRO * 500);;
 	GS_SETPOS (servo, GS_SERVO_HEAD, 100);
 	GS_SETPOS (servo, GS_SERVO_LEFTARM, 100);
 	usleep(GS_MICRO * 500);
 	GS_SETPOS (servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
-	GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_ARM);
+	GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_LEFTARM);
 	usleep(GS_MICRO * 500);
 	GS_SETPOS (servo, GS_SERVO_HEAD, 200);
 	GS_SETPOS (servo, GS_SERVO_RIGHTARM, 100);
 	usleep(GS_MICRO * 500);
 	GS_SETPOS (servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
-	GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_ARM);
+	GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_RIGHTARM);
 	usleep(GS_MICRO * 500);
 	}
 
@@ -94,7 +94,7 @@ int gs_raise_arms(CPhidgetAdvancedServoHandle servo)
     GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
 	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
     GS_SETPOS (servo, GS_SERVO_LEFTARM, 200);
-    GS_SETPOS (servo, GS_SERVO_RIGHTARM, 200);
+    GS_SETPOS (servo, GS_SERVO_RIGHTARM, 20);
     usleep(GS_MICRO * 1000);
     gs_set_pos(servo);
 
@@ -143,14 +143,14 @@ int gs_move_arms(CPhidgetAdvancedServoHandle servo)
 {
     GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
 	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
-    GS_SETPOS (servo, GS_SERVO_LEFTARM, 20);
+    GS_SETPOS (servo, GS_SERVO_LEFTARM, 200);
     GS_SETPOS (servo, GS_SERVO_RIGHTARM, 200);
     usleep(GS_MICRO * 500);
-    GS_SETPOS (servo, GS_SERVO_LEFTARM, 200);
+    GS_SETPOS (servo, GS_SERVO_LEFTARM, 20);
     GS_SETPOS (servo, GS_SERVO_RIGHTARM, 20);
     usleep(GS_MICRO * 500);
     GS_SETPOS (servo, GS_SERVO_LEFTARM, 200);
-    GS_SETPOS (servo, GS_SERVO_RIGHTARM, 20);
+    GS_SETPOS (servo, GS_SERVO_RIGHTARM, 200);
     usleep(GS_MICRO * 500);
     gs_set_pos(servo);
 

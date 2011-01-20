@@ -3,7 +3,8 @@
 #include "phidget.h"
 #include "gesture_interface.h"
 
-int main(void) {
+int main(void) 
+{
   noti_initialize();
   ph_initialise();
   //main_loop();
