@@ -48,7 +48,7 @@ int main() {
   
   
   printf("saving file\n");
-  rc = em_save(state, "poo.txt");
+  rc = em_save(state, "test.txt");
   
   if(rc) {
     printf("error saving file: %d\n", rc);
