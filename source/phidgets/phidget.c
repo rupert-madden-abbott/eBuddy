@@ -7,15 +7,16 @@ extern int ph_init(PhidgetHandle phidgets, const char *config)
 {
     ph_get_servo_handle();
 
-    ph_get_RFID_handle();
+    //ph_get_RFID_handle();
 
-    ph_get_kit_handle();	
+    //ph_get_kit_handle();	
 
     return 0;
 }
 
 int ph_destruct(void)
 {
+	ph_servo_close((CPhidgetHandle)ph_get_servo_handle());
     ph_RFID_closerfid();
 
     ph_kit_closekit();
@@ -100,6 +101,14 @@ int ph_servo_ErrorHandler(CPhidgetHandle phidget_servo, void *p, int ErrorCode, 
 	return 0;
 }
 
+int ph_servo_close(CPhidgetHandle phidget_servo)
+{
+	CPhidget_close(phidget_servo);
+	CPhidget_delete(phidget_servo);
+	
+	return 0;
+}
+
 /*RFID*/
 
 CPhidgetRFIDHandle ph_get_RFID_handle (void)
@@ -139,7 +148,7 @@ if((result = CPhidget_waitForAttachment((CPhidgetHandle)rfid, 10000)))
 		CPhidget_getErrorDescription(result, &err);
 		printf("Error ebuddy RFID not connected: %s\n", err);
 		ph_RFID_closerfid();
-		exit (1);
+		//exit (1);
 	}
 CPhidgetRFID_setAntennaOn(rfid, 1);
 return rfid;
@@ -277,7 +286,7 @@ CPhidgetInterfaceKitHandle ph_kit_openkit(void)
 		CPhidget_getErrorDescription(result, &err);
 		printf("ebuddy interface kit not connected: %s\n", err);
 		ph_kit_closekit();
-		exit(1);
+		//exit(1);
 	}
 
 	

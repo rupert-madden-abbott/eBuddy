@@ -6,3 +6,4 @@
 extern int gsi_happy_level1(void);
 extern int gsi_fun_level1(void);
 extern int gsi_notification(void);
+extern int gsi_test(void);

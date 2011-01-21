@@ -164,3 +164,29 @@ int gs_move_arms(CPhidgetAdvancedServoHandle servo)
     return 1;
 }
 
+int gs_turn(CPhidgetAdvancedServoHandle servo)
+{
+	GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
+	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
+	GS_SETENG(servo, GS_SERVO_HEAD, 1);
+	GS_SETENG(servo, GS_SERVO_TORSO, 1);
+	
+	GS_SETPOS(servo, GS_SERVO_LEFTARM, 100);
+	GS_SETPOS(servo, GS_SERVO_RIGHTARM, 100);
+	usleep(GS_MICRO * 500);
+	GS_SETPOS(servo, GS_SERVO_TORSO, 50);
+	GS_SETPOS(servo, GS_SERVO_HEAD, 160);
+	usleep(GS_MICRO * 2);
+	GS_SETPOS(servo, GS_SERVO_TORSO, GS_STARTPOS_TORSO);
+	GS_SETPOS(servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
+	usleep(GS_MICRO * 1);
+	GS_SETPOS(servo, GS_SERVO_TORSO, 160);
+	GS_SETPOS(servo, GS_SERVO_HEAD, 60);
+	usleep(GS_MICRO * 2);
+	gs_set_pos(servo);
+	
+	
+	
+	return 0;
+}
+

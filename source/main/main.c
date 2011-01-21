@@ -5,7 +5,6 @@
 #include "emotion.h"
 #include "config.h"
 
-
 int main(int argc, char *argv[]) {
   const char    *phidget_config = NULL, *notify_config = NULL, 
                 *gesture_config = NULL, *input_config = NULL, 
