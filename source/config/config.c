@@ -1,22 +1,19 @@
 #include "config.h"
 
-int conf_load(char *input, json_t *root) {
+int conf_load(char *input, json_t **root) {
   json_error_t error;
   
   if(!input) return 1;
   
   if(strstr(input, ".json")) {
-    root = json_load_file(input, &error);
-    
-    conf_printf(root);
+    *root = json_load_file(input, &error);
+  }
+  else {
+    *root = json_loads(input, &error);
+  }
   
-  }
-  /*else {
-    output = json_loads("", &error);
-  }
-  */
-  if(!root) {
-    printf("%i %s", error.line, error.text);
+  if(!*root) {
+    fprintf(stderr, "Error on line: %i: %s", error.line, error.text);
     return 1;
   }
   

@@ -11,7 +11,7 @@
 
 #define MAX_CHARS 100
 
-int conf_load(char *input, json_t *output);
+int conf_load(char *input, json_t **root);
 int conf_printf(json_t *root);
 
 int conf_read(char *filename, char *section, char *key, char **returned);
