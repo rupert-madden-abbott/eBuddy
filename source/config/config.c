@@ -26,7 +26,7 @@ int conf_printf(json_t *root) {
   return 0;
 }
 
-int conf_read2(json_t *root, char *section, char *key, const char **value) {
+int conf_read(json_t *root, char *section, char *key, void *value) {
   json_t *section_obj = NULL, *value_obj = NULL;
   
   if(!json_is_object(root)) return 1;
@@ -36,47 +36,11 @@ int conf_read2(json_t *root, char *section, char *key, const char **value) {
 
   value_obj = json_object_get(section_obj, key);
  
-  *value = json_string_value(value_obj);
+  memcpy(value, json_string_value(value_obj), 100);
 
   if(!value) return 1;
 
   return 0;  
-}
-
-int conf_read(char *filename, char *section, char *key, char **returned) {
-  int  in_section = 0;
-  FILE *conf_file;
-  char line[MAX_CHARS], section_heading[MAX_CHARS], file_key[MAX_CHARS],
-       path[MAX_CHARS] = CONF_DIR;
-  char *value = (char *)malloc(MAX_CHARS*sizeof(char));
-  
-  sprintf(section_heading, "[%s]", section);
-  strcat(path, filename);
-  
-  conf_file = fopen(path, "r");
-  if(!conf_file) {
-    return 1;
-  }
-
-  while(fgets(line, MAX_CHARS, conf_file)) {
-    if(in_section) {
-      if(conf_is_section(line)) {
-        in_section = 0;
-      }
-      else {
-        sscanf(line, "%s %[^\t\n]", file_key, value);
-        if(!strcmp(key, file_key)) {
-          fclose(conf_file);
-          *returned = value;
-          return 0;
-        }
-      }
-    }
-    else if(conf_is_section(line) && strcmp(line, section_heading)) {
-      in_section = 1;
-    }
-  }
-  return 1;
 }
 
 int conf_update(char *filename, char *section, char *key, char *value) {
