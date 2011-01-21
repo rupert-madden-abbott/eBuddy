@@ -18,6 +18,9 @@
 #define GS_SETACC(a, b, c) CPhidgetAdvancedServo_setAcceleration(a, b, c)
 #define GS_SETVEL(a, b, c) CPhidgetAdvancedServo_setVelocityLimit(a, b, c)
 
+#define GS_RIGHTEYE 0
+#define GS_LEFTEYE 2
+
 CPhidgetAdvancedServoHandle gs_get_servo_handle(void);
 
 int gs_init(PhidgetHandle *phidgets, const char *config);
@@ -29,6 +32,9 @@ extern int gs_raise_arms(CPhidgetAdvancedServoHandle servo);
 extern int gs_shake_head(CPhidgetAdvancedServoHandle servo);
 extern int gs_move_arms(CPhidgetAdvancedServoHandle servo);
 extern int gs_turn(CPhidgetAdvancedServoHandle servo);
+extern int gs_eyeson(CPhidgetInterfaceKitHandle ifkit);
+extern int gs_eyesoff(CPhidgetInterfaceKitHandle ifkit);
+extern int gs_eyeflash(CPhidgetInterfaceKitHandle ifkit);
 
 
 

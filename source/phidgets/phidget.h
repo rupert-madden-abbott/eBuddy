@@ -1,11 +1,16 @@
 #include <phidget21.h>
 
 extern int ph_init(PhidgetHandle *phidgets, const char *config);
+
+extern int ph_destruct(void);
+
+/*Servo Header*/
 extern CPhidgetAdvancedServoHandle ph_get_servo_handle(void);
 CPhidgetAdvancedServoHandle ph_servo_initialise(void);
 int ph_servo_DetachHandler(CPhidgetHandle phidget_servo, void *p);
 int ph_servo_AttachHandler(CPhidgetHandle phidget_servo, void *p);
 int ph_servo_ErrorHandler(CPhidgetHandle phidget_servo, void *p, int ErrorCode, const char *Description);
+int ph_servo_close(CPhidgetHandle);
 
 /*RFID Header*/
 void ph_RFID_food(void);

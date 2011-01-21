@@ -5,25 +5,33 @@
 
 extern int ph_init(PhidgetHandle phidgets, const char *config)
 {
+    int status;
+    CPhidgetInterfaceKitHandle ifkit;
     ph_get_servo_handle();
 
     //ph_get_RFID_handle();
 
-    //ph_get_kit_handle();	
+    ifkit = ph_get_kit_handle();
+    CPhidget_getDeviceStatus((CPhidgetHandle)ifkit, &status);
+    if(status == PHIDGET_ATTACHED){
+	gs_eyeson(ifkit);
+    }
+	
+    	
 
     return 0;
 }
 
 int ph_destruct(void)
 {
-	ph_servo_close((CPhidgetHandle)ph_get_servo_handle());
+    ph_servo_close((CPhidgetHandle)ph_get_servo_handle());
     ph_RFID_closerfid();
 
     ph_kit_closekit();
     return 0;
 }
 
-
+/*Servo Header*/
 CPhidgetAdvancedServoHandle ph_get_servo_handle(void)
 {
    static int servo_initialised = 0;
@@ -79,7 +87,7 @@ CPhidgetAdvancedServoHandle ph_servo_initialise(void)
 
 int ph_servo_DetachHandler(CPhidgetHandle phidget_servo, void *p)
 {
-
+    ph_servo_close(phidget_servo);
     printf("eBuddy servo detatched\n");
 
 	return 0;
@@ -87,7 +95,7 @@ int ph_servo_DetachHandler(CPhidgetHandle phidget_servo, void *p)
 
 int ph_servo_AttachHandler(CPhidgetHandle phidget_servo, void *p)
 {
-
+    ph_get_servo_handle();
     printf("eBuddy servo attached\n");
 
 	return 0;
@@ -189,7 +197,7 @@ int ph_RFID_DetachHandler(CPhidgetHandle RFID, void *userptr)
 
 int ph_RFID_ErrorHandler(CPhidgetHandle RFID, void *userptr, int ErrorCode, const char *unknown)
 {
-	printf("ebuddy RFID error %d - %s\n", ErrorCode, unknown);
+	printf("eBuddy RFID error %d - %s\n", ErrorCode, unknown);
 	return 0;
 }
 
@@ -284,7 +292,7 @@ CPhidgetInterfaceKitHandle ph_kit_openkit(void)
 	if((result = CPhidget_waitForAttachment((CPhidgetHandle)ifKit, 10000)))
 	{
 		CPhidget_getErrorDescription(result, &err);
-		printf("ebuddy interface kit not connected: %s\n", err);
+		printf("eBuddy interface kit not connected: %s\n", err);
 		ph_kit_closekit();
 		//exit(1);
 	}
@@ -309,6 +317,7 @@ int ph_kit_AttachHandler(CPhidgetHandle IFK, void *userptr)
 
 	CPhidget_getDeviceName(IFK, &name);
 	CPhidget_getSerialNumber(IFK, &serialNo);
+	gs_eyeson(IFK);
 
 	printf("ebuddy interface kit attached!\n");
 
@@ -322,6 +331,7 @@ int ph_kit_DetachHandler(CPhidgetHandle IFK, void *userptr)
 
 	CPhidget_getDeviceName (IFK, &name);
 	CPhidget_getSerialNumber(IFK, &serialNo);
+        gs_eyesoff(IFK);
 
 	printf("ebuddy interface kit detached!\n");
 

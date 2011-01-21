@@ -35,7 +35,7 @@ int gsi_notification(void)
 
 int gsi_test(void)
 {
-	int status;
+    int status;
     CPhidgetAdvancedServoHandle servo = ph_get_servo_handle();
     CPhidget_getDeviceStatus((CPhidgetHandle)servo, &status);
     if(status == PHIDGET_NOTATTACHED){
@@ -46,5 +46,18 @@ int gsi_test(void)
 	
 	return GSI_OK;
 }
+
+int gsi_eyeflash(void)
+{
+    int status;
+    CPhidgetInterfaceKitHandle ifkit = ph_get_kit_handle();
+    CPhidget_getDeviceStatus((CPhidgetHandle)ifkit, &status);
+    if(status == PHIDGET_NOTATTACHED){
+        return GSI_PHER;
+    }
+    gs_eyeflash(ifkit);
+    return GSI_OK;
+}
+
 
 

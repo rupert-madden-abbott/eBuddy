@@ -4,19 +4,16 @@ int gs_init(PhidgetHandle *phidgets, const char *config) {
   return 0;
 }
 
-
-
-
 int gs_set_pos(CPhidgetAdvancedServoHandle servo)
 {
 
 
     GS_SETENG(servo, GS_SERVO_HEAD, 1);
-	GS_SETENG(servo, GS_SERVO_TORSO, 1);
-	GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
-	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
+    GS_SETENG(servo, GS_SERVO_TORSO, 1);
+    GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
+    GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
 
-	GS_SETPOS (servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
+    GS_SETPOS (servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
     GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_LEFTARM);
     GS_SETPOS (servo, GS_SERVO_RIGHTARM, GS_STARTPOS_RIGHTARM);
     GS_SETPOS (servo, GS_SERVO_TORSO, GS_STARTPOS_TORSO);
@@ -94,7 +91,7 @@ int gs_dance_advanced(CPhidgetAdvancedServoHandle servo)
 int gs_raise_arms(CPhidgetAdvancedServoHandle servo)
 {
     GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
-	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
+    GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
     GS_SETPOS (servo, GS_SERVO_LEFTARM, 200);
     GS_SETPOS (servo, GS_SERVO_RIGHTARM, 20);
     usleep(GS_MICRO * 1000);
@@ -187,6 +184,42 @@ int gs_turn(CPhidgetAdvancedServoHandle servo)
 	
 	
 	
+	return 0;
+}
+
+int gs_eyesoff(CPhidgetInterfaceKitHandle ifkit)
+{
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PFALSE);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PFALSE);
+	return 0;
+}
+
+int gs_eyeson(CPhidgetInterfaceKitHandle ifkit)
+{
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PTRUE);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PTRUE);
+	return 0;
+}
+
+int gs_eyeflash(CPhidgetInterfaceKitHandle ifkit)
+{
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PFALSE);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PFALSE);
+	usleep(GS_MICRO * 250);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PTRUE);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PTRUE);
+	usleep(GS_MICRO * 250);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PFALSE);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PFALSE);
+	usleep(GS_MICRO * 250);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PTRUE);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PTRUE);
+	usleep(GS_MICRO * 250);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PFALSE);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PFALSE);
+	usleep(GS_MICRO * 250);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PTRUE);
+	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PTRUE);
 	return 0;
 }
 
