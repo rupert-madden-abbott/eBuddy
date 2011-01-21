@@ -9,13 +9,14 @@
   #define CONF_DIR "path/to/usr/dir/"
 #endif
 
-#define MAX_CHARS 100
+#define CONF_MAX 100
 
 int conf_load(char *input, json_t **root);
 int conf_printf(json_t *root);
-int conf_read(json_t *root, char *section, char *key, void *value);
+int conf_reads(json_t *root, char *section, char *key, char **value);
+int conf_readi(json_t *root, char *section, char *key, int *value);
 
 int conf_update(char *filename, char *section, char *key, char *value);
-int conf_is_section(char line[MAX_CHARS]);
+int conf_is_section(char line[CONF_MAX]);
 
 #endif

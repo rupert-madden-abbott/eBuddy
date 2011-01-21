@@ -26,7 +26,7 @@ int conf_printf(json_t *root) {
   return 0;
 }
 
-int conf_read(json_t *root, char *section, char *key, void *value) {
+int conf_reads(json_t *root, char *section, char *key, char **value) {
   json_t *section_obj = NULL, *value_obj = NULL;
   
   if(!json_is_object(root)) return 1;
@@ -35,10 +35,32 @@ int conf_read(json_t *root, char *section, char *key, void *value) {
   if(!json_is_object(section_obj)) return 1;
 
   value_obj = json_object_get(section_obj, key);
- 
-  memcpy(value, json_string_value(value_obj), 100);
+  if(!json_is_string(value_obj)) return 1;
+  
+  *value = malloc(CONF_MAX * sizeof(char));
+  strcpy(*value, json_string_value(value_obj));
 
-  if(!value) return 1;
+  if(value == NULL) return 1;
+
+  return 0;  
+}
+
+int conf_readi(json_t *root, char *section, char *key, int *value) {
+  json_t *section_obj = NULL, *value_obj = NULL;
+  
+  if(!json_is_object(root)) return 1;
+  
+  section_obj = json_object_get(root, section);
+  if(!json_is_object(section_obj)) return 1;
+
+  value_obj = json_object_get(section_obj, key);
+  if(!json_is_integer(value_obj)) return 1;
+  
+  if(json_typeof(value_obj) != JSON_INTEGER) return 1;
+  
+  *value = json_integer_value(value_obj);
+
+  if(value == NULL) return 1;
 
   return 0;  
 }
@@ -46,8 +68,8 @@ int conf_read(json_t *root, char *section, char *key, void *value) {
 int conf_update(char *filename, char *section, char *key, char *value) {
   int   in_section = 0, updated = 0;
   FILE  *conf_file, *temp_file;
-  char  path[MAX_CHARS] = CONF_DIR, section_heading[MAX_CHARS], line[MAX_CHARS], 
-        file_key[MAX_CHARS];
+  char  path[CONF_MAX] = CONF_DIR, section_heading[CONF_MAX], line[CONF_MAX], 
+        file_key[CONF_MAX];
   
   sprintf(section_heading, "[%s]", section);
   strcat(path, filename);
@@ -106,7 +128,7 @@ int conf_update(char *filename, char *section, char *key, char *value) {
   return 0;
 }
 
-int conf_is_section(char line[MAX_CHARS]) {
+int conf_is_section(char line[CONF_MAX]) {
   if(line[0] == '[') {
     return 1;
   }
