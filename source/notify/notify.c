@@ -2,9 +2,14 @@
 
 int noti_initialize(void) {
   noti_token user;
+  json_t *output = NULL;
   
-  if(noti_authenticate(&user)) return 1;
+  conf_load("conf/notify.json", output);
   
+  //if(noti_authenticate(&user)) return 1;
+  
+
+    
   /* printf("Enter your Twitter username or skip to switch this feature off\n");
     scanf("%s", username);
     if(strcmp(username, "skip") == 0) {

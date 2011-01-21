@@ -2,6 +2,7 @@
 #define NOTIFY_H
 
 #include "main.h"
+#include "config.h"
 #include <pthread.h>
 #include <oauth.h>
 #include <string.h>
