@@ -1,5 +1,34 @@
 #include "config.h"
 
+int conf_load(char *input, json_t *root) {
+  json_error_t error;
+  
+  if(!input) return 1;
+  
+  if(strstr(input, ".json")) {
+    root = json_load_file(input, &error);
+    
+    conf_printf(root);
+  
+  }
+  /*else {
+    output = json_loads("", &error);
+  }
+  */
+  if(!root) {
+    printf("%i %s", error.line, error.text);
+    return 1;
+  }
+  
+  return 0;
+}
+
+int conf_printf(json_t *root) {
+  if(json_dumpf(root, stdout, JSON_INDENT(2))) return 1;
+  
+  return 0;
+}
+
 int conf_read(char *filename, char *section, char *key, char **returned) {
   int  in_section = 0;
   FILE *conf_file;

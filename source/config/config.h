@@ -11,6 +11,9 @@
 
 #define MAX_CHARS 100
 
+int conf_load(char *input, json_t *output);
+int conf_printf(json_t *root);
+
 int conf_read(char *filename, char *section, char *key, char **returned);
 int conf_update(char *filename, char *section, char *key, char *value);
 int conf_is_section(char line[MAX_CHARS]);
