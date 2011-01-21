@@ -15,6 +15,7 @@ int conf_load(char *input, json_t **root);
 int conf_printf(json_t *root);
 int conf_reads(json_t *root, char *section, char *key, char **value);
 int conf_readi(json_t *root, char *section, char *key, int *value);
+int conf_reado(json_t *root, char *section, char *key, json_t **value_obj);
 
 int conf_update(char *filename, char *section, char *key, char *value);
 int conf_is_section(char line[CONF_MAX]);

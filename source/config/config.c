@@ -27,18 +27,13 @@ int conf_printf(json_t *root) {
 }
 
 int conf_reads(json_t *root, char *section, char *key, char **value) {
-  json_t *section_obj = NULL, *value_obj = NULL;
+  json_t *object = NULL;
   
-  if(!json_is_object(root)) return 1;
-  
-  section_obj = json_object_get(root, section);
-  if(!json_is_object(section_obj)) return 1;
+  if(conf_reado(root, section, key, &object)) return 1;
+  if(!json_is_string(object)) return 1;
 
-  value_obj = json_object_get(section_obj, key);
-  if(!json_is_string(value_obj)) return 1;
-  
   *value = malloc(CONF_MAX * sizeof(char));
-  strcpy(*value, json_string_value(value_obj));
+  strcpy(*value, json_string_value(object));
 
   if(value == NULL) return 1;
 
@@ -46,23 +41,28 @@ int conf_reads(json_t *root, char *section, char *key, char **value) {
 }
 
 int conf_readi(json_t *root, char *section, char *key, int *value) {
-  json_t *section_obj = NULL, *value_obj = NULL;
-  
+  json_t *object = NULL;
+
+  if(conf_reado(root, section, key, &object)) return 1;
+  if(!json_is_integer(object)) return 1;  
+
+  *value = json_integer_value(object);
+  if(value == NULL) return 1;
+
+  return 0;  
+}
+
+int conf_reado(json_t *root, char *section, char *key, json_t **object) {
+  json_t *section_obj = NULL;
   if(!json_is_object(root)) return 1;
   
   section_obj = json_object_get(root, section);
   if(!json_is_object(section_obj)) return 1;
 
-  value_obj = json_object_get(section_obj, key);
-  if(!json_is_integer(value_obj)) return 1;
-  
-  if(json_typeof(value_obj) != JSON_INTEGER) return 1;
-  
-  *value = json_integer_value(value_obj);
+  *object = json_object_get(section_obj, key);
+  if(*object == NULL) return 1;
 
-  if(value == NULL) return 1;
-
-  return 0;  
+  return 0;
 }
 
 int conf_update(char *filename, char *section, char *key, char *value) {
