@@ -13,6 +13,7 @@
 
 int conf_load(char *input, json_t **root);
 int conf_printf(json_t *root);
+int conf_read2(json_t *root, char *section, char *key, const char **value);
 
 int conf_read(char *filename, char *section, char *key, char **returned);
 int conf_update(char *filename, char *section, char *key, char *value);

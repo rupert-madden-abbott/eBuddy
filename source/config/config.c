@@ -26,6 +26,23 @@ int conf_printf(json_t *root) {
   return 0;
 }
 
+int conf_read2(json_t *root, char *section, char *key, const char **value) {
+  json_t *section_obj = NULL, *value_obj = NULL;
+  
+  if(!json_is_object(root)) return 1;
+  
+  section_obj = json_object_get(root, section);
+  if(!json_is_object(section_obj)) return 1;
+
+  value_obj = json_object_get(section_obj, key);
+ 
+  *value = json_string_value(value_obj);
+
+  if(!value) return 1;
+
+  return 0;  
+}
+
 int conf_read(char *filename, char *section, char *key, char **returned) {
   int  in_section = 0;
   FILE *conf_file;
