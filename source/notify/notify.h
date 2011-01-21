@@ -1,4 +1,10 @@
+#ifndef NOTIFY_H
+#define NOTIFY_H
+
+#include "main.h"
 #include <pthread.h>
+#include <oauth.h>
+#include <string.h>
 
 #define NOTI_CONF_FILE "notify.conf"
 
@@ -13,18 +19,11 @@ typedef struct noti_token {
 	char secret[50];
 } noti_token;
 
-typedef struct noti_request {
-  char *uri;
-  char *url;
-  char *postargs;
-  noti_token app;
-  noti_token user;
-  char *pin;
-} noti_request;
-
 int noti_initialize(void);
-int noti_authenticate(void);
-int noti_send_request(noti_request *request, char *response);
-int noti_parse_response(char *response, char *token, char *secret);
+int noti_authenticate(noti_token *user);
+int noti_request_token(char *uri, noti_token app, noti_token *user);
+int noti_parse_response(char *response, noti_token *token);
+int noti_read_arg(char *arg, char *type, char *value);
 
-char *noti_strdup(const char *str);
+#endif
+
