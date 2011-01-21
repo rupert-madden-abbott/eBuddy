@@ -4,6 +4,9 @@ int gs_init(PhidgetHandle *phidgets, const char *config) {
   return 0;
 }
 
+/*servo gestures*/
+
+//set default servo position
 int gs_set_pos(CPhidgetAdvancedServoHandle servo)
 {
 
@@ -187,6 +190,35 @@ int gs_turn(CPhidgetAdvancedServoHandle servo)
 	return 0;
 }
 
+
+
+/*sound functions*/
+int gs_sound(int sound, int itineration)
+{
+    int i = 0;
+    char *filepath;
+    char command[110];
+    char num[10];
+    filepath = (char *) malloc(sizeof(char) * 100);
+    sprintf(num, "%d", sound);
+    //get sound configuration
+    if(conf_read("sound.conf", "sound", num, &filepath)) {
+        return 1;
+    }
+    command[0] ='\0';
+    strcpy(command, MP3PLAYERCMD);
+    strcat(command, filepath);
+    while(i < itineration){
+        //make system call to play sound
+        system(command);
+        i++;
+
+    }
+    return 0;
+}
+
+
+/*LED functions*/
 int gs_eyesoff(CPhidgetInterfaceKitHandle ifkit)
 {
 	CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PFALSE);
@@ -222,4 +254,6 @@ int gs_eyeflash(CPhidgetInterfaceKitHandle ifkit)
 	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PTRUE);
 	return 0;
 }
+
+
 

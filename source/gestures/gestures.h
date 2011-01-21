@@ -1,11 +1,13 @@
 #include "phidget.h"
 #include "config.h"
 
+//servo mappings 
 #define GS_SERVO_HEAD 0
 #define GS_SERVO_TORSO 1
 #define GS_SERVO_LEFTARM 2
 #define GS_SERVO_RIGHTARM 3
 
+//default servo postions
 #define GS_STARTPOS_HEAD 110
 #define GS_STARTPOS_TORSO 110
 #define GS_STARTPOS_RIGHTARM 200
@@ -13,6 +15,7 @@
 
 #define GS_MICRO 1000
 
+//defined servo phidget library fucntions
 #define GS_SETPOS(a, b, c) CPhidgetAdvancedServo_setPosition (a, b, c)
 #define GS_SETENG(a, b, c) CPhidgetAdvancedServo_setEngaged(a, b, c)
 #define GS_SETACC(a, b, c) CPhidgetAdvancedServo_setAcceleration(a, b, c)
@@ -20,6 +23,8 @@
 
 #define GS_RIGHTEYE 0
 #define GS_LEFTEYE 2
+
+#define MP3PLAYERCMD "mpg123 -q "
 
 CPhidgetAdvancedServoHandle gs_get_servo_handle(void);
 
