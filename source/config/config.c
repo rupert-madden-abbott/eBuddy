@@ -26,10 +26,19 @@ int conf_printf(json_t *root) {
   return 0;
 }
 
-int conf_reads(json_t *root, char *section, char *key, char **value) {
+int conf_reado(json_t *root, char *key, json_t **object) {
+  if(!json_is_object(root)) return 1;
+
+  *object = json_object_get(root, key);
+  if(*object == NULL) return 1;
+
+  return 0;
+}
+
+int conf_reads(json_t *root, char *key, char **value) {
   json_t *object = NULL;
   
-  if(conf_reado(root, section, key, &object)) return 1;
+  if(conf_reado(root, key, &object)) return 1;
   if(!json_is_string(object)) return 1;
 
   *value = malloc(CONF_MAX * sizeof(char));
@@ -40,10 +49,10 @@ int conf_reads(json_t *root, char *section, char *key, char **value) {
   return 0;  
 }
 
-int conf_readi(json_t *root, char *section, char *key, int *value) {
+int conf_readi(json_t *root, char *key, int *value) {
   json_t *object = NULL;
 
-  if(conf_reado(root, section, key, &object)) return 1;
+  if(conf_reado(root, key, &object)) return 1;
   if(!json_is_integer(object)) return 1;  
 
   *value = json_integer_value(object);
@@ -52,86 +61,34 @@ int conf_readi(json_t *root, char *section, char *key, int *value) {
   return 0;  
 }
 
-int conf_reado(json_t *root, char *section, char *key, json_t **object) {
-  json_t *section_obj = NULL;
-  if(!json_is_object(root)) return 1;
+int conf_updates(json_t **root, char *key, char *value) {
+  json_t *object = NULL;
+
+  if(!json_is_object(*root)) return 1;
+
+  object = json_string(value);
+  if(object == NULL) return 1;
   
-  section_obj = json_object_get(root, section);
-  if(!json_is_object(section_obj)) return 1;
-
-  *object = json_object_get(section_obj, key);
-  if(*object == NULL) return 1;
-
+  if(json_object_set(*root, key, object)) return 1;
+  
   return 0;
 }
 
-int conf_update(char *filename, char *section, char *key, char *value) {
-  int   in_section = 0, updated = 0;
-  FILE  *conf_file, *temp_file;
-  char  path[CONF_MAX] = CONF_DIR, section_heading[CONF_MAX], line[CONF_MAX], 
-        file_key[CONF_MAX];
-  
-  sprintf(section_heading, "[%s]", section);
-  strcat(path, filename);
+int conf_updatei(json_t **root, char *key, int value) {
+  json_t *object = NULL;
 
-  conf_file = fopen(path, "r+");
-  if(!conf_file) {
-    return 1;
-  }
+  if(!json_is_object(*root)) return 1;
+
+  object = json_integer(value);
+  if(object == NULL) return 1;
   
-  temp_file = tmpfile();
+  if(json_object_set(*root, key, object)) return 1;
   
-  while(fgets(line, sizeof(line), conf_file)) {
-    if(in_section) {  
-      if(conf_is_section(line)) {
-        fputs(line, temp_file);
-        in_section = 0;
-      }
-      else {
-        sscanf(line, "%s ", file_key);
-        if(strcmp(key, file_key)) {
-          fputs(line, temp_file);
-        }
-        else {
-          updated = 1;
-          fprintf(temp_file, "%s %s\n", file_key, value);
-        }
-      }
-    }
-    else if(conf_is_section(line) && strcmp(line, section_heading)) {
-      fputs(line, temp_file);
-      in_section = 1;
-    }
-    else {
-      fputs(line, temp_file);
-    }
-  }
-  if(updated) {
-    rewind(temp_file);
-    
-    freopen(path, "w+", conf_file);
-    if(!conf_file) {
-      return 1;
-    }  
-    
-    while(fgets(line, sizeof(line), temp_file)) {
-      fputs(line, conf_file);
-    }
-  }
-  
-  fclose(conf_file);
-  fclose(temp_file);
-  
-  if(!updated) {
-    return 1;
-  }
   return 0;
 }
 
-int conf_is_section(char line[CONF_MAX]) {
-  if(line[0] == '[') {
-    return 1;
-  }
+int conf_write(char *input, json_t *root) {
+  if(json_dump_file(root, input, JSON_INDENT(2))) return 1;
   
   return 0;
 }
