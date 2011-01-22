@@ -2,13 +2,17 @@
 
 int noti_initialize(void) {
   noti_token user;
-  json_t *output = NULL;
+  json_t *root = NULL;
+  int authenticated, disabled;
   
-  conf_load("conf/notify.json", output);
-  
-  //if(noti_authenticate(&user)) return 1;
-  
+  if(conf_load("conf/notify.json", &root)) return 1;
 
+  if(conf_readi(root, "disabled", &disabled)) return 1;
+  if(conf_readi(root, "authenticated", &authenticated)) return 1;
+  
+  if(disabled || authenticated) return 0;
+  
+  if(noti_authenticate(&user)) return 1;
     
   /* printf("Enter your Twitter username or skip to switch this feature off\n");
     scanf("%s", username);
@@ -30,6 +34,7 @@ int noti_initialize(void) {
 
 int noti_authenticate(noti_token *user) {
   char url[1000], pin[200];
+  json_t *root = NULL;
   noti_token app;
 
   //Get request token
@@ -59,6 +64,13 @@ int noti_authenticate(noti_token *user) {
 
   //Get access token
   if(noti_request_token(url, app, user)) return 1;
+
+  if(conf_load("conf/notify.json", &root)) return 1;
+
+  if(conf_updates(&root, "user_key", user->key)) return 1;
+  if(conf_updates(&root, "user_secret", user->secret)) return 1;
+
+  if(conf_write("conf/notify.json", root)) return 1;
 
   return 0;
 }
