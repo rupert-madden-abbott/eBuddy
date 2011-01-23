@@ -8,8 +8,8 @@ BUILD_DIR   := $(addprefix build/,$(MODULE_DIR))
 SOURCE      := $(foreach temp, $(SOURCE_DIR), $(wildcard $(temp)/*.c))
 OBJECTS     := $(patsubst source/%.c, build/%.o, $(SOURCE))
 INCLUDES    := $(addprefix -I,$(SOURCE_DIR))
-LIBRARIES   := -lssl -loauth -lm -lphidget21 -ljansson
-LIBRARIES_MAC:= -lssl -loauth -lm -ljansson -framework Phidget21
+LIBRARIES   := -lssl -loauth -lm -lphidget21 -ljansson -lcurl
+LIBRARIES_MAC:= -lssl -loauth -lm -ljansson -lcurl -framework Phidget21
 
 vpath %.c $(SOURCE_DIR)
 
