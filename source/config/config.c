@@ -35,14 +35,13 @@ int conf_reado(json_t *root, char *key, json_t **object) {
   return 0;
 }
 
-int conf_reads(json_t *root, char *key, char **value) {
+int conf_reads(json_t *root, char *key, char *value) {
   json_t *object = NULL;
   
   if(conf_reado(root, key, &object)) return 1;
   if(!json_is_string(object)) return 1;
 
-  *value = malloc(CONF_MAX * sizeof(char));
-  strcpy(*value, json_string_value(object));
+  strcpy(value, json_string_value(object));
 
   if(value == NULL) return 1;
 
