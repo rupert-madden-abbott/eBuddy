@@ -13,7 +13,7 @@
 #include "main.h"
 
 /* Represents a JSON structure (Renamed to maintain a consistent public API) */
-typedef json_t conf_t;
+typedef json_t conf;
 
 /**
  * Allocate and return a JSON structure from either a file or a string. This
@@ -28,7 +28,7 @@ typedef json_t conf_t;
  * @param  input A path to a json file or a JSON formatted string
  * @return NULL on error or the JSON object parsed from @p input
  */
-conf_t *conf_read(const char *input);
+conf *conf_read(const char *input);
 
 /**
  * Writes a JSON object into the file specified by @p path. If @p path already
@@ -39,7 +39,7 @@ conf_t *conf_read(const char *input);
  * @param  path The path of the file to be written to
  * @return err_code
  */
-int conf_write(const conf_t *root, const char *path);
+int conf_write(const conf *root, const char *path);
 
 /**
  * Performs cleanup when a JSON object is finished with.
@@ -47,7 +47,7 @@ int conf_write(const conf_t *root, const char *path);
  * @param  root The JSON object to be destroyed
  * @return void
  */
-void conf_free(conf_t *root);
+void conf_free(conf *root);
 
 ///@{
 /**
@@ -62,10 +62,10 @@ void conf_free(conf_t *root);
  * @param  key  The name of the @p value to return
  * @return NULL, 0 or 0.0 on error or the value named @p key
  */
-conf_t *conf_get_object(const conf_t *root, const char *key);
-const char *conf_get_string(const conf_t *root, const char *key);
-int conf_get_integer(const conf_t *root, const char *key);
-double conf_get_double(const conf_t *root, const char *key);
+conf *conf_get_object(const conf *root, const char *key);
+const char *conf_get_string(const conf *root, const char *key);
+int conf_get_integer(const conf *root, const char *key);
+double conf_get_double(const conf *root, const char *key);
 ///@}
 
 ///@{
@@ -82,10 +82,10 @@ double conf_get_double(const conf_t *root, const char *key);
  * @param  value The value to be stored in @p root
  * @return err_code
  */
-int conf_set_object(conf_t *root, const char *key, conf_t *value);
-int conf_set_string(conf_t *root, const char *key, const char *value);
-int conf_set_integer(conf_t *root, const char *key, int value);
-int conf_set_double(conf_t *root, const char *key, double value);
+int conf_set_object(conf *root, const char *key, conf *value);
+int conf_set_string(conf *root, const char *key, const char *value);
+int conf_set_integer(conf *root, const char *key, int value);
+int conf_set_double(conf *root, const char *key, double value);
 ///@}
 
 /**
@@ -95,6 +95,6 @@ int conf_set_double(conf_t *root, const char *key, double value);
  * @param  root A JSON object
  * @return error_code
  */
-int conf_printf(const conf_t *root);
+int conf_printf(const conf *root);
 
 #endif

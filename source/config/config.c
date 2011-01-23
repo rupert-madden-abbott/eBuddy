@@ -1,6 +1,6 @@
 #include "config.h"
 
-conf_t *conf_read(const char *input) {
+conf *conf_read(const char *input) {
   json_t *root;
   json_error_t error;
   
@@ -24,7 +24,7 @@ conf_t *conf_read(const char *input) {
   return root;
 }
 
-int conf_write(const conf_t *root, const char *input) {
+int conf_write(const conf *root, const char *input) {
   /* input is automatically formatted to ensure configuration files are 
      consistently formatted */
   if(json_dump_file(root, input, JSON_INDENT(2) || JSON_SORT_KEYS)) {
@@ -34,13 +34,13 @@ int conf_write(const conf_t *root, const char *input) {
   return err_none;
 }
 
-void conf_free(conf_t *root) {
+void conf_free(conf *root) {
   /* jansson uses resource counting to keep track of resources. Each reference
      must be decremented in order to free it. */
   json_decref(root);
 }
 
-conf_t *conf_get_object(const conf_t *root, const char *key) {
+conf *conf_get_object(const conf *root, const char *key) {
   /* This returns a reference to the object stored in root. Therefore, if root
      is freed, this object will be destroyed as well */
   return json_object_get(root, key);
@@ -48,7 +48,7 @@ conf_t *conf_get_object(const conf_t *root, const char *key) {
 
 /* The following functions first get an object containing the required value
    and then convert the object into the required type */
-const char *conf_get_string(const conf_t *root, const char *key) {
+const char *conf_get_string(const conf *root, const char *key) {
   json_t *object = NULL;
   
   object = conf_get_object(root, key);
@@ -57,7 +57,7 @@ const char *conf_get_string(const conf_t *root, const char *key) {
   return json_string_value(object);
 }
 
-int conf_get_integer(const conf_t *root, const char *key) {
+int conf_get_integer(const conf *root, const char *key) {
   json_t *object = NULL;
   
   object = conf_get_object(root, key);
@@ -66,7 +66,7 @@ int conf_get_integer(const conf_t *root, const char *key) {
   return json_integer_value(object);
 }
 
-double conf_get_double(const conf_t *root, const char *key) {
+double conf_get_double(const conf *root, const char *key) {
   json_t *object = NULL;
   
   object = conf_get_object(root, key);
@@ -75,7 +75,7 @@ double conf_get_double(const conf_t *root, const char *key) {
   return json_real_value(object);
 }
 
-int conf_set_object(conf_t *root, const char *key, conf_t *value) {
+int conf_set_object(conf *root, const char *key, conf *value) {
   /* Even if an object is created in this process, it is enough to call 
      conf_free on root due to jansson's resource counting */
   return json_object_set(root, key, value);
@@ -83,7 +83,7 @@ int conf_set_object(conf_t *root, const char *key, conf_t *value) {
 
 /* The following functions first convert value from the given type into a JSON
    object and then set that object onto the root object. */
-int conf_set_string(conf_t *root, const char *key, const char *value) {
+int conf_set_string(conf *root, const char *key, const char *value) {
   int rc;
   json_t *object = NULL;
 
@@ -99,7 +99,7 @@ int conf_set_string(conf_t *root, const char *key, const char *value) {
   return err_none;
 }
 
-int conf_set_integer(conf_t *root, const char *key, int value) {
+int conf_set_integer(conf *root, const char *key, int value) {
   int rc;
   json_t *object = NULL;
 
@@ -115,7 +115,7 @@ int conf_set_integer(conf_t *root, const char *key, int value) {
   return err_none;
 }
 
-int conf_set_double(conf_t *root, const char *key, double value) {
+int conf_set_double(conf *root, const char *key, double value) {
   int rc;
   json_t *object = NULL;
 
@@ -134,7 +134,7 @@ int conf_set_double(conf_t *root, const char *key, double value) {
 /* This is handy for quickly checking whether a JSON object contains the 
    correct information at a particular point in the program. It is formatted so 
    that it will look identical to the configuration files */
-int conf_printf(const conf_t *root) {
+int conf_printf(const conf *root) {
   if(json_dumpf(root, stdout, JSON_INDENT(2) || JSON_SORT_KEYS)) {
     return err_unknown;
   }
