@@ -3,7 +3,7 @@
 #include "gestures.h"
 
 
-int ph_initialise(void)
+extern int ph_init(PhidgetHandle phidgets, const char *config)
 {
     ph_get_servo_handle();
 

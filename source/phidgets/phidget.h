@@ -1,7 +1,7 @@
 #include <phidget21.h>
 
 
-extern int ph_initialise(void);
+extern int ph_init(PhidgetHandle *phidgets, const char *config);
 extern CPhidgetAdvancedServoHandle ph_get_servo_handle(void);
 CPhidgetAdvancedServoHandle ph_servo_initialise(void);
 int ph_servo_DetachHandler(CPhidgetHandle phidget_servo, void *p);
