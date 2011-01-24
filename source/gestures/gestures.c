@@ -104,14 +104,19 @@ int gs_raise_arms(CPhidgetAdvancedServoHandle servo)
 int gs_sound(int sound, int itineration)
 {
     int i = 0;
-    char *filepath;
+    const char *filepath = NULL;
     char command[110];
     char num[10];
-    filepath = (char *) malloc(sizeof(char) * 100);
+    conf *root;
     sprintf(num, "%d", sound);
-    if(conf_read("sound.conf", "sound", num, &filepath)) {
-        return 1;
-    }
+   
+    root = conf_read("conf/sound.conf");
+    if(!root) return 1;
+    
+    filepath = conf_get_string(root, num);
+    conf_free(root);
+    if(!filepath) return 1;
+    
     command[0] ='\0';
     strcpy(command, "mpg123 -q ");
     strcat(command, filepath);
