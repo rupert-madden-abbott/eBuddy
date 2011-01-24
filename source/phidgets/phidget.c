@@ -143,10 +143,9 @@ CPhidget_set_OnAttach_Handler((CPhidgetHandle)rfid, ph_RFID_AttachHandler, NULL)
 CPhidget_set_OnDetach_Handler((CPhidgetHandle)rfid, ph_RFID_DetachHandler, NULL);
 CPhidget_set_OnError_Handler((CPhidgetHandle)rfid, ph_RFID_ErrorHandler, NULL);
 
-CPhidgetRFID_set_OnOutputChange_Handler(rfid, ph_RFID_OutputChangeHandler, NULL);
 
-CPhidgetRFID_set_OnTag_Handler(rfid, ph_RFID_TagHandler, NULL);
-CPhidgetRFID_set_OnTagLost_Handler(rfid, ph_RFID_TagLostHandler, NULL);
+CPhidgetRFID_set_OnTag_Handler(rfid, in_RFID_TagHandler, NULL);
+CPhidgetRFID_set_OnTagLost_Handler(rfid, in_RFID_TagLostHandler, NULL);
 
 CPhidget_open((CPhidgetHandle)rfid, -1);
 
@@ -201,35 +200,6 @@ int ph_RFID_ErrorHandler(CPhidgetHandle RFID, void *userptr, int ErrorCode, cons
 	return 0;
 }
 
-
-int ph_RFID_TagHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char *TagVal)
-{
-	//turn on the Onboard LED
-	CPhidgetRFID_setLEDOn(RFID, 1);
-
-
-	printf("Tag Read: %02x%02x%02x%02x%02x\n", TagVal[0], TagVal[1], TagVal[2], TagVal[3], TagVal[4]);
-	ph_RFID_savetag(TagVal[0]+TagVal[1]+TagVal[2]+TagVal[3]+TagVal[4]);
-	return 0;
-}
-
-int ph_RFID_TagLostHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char *TagVal)
-{
-	//turn off the Onboard LED
-	CPhidgetRFID_setLEDOn(RFID, 0);
-
-	printf("Tag Lost: %02x%02x%02x%02x%02x\n", TagVal[0], TagVal[1], TagVal[2], TagVal[3], TagVal[4]);
-	return 0;
-}
-
-int ph_RFID_OutputChangeHandler(CPhidgetRFIDHandle RFID, void *usrptr, int Index, int State)
-{
-	if(Index == 0 || Index == 1)
-	{
-		//printf("Output: %d > State: %d\n", Index, State);
-	}
-	return 0;
-}
 
 void ph_RFID_food(void)
 {
