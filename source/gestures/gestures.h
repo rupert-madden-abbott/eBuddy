@@ -1,7 +1,12 @@
 #include "phidget.h"
 #include "config.h"
 
-//servo mappings 
+
+#define LCDWIDTH 20
+#define SCROLLSPEED 1500000
+#define WHITESPACE 32
+
+//servo mappings
 #define GS_SERVO_HEAD 0
 #define GS_SERVO_TORSO 1
 #define GS_SERVO_LEFTARM 2
@@ -42,6 +47,4 @@ extern int gs_eyesoff(CPhidgetInterfaceKitHandle ifkit);
 extern int gs_eyeflash(CPhidgetInterfaceKitHandle ifkit);
 
 
-
-
-
+int gs_printstring(char* str,CPhidgetTextLCDHandle txt_lcd);

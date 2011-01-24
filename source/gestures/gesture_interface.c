@@ -43,7 +43,7 @@ int gsi_test(void)
     }
 	gs_move_arms(servo);
 	gs_shake_head(servo);
-	
+
 	return GSI_OK;
 }
 
@@ -57,6 +57,13 @@ int gsi_eyeflash(void)
     }
     gs_eyeflash(ifkit);
     return GSI_OK;
+}
+
+int gsi_printLCD(char* str)
+{
+   CPhidgetTextLCDHandle txt_lcd = lcd_get_lcd_handle();
+   lcd_printstring(str,txt_lcd);
+   return 0;
 }
 
 

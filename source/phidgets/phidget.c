@@ -16,8 +16,8 @@ extern int ph_init(PhidgetHandle phidgets, const char *config)
     if(status == PHIDGET_ATTACHED){
 	gs_eyeson(ifkit);
     }
-	
-    	
+
+
 
     return 0;
 }
@@ -113,7 +113,7 @@ int ph_servo_close(CPhidgetHandle phidget_servo)
 {
 	CPhidget_close(phidget_servo);
 	CPhidget_delete(phidget_servo);
-	
+
 	return 0;
 }
 
@@ -127,7 +127,7 @@ CPhidgetRFIDHandle ph_get_RFID_handle (void)
 		{
 			RFID_initialised=1;
 			rfid=ph_RFID_openrfid();
-			
+
 		}
 	return rfid;
 }
@@ -207,7 +207,7 @@ int ph_RFID_TagHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char *Tag
 	//turn on the Onboard LED
 	CPhidgetRFID_setLEDOn(RFID, 1);
 
-	
+
 	printf("Tag Read: %02x%02x%02x%02x%02x\n", TagVal[0], TagVal[1], TagVal[2], TagVal[3], TagVal[4]);
 	ph_RFID_savetag(TagVal[0]+TagVal[1]+TagVal[2]+TagVal[3]+TagVal[4]);
 	return 0;
@@ -263,7 +263,7 @@ CPhidgetInterfaceKitHandle ph_get_kit_handle (void)
 		{
 			kit_initialised=1;
 			ifKit=ph_kit_openkit();
-			
+
 		}
 	return ifKit;
 }
@@ -297,7 +297,7 @@ CPhidgetInterfaceKitHandle ph_kit_openkit(void)
 		//exit(1);
 	}
 
-	
+
 return ifKit;
 }
 
@@ -374,3 +374,77 @@ void ph_kit_laugh(int sindex, int svalue)
 }
 
 
+//LCD
+CPhidgetTextLCDHandle ph_get_lcd_handle(void)
+{
+   static int lcd_initialised = 0;
+   static CPhidgetTextLCDHandle txt_lcd;
+   if (lcd_initialised == 0) {
+       lcd_initialised = 1;
+       txt_lcd = lcd_initialise();
+   }
+   return txt_lcd;
+}
+
+CPhidgetTextLCDHandle ph_lcd_initialise(void)
+{
+        int result;
+	const char *err;
+        //Declare an TextLCD handle
+        CPhidgetTextLCDHandle txt_lcd = 0;
+
+	//create the TextLCD object
+	CPhidgetTextLCD_create(&txt_lcd);
+
+	//Set the handlers to be run when the device is plugged in or opened from software, unplugged or closed from software, or generates an error.
+	CPhidget_set_OnAttach_Handler((CPhidgetHandle)txt_lcd, ph_lcd_AttachHandler, NULL);
+	CPhidget_set_OnDetach_Handler((CPhidgetHandle)txt_lcd, ph_lcd_DetachHandler, NULL);
+	CPhidget_set_OnError_Handler((CPhidgetHandle)txt_lcd, ph_lcd_ErrorHandler, NULL);
+
+	//open the TextLCD for device connections
+	CPhidget_open((CPhidgetHandle)txt_lcd, -1);
+
+	//get the program to wait for an TextLCD device to be attached
+	printf("Waiting for LCD to be attached....");
+	if((result = CPhidget_waitForAttachment((CPhidgetHandle)txt_lcd, 10000)))
+	{
+		CPhidget_getErrorDescription(result, &err);
+		printf("Problem waiting for attachment: %s\n", err);
+		return 0;
+	}
+        CPhidgetTextLCD_setBacklight(txt_lcd,1);
+        CPhidgetTextLCD_setContrast (txt_lcd, 100);
+        return txt_lcd;
+}
+
+int ph_lcd_AttachHandler(CPhidgetHandle TXT, void *userptr)
+{
+	int serialNo;
+	const char *name;
+
+	CPhidget_getDeviceName (TXT, &name);
+	CPhidget_getSerialNumber(TXT, &serialNo);
+	printf("%s %10d attached!\n", name, serialNo);
+
+	return 0;
+}
+
+int ph_lcd_DetachHandler(CPhidgetHandle TXT, void *userptr)
+{
+	int serialNo;
+	const char *name;
+
+	CPhidget_getDeviceName (TXT, &name);
+	CPhidget_getSerialNumber(TXT, &serialNo);
+	printf("%s %10d detached!\n", name, serialNo);
+
+	return 0;
+}
+
+int ph_lcd_ErrorHandler(CPhidgetHandle TXT, void *userptr, int ErrorCode, const char *Description)
+{
+	printf("Error handled. %d - %s\n", ErrorCode, Description);
+	return 0;
+}
+
+// end of LCD code

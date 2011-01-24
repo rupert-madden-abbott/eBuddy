@@ -38,3 +38,8 @@ int ph_kit_OutputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int
 int ph_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int Value);
 CPhidgetInterfaceKitHandle ph_get_kit_handle (void);
 
+int ph_lcd_ErrorHandler(CPhidgetHandle TXT, void *userptr, int ErrorCode, const char *Description);
+int ph_lcd_DetachHandler(CPhidgetHandle TXT, void *userptr);
+int ph_lcd_AttachHandler(CPhidgetHandle TXT, void *userptr);
+CPhidgetTextLCDHandle ph_lcd_initialise(void);
+CPhidgetTextLCDHandle ph_get_lcd_handle(void);
