@@ -1,6 +1,6 @@
 #include "notify.h"
 
-int nt_initialize(void) {
+int nt_init(nt_node *queue, const char *config);
   char input = '\0', *config = "conf/notify.json";
   nt_token user = { "", "" }, app = { "", "" };
   cf_json *root = NULL;
@@ -64,7 +64,7 @@ int nt_destroy() {
 
 void *nt_poll(void *data) {
   cf_json *root;
-  nt_tweet tweet; 
+  nt_message tweet; 
   char *config = "conf/notify.json";
   nt_token user = { "", "" }, app = { "", "" };
   
@@ -178,8 +178,8 @@ int nt_parse_arg(char *arg, char *type, char *value) {
   return err_none;
 }
 
-nt_tweet nt_get_tweet(char *uri, nt_token app, nt_token user) {
-  nt_tweet tweet;
+nt_message nt_get_tweet(char *uri, nt_token app, nt_token user) {
+  nt_message tweet;
   cf_json *root, *object;
   char *url = NULL, *postargs = NULL, *response = NULL;
   url = oauth_sign_url2(uri, &(postargs), OA_HMAC, "GET", app.key, app.secret, 
@@ -196,6 +196,7 @@ nt_tweet nt_get_tweet(char *uri, nt_token app, nt_token user) {
   
   object = (cf *)json_array_get((const json_t *)root, 0);
   
+  strncpy(tweet.app, "twitter", NT_APP_MAX);
   strncpy(tweet.text, cf_get_string(object, "text"), NT_TEXT_MAX);
   strncpy(tweet.user, cf_get_string(cf_get_object(object, "user"), "screen_name"), NT_USER_MAX);
   strncpy(tweet.id, cf_get_string(object, "id_str"), NT_ID_MAX);  
