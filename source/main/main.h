@@ -28,6 +28,10 @@ typedef struct ges_response {
   char *message;	/* string to display on the lcd screen */
 } ges_Response;
 
+typedef struct em_response {
+  void *example; /* This needs to be filled out */
+} em_Response;
+
 typedef enum error_code {
   err_unknown = -1,	/* unknow error */ 
   err_none = 0,		/* no error */
@@ -53,22 +57,30 @@ typedef struct emotion_action {
   int mode;
 } EmotionAction;
 
+
+/**
+ * \todo Currently sends out several warnings
+ *  - warning: braces around scalar initializer
+ *  - warning: excess elements in scalar initializer
+ */
 /* list of emotions and their decay times etc */
+#if 0
 const em_Emotion emotions = {
   {24,	0.5,	10,	800,	200,	100},	/* hungar */
   {}
 };
 
+
 /* list of reactions for each emoton */
 const EmotionAction emotion_actions[] = {
   {{NULL,	""}, {NULL,	""}, {NULL,	""},	0}		/* hunger */
-}
+};
 
 const InputAction input_actions[] = {
   {{0,	0,	0},	{0,	0,	0}, {NULL,	""}, {NULL,	""}, {NULL,	""},	0}	/* somthing happens */
 
-}
-
+};
+#endif
 
 enum os { LINUX, OSX, WINDOWS };
 
