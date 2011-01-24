@@ -197,9 +197,13 @@ int gs_sound(int sound, int itineration)
 {
     int i = 0;
     char *filepath;
-    char command[110];
+    char command[MAX_CHARS + 10];
     char num[10];
-    filepath = (char *) malloc(sizeof(char) * 100);
+    filepath = (char *) malloc(sizeof(char) * MAX_CHARS);
+    if (filepath == NULL){
+	printf("Unable to allocate memory\n");
+	exit(1);
+    }
     sprintf(num, "%d", sound);
     //get sound configuration
     if(conf_read("sound.conf", "sound", num, &filepath)) {
