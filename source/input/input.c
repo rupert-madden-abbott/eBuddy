@@ -24,13 +24,13 @@ int in_RFID_TagLostHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char 
 void in_RFID_savetag(int tagv)
 {
 
-if(tagv==386)
+if(tagv==eating)
 	{
-		in_last_input=1;//eating
+		in_last_input=eating;//eating
 	}
-if(tagv==601)
+if(tagv==drinking)
 	{
-		in_last_input=2;//drinking
+		in_last_input=drinking;//drinking
 	}
 
 }
