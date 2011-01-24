@@ -1,6 +1,7 @@
 enum in_input_type{
-eating = 386,
-drinking = 601,
+battery = 386,
+oil = 601,
+nuts_and_bolts = 558
 nothing = 0;
 };
 typedef enum in_input_type in_input_type;

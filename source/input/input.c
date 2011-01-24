@@ -24,21 +24,27 @@ int in_RFID_TagLostHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char 
 void in_RFID_savetag(int tagv)
 {
 
-if(tagv==eating)
+if(tagv==oil)
 	{
 		if(in_last_input==nothing)
 		{
-			in_last_input=eating;//eating
+			in_last_input=oil;//eating
 		}
 	}
-if(tagv==drinking)
+if(tagv==battery)
 	{
 		if(in_last_input==nothing)
 		{
-			in_last_input=drinking;//drinking
+			in_last_input=battery;//drinking
 		}
 	}
-
+if(tagv==nuts_and_bolts)
+	{
+		if(in_last_input==nothing)
+		{
+			in_last_input=nuts_and_bolts;//drinking
+		}
+	}
 }
 
 /*Interface Kit input*/
