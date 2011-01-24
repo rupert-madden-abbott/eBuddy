@@ -1,3 +1,4 @@
+int in_last_input;
 /* RFID input*/
 int in_RFID_TagHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char *TagVal)
 {
