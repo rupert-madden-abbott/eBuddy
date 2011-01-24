@@ -1,6 +1,5 @@
 #include <phidget21.h>
 
-
 extern int ph_init(PhidgetHandle *phidgets, const char *config);
 extern CPhidgetAdvancedServoHandle ph_get_servo_handle(void);
 CPhidgetAdvancedServoHandle ph_servo_initialise(void);
@@ -33,5 +32,4 @@ int ph_kit_InputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int 
 int ph_kit_OutputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int State);
 int ph_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int Value);
 CPhidgetInterfaceKitHandle ph_get_kit_handle (void);
-
 

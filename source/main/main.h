@@ -63,11 +63,11 @@ typedef struct emotion_action {
 } EmotionAction;
 
 /**
- * \todo Placeholder for em_Response needs to be filled out
+ * \todo Placeholder for PhidgetHandle needs to be filled out
  */
-typedef struct PhidgitHandle {
+typedef struct PhidgetHandle {
   void *example;
-} PhidgitHandle;
+} PhidgetHandle;
 
 /**
  * \todo Currently sends out several warnings
@@ -97,5 +97,5 @@ enum os { LINUX, OSX, WINDOWS };
 
 void end(void);
 int main_loop(void);
-
+int run_mode(const char *config, int *input_buffer, em_State *emotions, nt_node message, int mode);
 #endif

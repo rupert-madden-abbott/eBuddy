@@ -3,65 +3,68 @@
 #include "phidget.h"
 #include "gesture_interface.h"
 #include "emotion.h"
+#include "config.h"
 
 
 int main(int argc, char *argv[]) {
-  Config *config;
-  PhidgitHandle *phidgits;
-  int *input_buffer;
-  int rc;
+  const char    *phidget_config = NULL, *notify_config = NULL, 
+                *gesture_config = NULL, *input_config = NULL, 
+                *emotion_config = NULL; 
+  cf_json       *root = NULL;
+  nt_node       *queue = NULL;
+  PhidgetHandle *phidgets;
+  int           *input_buffer, rc;
   
   /* load config */
-  rc = load_conf(conf, CONFIG_PATH);
+  root = cf_read(CONFIG_PATH);
+  if(!root) return err_unknown;
   
-  /* check for errors */
-  if(rc == 2) {
-  }
+  phidget_config = cf_get_string(root, "phidget_config");
+  notify_config = cf_get_string(root, "notify_config");
+  gesture_config = cf_get_string(root, "gesture_config");
+  input_config = cf_get_string(root, "input_config");
+  emotion_config = cf_get_string(root, "emotion_config");
+  cf_free(root);
+  if(!phidget_config || !notify_config || !gesture_config) return err_unknown;
   
-  /* initialise the phidgits */
-  rc = phi_init(*phidgits, config);
-  
-  /* check for errors */
-  if(rc == 2) {
-  }
+  /* initialise the phidgets */
+  rc = ph_init(phidgets, phidget_config);
+  if(rc) return err_unknown;
   
   /* initialise the gesture library */
-  rc = ges_init(phidgits, config);
+  rc = gs_init(phidgets, gesture_config);
   
   /* check for errors */
-  if(rc == 2) {
+  if(rc) {
   }
   
-  rc = not_init(config);
+  rc = nt_init(queue, notify_config);
   
   /* check for errors */
-  if(rc == 2) {
+  if(rc) {
   }
   
-  rc = em_init(config);
+  rc = em_init(emotion_config);
   
   /* check for errors */
-  if(rc == 2) {
+  if(rc) {
   }
   
   /* initialise the input library */
-  rc = inp_init(phidgits, config)
-  
-  /* check for errors */
-  if(rc == 2) {
-  }
+  //rc = ip_init(phidgets, input_config)
 
   rc = run_mode(config, input_buffer, emotions, notifications, mode_interactive);
   
   /* check for errors */
-  if(rc == 2) {
+  if(rc) {
   }
   
   /* finalise and unload all modules */
 }
 
 /* hooks to different modes go here */
-int run_mode(Config *config, int *input_buffer, em_State *emotions, not_Queue notifications, mode) {
+int run_mode(const char *config, int *input_buffer, em_State *emotions, 
+             nt_node message, int mode); {
 	
   /* interactive (normal) mode */
   if(mode == mode_interactive) {
@@ -74,7 +77,8 @@ int run_mode(Config *config, int *input_buffer, em_State *emotions, not_Queue no
   }
 }
 
-int interactive_mode(Config *config, int *input_buffer, em_State *emotions, not_Queue notifications) {
+int interactive_mode(const char *config, int *input_buffer, em_State *emotions, 
+                     nt_node message) {
   EmotionReaction *emotion_reaction;
   GestureReaction *gesture_reaction;
   em_condition condition;

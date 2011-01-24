@@ -1,6 +1,8 @@
 #include "gestures.h"
 
-
+int gs_init(PhidgetHandle *phidgets, const char *config) {
+  return 0;
+}
 
 
 

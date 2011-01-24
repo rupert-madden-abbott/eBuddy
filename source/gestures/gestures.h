@@ -20,6 +20,7 @@
 
 CPhidgetAdvancedServoHandle gs_get_servo_handle(void);
 
+int gs_init(PhidgetHandle *phidgets, const char *config);
 int gs_set_pos(CPhidgetAdvancedServoHandle servo);
 extern int gs_dance_basic(CPhidgetAdvancedServoHandle servo);
 extern int gs_sound(int sound, int itineration);
