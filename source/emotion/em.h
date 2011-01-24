@@ -1,9 +1,11 @@
+#ifndef EM_H
+#define EM_H
+
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <math.h>
-#include "util.h"
 
 /* the highest value a level can take (a double) */
 #define EM_MAX_LEVEL 1000
@@ -98,3 +100,5 @@ int em_check(em_State *state, em_Event *event);
 
 /* updates a state according to the a reaction struct. */
 int em_react(em_State *state, em_Reaction *reaction);
+
+#endif
