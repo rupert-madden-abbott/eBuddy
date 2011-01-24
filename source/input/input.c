@@ -28,21 +28,21 @@ if(tagv==oil)
 	{
 		if(in_last_input==nothing)
 		{
-			in_last_input=oil;//eating
+			in_set_input(oil);//oil
 		}
 	}
 if(tagv==battery)
 	{
 		if(in_last_input==nothing)
 		{
-			in_last_input=battery;//drinking
+			in_set_input(battery);//battery
 		}
 	}
 if(tagv==nuts_and_bolts)
 	{
 		if(in_last_input==nothing)
 		{
-			in_last_input=nuts_and_bolts;//drinking
+			in_set_input(nuts_and_bolts);//nuts and bolts
 		}
 	}
 }
@@ -69,3 +69,13 @@ void in_kit_laugh(int sindex, int svalue)
 		}
 }
 
+/*in_input_type functions*/
+int in_get_input(void)
+{
+return in_last_input;
+}
+void in_set_input(int input)
+{
+in_last_input=input;
+
+}

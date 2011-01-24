@@ -13,3 +13,6 @@ void in_RFID_savetag(int tagv);
 int in_kit_InputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int State);
 int in_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int Value);
 void in_kit_laugh(int sindex, int svalue);
+/*in_input_type functions header*/
+int in_get_input(void);
+void in_set_input(int input);
