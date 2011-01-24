@@ -1,10 +1,10 @@
 /**
- * @file   config.h
+ * @file   cfig.h
  * @author Rupert Madden-Abbott
  *
  * This module wraps the jansson library to simplify and standardise 
  * interaction with JSON objects. It provides functions for parsing JSON 
- * contained in either configuration files or network responses.
+ * contained in either cfiguration files or network responses.
  */
 
 #ifndef CONFIG_H
@@ -13,22 +13,22 @@
 #include "main.h"
 
 /* Represents a JSON structure (Renamed to maintain a consistent public API) */
-typedef json_t conf;
+typedef json_t cf_json;
 
 /**
  * Allocate and return a JSON structure from either a file or a string. This
- * structure may then be traversed using the conf_read* functions in order to
+ * structure may then be traversed using the cf_read* functions in order to
  * get data.
  *
  * @warning Every structure created in this way must be cleaned up by calling  
- * conf_free when the structure is no longer needed.
+ * cf_free when the structure is no longer needed.
  * 
  * Prints to stderr if an error in the JSON occured.
  *
  * @param  input A path to a json file or a JSON formatted string
  * @return NULL on error or the JSON object parsed from @p input
  */
-conf *conf_read(const char *input);
+cf_json *cf_read(const char *input);
 
 /**
  * Writes a JSON object into the file specified by @p path. If @p path already
@@ -39,7 +39,7 @@ conf *conf_read(const char *input);
  * @param  path The path of the file to be written to
  * @return err_code
  */
-int conf_write(const conf *root, const char *path);
+int cf_write(const cf_json *root, const char *path);
 
 /**
  * Performs cleanup when a JSON object is finished with.
@@ -47,7 +47,7 @@ int conf_write(const conf *root, const char *path);
  * @param  root The JSON object to be destroyed
  * @return void
  */
-void conf_free(conf *root);
+void cf_free(cf_json *root);
 
 ///@{
 /**
@@ -55,19 +55,19 @@ void conf_free(conf *root);
  * object @p root based on its @p key. In the case of arrays, @p key is the 
  * index of the value.
  *
- * The object returned by conf_get_object is a reference to the actual value
- * stored in @p root. Therefore, if conf_free is called on @p root, this object 
+ * The object returned by cf_get_object is a reference to the actual value
+ * stored in @p root. Therefore, if cf_free is called on @p root, this object 
  * will also be destroyed.
  *
  * @param  root A JSON object
  * @param  key  The name or index of the @p value to return
  * @return NULL, 0 or 0.0 on error or the value named @p key
  */
-conf *conf_get_object(const conf *root, const char *key);
-conf *conf_get_array(const conf *root, int key);
-const char *conf_get_string(const conf *root, const char *key);
-int conf_get_integer(const conf *root, const char *key);
-double conf_get_double(const conf *root, const char *key);
+cf_json *cf_get_object(const cf_json *root, const char *key);
+cf_json *cf_get_array(const cf_json *root, int key);
+const char *cf_get_string(const cf_json *root, const char *key);
+int cf_get_integer(const cf_json *root, const char *key);
+double cf_get_double(const cf_json *root, const char *key);
 ///@}
 
 ///@{
@@ -84,10 +84,10 @@ double conf_get_double(const conf *root, const char *key);
  * @param  value The value to be stored in @p root
  * @return err_code
  */
-int conf_set_object(conf *root, const char *key, conf *value);
-int conf_set_string(conf *root, const char *key, const char *value);
-int conf_set_integer(conf *root, const char *key, int value);
-int conf_set_double(conf *root, const char *key, double value);
+int cf_set_object(cf_json *root, const char *key, cf_json *value);
+int cf_set_string(cf_json *root, const char *key, const char *value);
+int cf_set_integer(cf_json *root, const char *key, int value);
+int cf_set_double(cf_json *root, const char *key, double value);
 ///@}
 
 /**
@@ -97,6 +97,6 @@ int conf_set_double(conf *root, const char *key, double value);
  * @param  root A JSON object
  * @return error_code
  */
-int conf_printf(const conf *root);
+int cf_printf(const cf_json *root);
 
 #endif
