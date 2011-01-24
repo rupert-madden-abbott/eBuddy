@@ -107,14 +107,14 @@ int gs_sound(int sound, int itineration)
     const char *filepath = NULL;
     char command[110];
     char num[10];
-    conf *root;
+    cf_json *root;
     sprintf(num, "%d", sound);
    
-    root = conf_read("conf/sound.conf");
+    root = cf_read("conf/sound.json");
     if(!root) return 1;
     
-    filepath = conf_get_string(root, num);
-    conf_free(root);
+    filepath = cf_get_string(root, num);
+    cf_free(root);
     if(!filepath) return 1;
     
     command[0] ='\0';

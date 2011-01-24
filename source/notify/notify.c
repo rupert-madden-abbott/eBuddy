@@ -3,28 +3,28 @@
 int noti_initialize(void) {
   char input = '\0', *config = "conf/notify.json";
   noti_token user = { "", "" }, app = { "", "" };
-  json_t *root = NULL;
+  cf_json *root = NULL;
   int authenticated, disabled;
   pthread_t thread;
   
   curl_global_init(CURL_GLOBAL_ALL);
   
-  root = conf_read(config);
+  root = cf_read(config);
   if(!root) return err_unknown;
   
-  disabled = conf_get_integer(root, "disabled");
+  disabled = cf_get_integer(root, "disabled");
   if(disabled) return err_none;
 
-  authenticated = conf_get_integer(root, "authenticated");
-  strncpy(app.key, conf_get_string(root, "app_key"), NOTI_MAX);
+  authenticated = cf_get_integer(root, "authenticated");
+  strncpy(app.key, cf_get_string(root, "app_key"), NOTI_MAX);
   if(!app.key) return err_unknown;
-  strncpy(app.secret, conf_get_string(root, "app_secret"), NOTI_MAX);
+  strncpy(app.secret, cf_get_string(root, "app_secret"), NOTI_MAX);
   if(!app.secret) return err_unknown;
   
   if(authenticated) {
-    strncpy(user.key, conf_get_string(root, "user_key"), NOTI_MAX);
+    strncpy(user.key, cf_get_string(root, "user_key"), NOTI_MAX);
     if(!user.key) return err_unknown;
-    strncpy(user.secret, conf_get_string(root, "user_secret"), NOTI_MAX);
+    strncpy(user.secret, cf_get_string(root, "user_secret"), NOTI_MAX);
     if(!user.secret) return err_none;
   }
   else { 
@@ -33,8 +33,8 @@ int noti_initialize(void) {
       input = '\0';
       if(noti_ask("Would you like to disable the Twitter feature?", &input)) return err_unknown;
       if(noti_isyes(input)) {
-        if(conf_set_integer(root, "disabled", 1)) return err_unknown;
-        if(conf_write(root, config)) return err_unknown;
+        if(cf_set_integer(root, "disabled", 1)) return err_unknown;
+        if(cf_write(root, config)) return err_unknown;
         printf("Twitter has been disabled\n");
         return err_none;
       }
@@ -63,17 +63,17 @@ int noti_destroy() {
 }
 
 void *noti_poll(void *data) {
-  conf *root;
+  cf_json *root;
   noti_tweet tweet; 
   char *config = "conf/notify.json";
   noti_token user = { "", "" }, app = { "", "" };
   
-  root = conf_read(config);
+  root = cf_read(config);
   
-  strncpy(app.key, conf_get_string(root, "app_key"), NOTI_MAX);
-  strncpy(app.secret, conf_get_string(root, "app_secret"), NOTI_MAX);
-  strncpy(user.key, conf_get_string(root, "user_key"), NOTI_MAX);
-  strncpy(user.secret, conf_get_string(root, "user_secret"), NOTI_MAX);
+  strncpy(app.key, cf_get_string(root, "app_key"), NOTI_MAX);
+  strncpy(app.secret, cf_get_string(root, "app_secret"), NOTI_MAX);
+  strncpy(user.key, cf_get_string(root, "user_key"), NOTI_MAX);
+  strncpy(user.secret, cf_get_string(root, "user_secret"), NOTI_MAX);
 
   while(1) {
     sleep(5);
@@ -87,7 +87,7 @@ void *noti_poll(void *data) {
 int noti_authenticate(noti_token app, noti_token *user, char *config) {
   int i, j;
   char url[1000], pin[NOTI_MAX];
-  conf *root;
+  cf_json *root;
   
   //Get request token
   if(noti_request_token(NOTI_TWITTER_REQUEST, app, user)) return err_unknown;
@@ -126,15 +126,15 @@ int noti_authenticate(noti_token app, noti_token *user, char *config) {
     j = 1;
   } while(noti_request_token(url, app, user));
   
-  root = conf_read(config);
+  root = cf_read(config);
 
-  if(conf_set_string(root, "user_key", user->key)) return err_unknown;
-  if(conf_set_string(root, "user_secret", user->secret)) return err_unknown;
-  if(conf_set_integer(root, "authenticated", 1)) return err_unknown;
+  if(cf_set_string(root, "user_key", user->key)) return err_unknown;
+  if(cf_set_string(root, "user_secret", user->secret)) return err_unknown;
+  if(cf_set_integer(root, "authenticated", 1)) return err_unknown;
 
-  if(conf_write(root, config)) return err_unknown;
+  if(cf_write(root, config)) return err_unknown;
   
-  conf_free(root);
+  cf_free(root);
   
   return err_none;
 }
@@ -180,7 +180,7 @@ int noti_parse_arg(char *arg, char *type, char *value) {
 
 noti_tweet noti_get_tweet(char *uri, noti_token app, noti_token user) {
   noti_tweet tweet;
-  conf *root, *object;
+  cf_json *root, *object;
   char *url = NULL, *postargs = NULL, *response = NULL;
   url = oauth_sign_url2(uri, &(postargs), OA_HMAC, "GET", app.key, app.secret, 
                         user.key, user.secret);
@@ -190,15 +190,15 @@ noti_tweet noti_get_tweet(char *uri, noti_token app, noti_token user) {
   if(postargs) free(postargs);
   if(url) free(url);
   
-  root = conf_read(response);
+  root = cf_read(response);
 
   if(response) free(response);
   
-  object = (conf *)json_array_get((const json_t *)root, 0);
+  object = (cf *)json_array_get((const json_t *)root, 0);
   
-  strncpy(tweet.text, conf_get_string(object, "text"), NOTI_TEXT_MAX);
-  strncpy(tweet.user, conf_get_string(conf_get_object(object, "user"), "screen_name"), NOTI_USER_MAX);
-  strncpy(tweet.id, conf_get_string(object, "id_str"), NOTI_ID_MAX);  
+  strncpy(tweet.text, cf_get_string(object, "text"), NOTI_TEXT_MAX);
+  strncpy(tweet.user, cf_get_string(cf_get_object(object, "user"), "screen_name"), NOTI_USER_MAX);
+  strncpy(tweet.id, cf_get_string(object, "id_str"), NOTI_ID_MAX);  
     
   return tweet;
 }
