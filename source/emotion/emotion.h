@@ -61,7 +61,8 @@ typedef struct em_reaction {
   int emotion;				/* the emotion to perform it on */
   double value;				/* the argument for the action */
 } em_Reaction;
-  
+
+int em_init(const char *config);
 
 /* allocate and return a pointer to a new emotional state */
 em_State *em_create(const em_Emotion *values, int num_values);

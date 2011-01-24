@@ -1,5 +1,9 @@
 #include "em.h"
 
+int em_init(const char *config) {
+  return 0;
+}
+
 /* allocate and return a pointer to a new emotional state */
 em_State *em_create(const em_Emotion *emotions, int num_emotions) {
   em_State *state;
