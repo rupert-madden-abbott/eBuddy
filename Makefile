@@ -1,7 +1,7 @@
 CC          := gcc
 CFLAGS      := -Wall -pedantic -std=gnu99 -g
 
-MODULE_DIR  := main notify config gestures phidgets emotion
+MODULE_DIR  := main notify config gestures phidgets emotion queue
 SOURCE_DIR  := $(addprefix source/,$(MODULE_DIR))
 BUILD_DIR   := $(addprefix build/,$(MODULE_DIR))
 
