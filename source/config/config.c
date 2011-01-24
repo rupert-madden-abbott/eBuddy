@@ -9,15 +9,16 @@ conf *conf_read(const char *input) {
   
   /* Check if input contains JSON or is a path to a file containing JSON */
   if(strstr(input, ".json")) {
-    root = json_load_file(input, &error);
+    root = json_load_file(input, 0, &error);
   }
   else {
-    root = json_loads(input, &error);
+    root = json_loads(input, 0, &error);
   }
   
   /* Prints out any errors encountered whilst parsing the JSON. */
   if(!root) {
-    fprintf(stderr, "Error on line: %i: %s\n", error.line, error.text);
+    fprintf(stderr, "Error on line: %i, col: %i\n%s\n", error.line, 
+            error.column, error.text);
     return NULL;
   }
   
@@ -44,6 +45,10 @@ conf *conf_get_object(const conf *root, const char *key) {
   /* This returns a reference to the object stored in root. Therefore, if root
      is freed, this object will be destroyed as well */
   return json_object_get(root, key);
+}
+
+conf *conf_get_array(const conf *root, int key) {
+  return json_array_get(root, key);
 }
 
 /* The following functions first get an object containing the required value
@@ -78,55 +83,40 @@ double conf_get_double(const conf *root, const char *key) {
 int conf_set_object(conf *root, const char *key, conf *value) {
   /* Even if an object is created in this process, it is enough to call 
      conf_free on root due to jansson's resource counting */
-  return json_object_set(root, key, value);
+  return json_object_set_new(root, key, value);
 }
 
 /* The following functions first convert value from the given type into a JSON
    object and then set that object onto the root object. */
 int conf_set_string(conf *root, const char *key, const char *value) {
-  int rc;
   json_t *object = NULL;
 
   object = json_string(value);
   if(object == NULL) return err_unknown;
   
-  rc = conf_set_object(root, key, object);
-  
-  conf_free(object);
-  
-  if(rc) return err_unknown;
+  if(conf_set_object(root, key, object)) return err_unknown;
     
   return err_none;
 }
 
 int conf_set_integer(conf *root, const char *key, int value) {
-  int rc;
   json_t *object = NULL;
 
   object = json_integer(value);
   if(object == NULL) return err_unknown;
   
-  rc = conf_set_object(root, key, object);
+  if(conf_set_object(root, key, object)) return err_unknown;
   
-  conf_free(object);
-  
-  if(rc) return err_unknown;
-    
   return err_none;
 }
 
 int conf_set_double(conf *root, const char *key, double value) {
-  int rc;
   json_t *object = NULL;
 
   object = json_real(value);
   if(object == NULL) return err_unknown;
   
-  rc = conf_set_object(root, key, object);
-  
-  conf_free(object);
-  
-  if(rc) return err_unknown;
+  if(conf_set_object(root, key, object)) return err_unknown;
     
   return err_none;
 }

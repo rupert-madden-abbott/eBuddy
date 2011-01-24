@@ -52,17 +52,19 @@ void conf_free(conf *root);
 ///@{
 /**
  * Each function returns a value (of the relevant type) stored inside the JSON 
- * object @p root based on its @p key.
+ * object @p root based on its @p key. In the case of arrays, @p key is the 
+ * index of the value.
  *
  * The object returned by conf_get_object is a reference to the actual value
  * stored in @p root. Therefore, if conf_free is called on @p root, this object 
  * will also be destroyed.
  *
  * @param  root A JSON object
- * @param  key  The name of the @p value to return
+ * @param  key  The name or index of the @p value to return
  * @return NULL, 0 or 0.0 on error or the value named @p key
  */
 conf *conf_get_object(const conf *root, const char *key);
+conf *conf_get_array(const conf *root, int key);
 const char *conf_get_string(const conf *root, const char *key);
 int conf_get_integer(const conf *root, const char *key);
 double conf_get_double(const conf *root, const char *key);

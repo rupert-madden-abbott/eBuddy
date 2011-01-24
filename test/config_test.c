@@ -4,12 +4,15 @@
 int main(void) {
   int i, rc;
   double d;
-  const char *json_string = "{\"object\":{\"string\":\"a string\"},\"int\":5,\""
-                            "double\":9.4}", *s, *s2;
-  conf_t *root, *file_root, *object;
+  const char *json_string = "[{\"object\":{\"string\":\"a string\"},\"int\":5,\""
+                            "double\":9.4}]", *s, *s2;
+  conf *root, *file_root, *array, *object;
 
-  root = conf_read(json_string);
-  if(!root) fail("Failed to read JSON string");
+  array = conf_read(json_string);
+  if(!array) fail("Failed to read JSON string");
+
+  root = conf_get_array(array, 0);
+  if(!root) fail("Failed to get array index");
   
   object = conf_get_object(root, "object");
   if(!object) fail("Failed to get object");
