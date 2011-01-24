@@ -1,6 +1,7 @@
 enum in_input_type{
 eating = 386,
 drinking = 601,
+nothing = 0;
 };
 typedef enum in_input_type in_input_type;
 /* RFID input header*/

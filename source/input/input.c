@@ -26,11 +26,17 @@ void in_RFID_savetag(int tagv)
 
 if(tagv==eating)
 	{
-		in_last_input=eating;//eating
+		if(in_last_input==nothing)
+		{
+			in_last_input=eating;//eating
+		}
 	}
 if(tagv==drinking)
 	{
-		in_last_input=drinking;//drinking
+		if(in_last_input==nothing)
+		{
+			in_last_input=drinking;//drinking
+		}
 	}
 
 }
