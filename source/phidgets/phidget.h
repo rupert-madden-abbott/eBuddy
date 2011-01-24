@@ -24,13 +24,10 @@ void ph_RFID_closerfid(void);
 /*Interface Kit Header*/
 CPhidgetInterfaceKitHandle ph_kit_openkit(void);
 void ph_kit_closekit(void);
-void ph_kit_laugh(int sindex, int svalue);
 int ph_kit_AttachHandler(CPhidgetHandle IFK, void *userptr);
 int ph_kit_DetachHandler(CPhidgetHandle IFK, void *userptr);
 int ph_kit_ErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const char *unknown);
-int ph_kit_InputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int State);
-int ph_kit_OutputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int State);
-int ph_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int Value);
+
 CPhidgetInterfaceKitHandle ph_get_kit_handle (void);
 
 int ph_lcd_ErrorHandler(CPhidgetHandle TXT, void *userptr, int ErrorCode, const char *Description);

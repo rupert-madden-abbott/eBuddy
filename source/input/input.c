@@ -45,6 +45,15 @@ int in_kit_InputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int 
 int in_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int Value)
 {
 	//printf("Sensor: %d > Value: %d\n", Index, Value);
-	ph_kit_laugh(Index,Value);
+	in_kit_laugh(Index,Value);
 	return 0;
 }
+
+void in_kit_laugh(int sindex, int svalue)
+{
+	if(svalue > 0)
+		{
+			printf("I am Laughing\n");
+		}
+}
+

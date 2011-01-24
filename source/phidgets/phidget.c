@@ -229,12 +229,11 @@ CPhidgetInterfaceKitHandle ph_kit_openkit(void)
 	CPhidget_set_OnError_Handler((CPhidgetHandle)ifKit, ph_kit_ErrorHandler, NULL);
 
 
-	CPhidgetInterfaceKit_set_OnInputChange_Handler (ifKit, ph_kit_InputChangeHandler, NULL);
+	CPhidgetInterfaceKit_set_OnInputChange_Handler (ifKit, in_kit_InputChangeHandler, NULL);
 
 
-	CPhidgetInterfaceKit_set_OnSensorChange_Handler (ifKit, ph_kit_SensorChangeHandler, NULL);
+	CPhidgetInterfaceKit_set_OnSensorChange_Handler (ifKit, in_kit_SensorChangeHandler, NULL);
 
-	CPhidgetInterfaceKit_set_OnOutputChange_Handler (ifKit, ph_kit_OutputChangeHandler, NULL);
 
 	CPhidget_open((CPhidgetHandle)ifKit, -1);
 
@@ -293,34 +292,8 @@ int ph_kit_ErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const 
 	return 0;
 }
 
-int ph_kit_InputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int State)
-{
-	//printf("Digital Input: %d > State: %d\n", Index, State);
-	return 0;
-}
-
-int ph_kit_OutputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int State)
-{
-	//printf("Digital Output: %d > State: %d\n", Index, State);
-	return 0;
-}
 
 
-int ph_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int Value)
-{
-	//printf("Sensor: %d > Value: %d\n", Index, Value);
-	ph_kit_laugh(Index,Value);
-	return 0;
-}
-
-
-void ph_kit_laugh(int sindex, int svalue)
-{
-	if(svalue > 0)
-		{
-			printf("I am Laughing\n");
-		}
-}
 
 
 //LCD
