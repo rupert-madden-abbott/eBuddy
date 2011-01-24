@@ -26,24 +26,21 @@ void in_RFID_savetag(int tagv)
 
 if(tagv==oil)
 	{
-		if(in_last_input==nothing)
-		{
+		
 			in_set_input(oil);//oil
-		}
+		
 	}
 if(tagv==battery)
 	{
-		if(in_last_input==nothing)
-		{
+		
 			in_set_input(battery);//battery
-		}
+		
 	}
 if(tagv==nuts_and_bolts)
 	{
-		if(in_last_input==nothing)
-		{
+	
 			in_set_input(nuts_and_bolts);//nuts and bolts
-		}
+		
 	}
 }
 
@@ -73,9 +70,13 @@ void in_kit_laugh(int sindex, int svalue)
 int in_get_input(void)
 {
 return in_last_input;
+in_last_input=nothing;
 }
 void in_set_input(int input)
 {
-in_last_input=input;
+if(in_last_input==nothing)
+	{
+		in_last_input=input;
+	}
 
 }
