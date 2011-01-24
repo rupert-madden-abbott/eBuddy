@@ -9,6 +9,8 @@
 
 #define DEBUG 1
 
+#define CONFIG_PATH "conf/main.json"
+
 #define ONE_MIN (60)
 #define ONE_HOUR (60*60)
 #define ONE_DAY (24*60*60)
@@ -28,6 +30,9 @@ typedef struct ges_response {
   char *message;	/* string to display on the lcd screen */
 } ges_Response;
 
+/**
+ * \todo Placeholder for em_Response needs to be filled out
+ */
 typedef struct em_response {
   void *example; /* This needs to be filled out */
 } em_Response;
@@ -57,6 +62,12 @@ typedef struct emotion_action {
   int mode;
 } EmotionAction;
 
+/**
+ * \todo Placeholder for em_Response needs to be filled out
+ */
+typedef struct PhidgitHandle {
+  void *example;
+} PhidgitHandle;
 
 /**
  * \todo Currently sends out several warnings
