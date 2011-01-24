@@ -7,7 +7,7 @@ int in_RFID_TagHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char *Tag
 
 	
 	printf("Tag Read: %02x%02x%02x%02x%02x\n", TagVal[0], TagVal[1], TagVal[2], TagVal[3], TagVal[4]);
-	ph_RFID_savetag(TagVal[0]+TagVal[1]+TagVal[2]+TagVal[3]+TagVal[4]);
+	in_RFID_savetag(TagVal[0]+TagVal[1]+TagVal[2]+TagVal[3]+TagVal[4]);
 	return 0;
 }
 
@@ -19,6 +19,20 @@ int in_RFID_TagLostHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char 
 
 	printf("Tag Lost: %02x%02x%02x%02x%02x\n", TagVal[0], TagVal[1], TagVal[2], TagVal[3], TagVal[4]);
 	return 0;
+}
+
+void in_RFID_savetag(int tagv)
+{
+
+if(tagv==386)
+	{
+		in_last_input=1;//eating
+	}
+if(tagv==601)
+	{
+		in_last_input=2;//drinking
+	}
+
 }
 
 /*Interface Kit input*/
