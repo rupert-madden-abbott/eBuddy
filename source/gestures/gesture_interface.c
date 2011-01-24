@@ -2,6 +2,24 @@
 #include "main.h"
 
 
+
+int gsi_respond(gsi_Response *resp)
+{
+    int error = GSI_OK
+    if(resp->gesture == NULL){
+        return GSI_NULL;
+    }
+    if(resp->gesture(void) == GSI_PHER){
+        error = GSI_PHER;
+    }
+    if(resp->message != NULL){
+        if(gsi_printLCD(resp->message) == GSI_PHER){
+            error = ER_PHER;
+        }
+    }
+    return GSI_OK;
+}
+
 int gsi_happy_level1(void)
 {
     int status;
@@ -61,9 +79,14 @@ int gsi_eyeflash(void)
 
 int gsi_printLCD(char* str)
 {
-   CPhidgetTextLCDHandle txt_lcd = lcd_get_lcd_handle();
+    int status;
+    CPhidgetTextLCDHandle txt_lcd = lcd_get_lcd_handle();
+    CPhidget_getDeviceStatus((CPhidgetHandle)ifkit, &status);
+    if(status == PHIDGET_NOTATTACHED){
+        return GSI_PHER;
+    }
    lcd_printstring(str,txt_lcd);
-   return 0;
+   return GSI_OK;
 }
 
 

@@ -24,12 +24,6 @@
 #endif
 #endif
 
-/* representation of a gesture [needs to go in gesture] */
-typedef struct ges_response {
-  void *gesture;	/* pointer to the gesture that should be called */
-  char *message;	/* string to display on the lcd screen */
-} ges_Response;
-
 /**
  * \todo Placeholder for em_Response needs to be filled out
  */
@@ -38,7 +32,7 @@ typedef struct em_response {
 } em_Response;
 
 typedef enum error_code {
-  err_unknown = -1,	/* unknow error */ 
+  err_unknown = -1,	/* unknow error */
   err_none = 0,		/* no error */
   err_bad_path,		/* file path is invalid */
   err_bad_file		/* file is corrupt */
