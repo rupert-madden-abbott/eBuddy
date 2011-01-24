@@ -13,9 +13,7 @@ int ph_servo_ErrorHandler(CPhidgetHandle phidget_servo, void *p, int ErrorCode, 
 int ph_servo_close(CPhidgetHandle);
 
 /*RFID Header*/
-void ph_RFID_food(void);
-void ph_RFID_drink(void);
-void ph_RFID_savetag(int tagv);
+
 int ph_RFID_AttachHandler(CPhidgetHandle RFID, void *userptr);
 int ph_RFID_DetachHandler(CPhidgetHandle RFID, void *userptr);
 int ph_RFID_ErrorHandler(CPhidgetHandle RFID, void *userptr, int ErrorCode, const char *unknown);

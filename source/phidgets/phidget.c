@@ -202,28 +202,6 @@ int ph_RFID_ErrorHandler(CPhidgetHandle RFID, void *userptr, int ErrorCode, cons
 }
 
 
-void ph_RFID_food(void)
-{
-	printf("I am eating\n");
-}
-void ph_RFID_drink(void)
-{
-	printf("I am drinking\n");
-}
-void ph_RFID_savetag(int tagv)
-{
-
-if(tagv==386)
-	{
-		ph_RFID_food();
-	}
-if(tagv==601)
-	{
-		ph_RFID_drink();
-	}
-
-}
-
 
 /*Interface Kit*/
 CPhidgetInterfaceKitHandle ph_get_kit_handle (void)
