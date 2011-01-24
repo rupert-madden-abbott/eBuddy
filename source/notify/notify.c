@@ -5,68 +5,92 @@ int noti_initialize(void) {
   noti_token user = { "", "" }, app = { "", "" };
   json_t *root = NULL;
   int authenticated, disabled;
+  pthread_t thread;
   
   curl_global_init(CURL_GLOBAL_ALL);
   
-  if(conf_load(config, &root)) return 1;
+  root = conf_read(config);
+  if(!root) return err_unknown;
   
-  if(conf_readi(root, "disabled", &disabled)) return 1;
-  if(disabled) return 0;
+  disabled = conf_get_integer(root, "disabled");
+  if(disabled) return err_none;
 
-  if(conf_readi(root, "authenticated", &authenticated)) return 1;
-  if(conf_reads(root, "app_key", app.key)) return 1;
-  if(conf_reads(root, "app_secret", app.secret)) return 1;
-
+  authenticated = conf_get_integer(root, "authenticated");
+  strncpy(app.key, conf_get_string(root, "app_key"), NOTI_MAX);
+  if(!app.key) return err_unknown;
+  strncpy(app.secret, conf_get_string(root, "app_secret"), NOTI_MAX);
+  if(!app.secret) return err_unknown;
+  
   if(authenticated) {
-    if(conf_reads(root, "user_key", user.key)) return 1;
-    if(conf_reads(root, "user_secret", user.secret)) return 1;
+    strncpy(user.key, conf_get_string(root, "user_key"), NOTI_MAX);
+    if(!user.key) return err_unknown;
+    strncpy(user.secret, conf_get_string(root, "user_secret"), NOTI_MAX);
+    if(!user.secret) return err_none;
   }
   else { 
-    if(noti_ask("Would you like to setup Twitter now?", &input)) return 1;
+    if(noti_ask("Would you like to setup Twitter now?", &input)) return err_unknown;
     if(noti_isno(input)) {
       input = '\0';
-      if(noti_ask("Would you like to disable the Twitter feature?", &input)) return 1;
+      if(noti_ask("Would you like to disable the Twitter feature?", &input)) return err_unknown;
       if(noti_isyes(input)) {
-        if(conf_updatei(&root, "disabled", 1)) return 1;
-        if(conf_write(config, root)) return 1;
+        if(conf_set_integer(root, "disabled", 1)) return err_unknown;
+        if(conf_write(root, config)) return err_unknown;
         printf("Twitter has been disabled\n");
-        return 0;
+        return err_none;
       }
       else if(noti_isno(input)) {
         printf("You will have the opportunity to setup Twitter when you next "
                "start your eBuddy\n");
-        return 0;
+        return err_none;
       }
-      else return 1;
+      else return err_unknown;
     }
     else if(noti_isyes(input)) {
       printf("Setting up Twitter...\n");
-      if(noti_authenticate(app, &user, config)) return 1;
+      if(noti_authenticate(app, &user, config)) return err_unknown;
     }
-    else return 1;
+    else return err_unknown;
   }
-  
-  json_decref(root);
 
-  if(noti_poll("http://api.twitter.com/1/statuses/user_timeline.json?count=1", app, user)) return 1;
-  
-  
-  
-  return 0;
+  pthread_create(&thread, NULL, noti_poll, NULL);  
+
+  return err_none;
 }
 
 int noti_destroy() {
   curl_global_cleanup();
-  return 0;
+  return err_none;
+}
+
+void *noti_poll(void *data) {
+  conf *root;
+  noti_tweet tweet; 
+  char *config = "conf/notify.json";
+  noti_token user = { "", "" }, app = { "", "" };
+  
+  root = conf_read(config);
+  
+  strncpy(app.key, conf_get_string(root, "app_key"), NOTI_MAX);
+  strncpy(app.secret, conf_get_string(root, "app_secret"), NOTI_MAX);
+  strncpy(user.key, conf_get_string(root, "user_key"), NOTI_MAX);
+  strncpy(user.secret, conf_get_string(root, "user_secret"), NOTI_MAX);
+
+  while(1) {
+    sleep(5);
+    tweet = noti_get_tweet("http://api.twitter.com/1/statuses/friends_timeline.json?count=1", app, user);
+    
+    printf("USER: %s\nID: %s\nTEXT: %s\n\n", tweet.user, tweet.id, tweet.text);
+  }
+  pthread_exit(NULL);
 }
 
 int noti_authenticate(noti_token app, noti_token *user, char *config) {
   int i, j;
   char url[1000], pin[NOTI_MAX];
-  json_t *root = NULL;
-
+  conf *root;
+  
   //Get request token
-  if(noti_request_token(NOTI_TWITTER_REQUEST, app, user)) return 1;
+  if(noti_request_token(NOTI_TWITTER_REQUEST, app, user)) return err_unknown;
 
   //Get authorization pin
   if(OS == LINUX) {
@@ -76,12 +100,12 @@ int noti_authenticate(noti_token app, noti_token *user, char *config) {
   else if(OS == OSX) {
     sprintf(url, "open %s?oauth_token=%s", NOTI_TWITTER_AUTHORIZE, user->key);
   }
-  else return 1;
+  else return err_unknown;
   
   printf("In a moment, your browser will open. Please grant access to this "
          "application. You may need to login to your account. Once you have "
          "done so, enter the PIN below\nPIN: ");
-  if(system(url)) return 1;
+  if(system(url)) return err_unknown;
   
   j = 0;
   do {
@@ -101,16 +125,18 @@ int noti_authenticate(noti_token app, noti_token *user, char *config) {
     sprintf(url, "%s?oauth_verifier=%s", NOTI_TWITTER_ACCESS, pin);
     j = 1;
   } while(noti_request_token(url, app, user));
-
-  if(conf_load(config, &root)) return 1;
-
-  if(conf_updates(&root, "user_key", user->key)) return 1;
-  if(conf_updates(&root, "user_secret", user->secret)) return 1;
-  if(conf_updatei(&root, "authenticated", 1)) return 1;
-
-  if(conf_write(config, root)) return 1;
   
-  return 0;
+  root = conf_read(config);
+
+  if(conf_set_string(root, "user_key", user->key)) return err_unknown;
+  if(conf_set_string(root, "user_secret", user->secret)) return err_unknown;
+  if(conf_set_integer(root, "authenticated", 1)) return err_unknown;
+
+  if(conf_write(root, config)) return err_unknown;
+  
+  conf_free(root);
+  
+  return err_none;
 }
 
 int noti_request_token(char *uri, noti_token app, noti_token *user) {
@@ -121,56 +147,60 @@ int noti_request_token(char *uri, noti_token app, noti_token *user) {
   response = oauth_http_post(url, postargs);
   if(postargs) free(postargs);
   if(url) free(url);
-  if(noti_parse_response(response, user)) return 1;
-  return 0;
+  if(noti_parse_response(response, user)) return err_unknown;
+  return err_none;
 }
 
 int noti_parse_response(char *response, noti_token *token) {
   char **rv = NULL, key[70], secret[70];
   
-  if(oauth_split_url_parameters(response, &rv) < 2) return 1;
+  if(oauth_split_url_parameters(response, &rv) < 2) return err_unknown;
   strcpy(key, rv[0]);
   strcpy(secret, rv[1]);
   free(rv);
   
-  if(noti_parse_arg(key, "oauth_token", token->key)) return 1;
-  if(noti_parse_arg(secret, "oauth_token_secret", token->secret)) return 1;
-
-  printf("\n\nUser Key (%i): %s\nUser Secret(%i): %s\n\n", strlen(token->key), token->key, strlen(token->secret), token->secret);
+  if(noti_parse_arg(key, "oauth_token", token->key)) return err_unknown;
+  if(noti_parse_arg(secret, "oauth_token_secret", token->secret)) return err_unknown;
   
-  return 0;
+  return err_none;
 }
 
 int noti_parse_arg(char *arg, char *type, char *value) {
   char *piece;
   
   piece = strtok(arg, "=");
-  if(!piece) return 1;
-  if(strcmp(piece, type)) return 1;
+  if(!piece) return err_unknown;
+  if(strcmp(piece, type)) return err_unknown;
   piece = strtok(NULL, "=");
-  if(!piece) return 1;
+  if(!piece) return err_unknown;
   memcpy(value, piece, 50 * sizeof(char));
   
-  return 0;
+  return err_none;
 }
 
-int noti_poll(char *uri, noti_token app, noti_token user) {
+noti_tweet noti_get_tweet(char *uri, noti_token app, noti_token user) {
+  noti_tweet tweet;
+  conf *root, *object;
   char *url = NULL, *postargs = NULL, *response = NULL;
   url = oauth_sign_url2(uri, &(postargs), OA_HMAC, "GET", app.key, app.secret, 
                         user.key, user.secret);
-  
-  printf("\n\n%s %s\n\n", url, postargs);
   
   response = noti_curl_get(url, postargs);
 
   if(postargs) free(postargs);
   if(url) free(url);
   
-  printf("%s", response);
-  
+  root = conf_read(response);
+
   if(response) free(response);
   
-  return 0;
+  object = (conf *)json_array_get((const json_t *)root, 0);
+  
+  strncpy(tweet.text, conf_get_string(object, "text"), NOTI_TEXT_MAX);
+  strncpy(tweet.user, conf_get_string(conf_get_object(object, "user"), "screen_name"), NOTI_USER_MAX);
+  strncpy(tweet.id, conf_get_string(object, "id_str"), NOTI_ID_MAX);  
+    
+  return tweet;
 }
 
 char *noti_curl_get (const char *uri, const char *query) {
@@ -216,12 +246,12 @@ size_t WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data) {
 
 int noti_validate_int(char *line) {
   unsigned int i;
-  if(strlen(line) == 0) return 1;
+  if(strlen(line) == 0) return err_unknown;
 
   for(i = 0; i < strlen(line); i++) {
-    if(!isdigit((int) line[i])) return 1;
+    if(!isdigit((int) line[i])) return err_unknown;
   }
-  return 0;  
+  return err_none;  
 }
 
 int noti_flush(void) {
@@ -229,22 +259,22 @@ int noti_flush(void) {
   
   while ((c = getchar()) != '\n' && c != EOF);
   
-  return 0;
+  return err_none;
 }
 
 int noti_isyes(char input) {
-  if(input == 'y' || input == 'Y') return 1;
-  else return 0;
+  if(input == 'y' || input == 'Y') return err_unknown;
+  else return err_none;
 }
 
 int noti_isno(char input) {
-  if(input == 'n' || input == 'N') return 1;
-  else return 0;
+  if(input == 'n' || input == 'N') return err_unknown;
+  else return err_none;
 }
 
 int noti_isans(char input) {
-  if(noti_isyes(input) || noti_isno(input)) return 1;
-  else return 0;
+  if(noti_isyes(input) || noti_isno(input)) return err_unknown;
+  else return err_none;
 }
 
 int noti_ask(char *question, char *input) {
@@ -256,10 +286,10 @@ int noti_ask(char *question, char *input) {
       printf("Please enter y or n: ");
     }
     *input = getchar();
-    if(noti_flush()) return 1;
+    if(noti_flush()) return err_unknown;
     i = 1;
   } while(!noti_isans(*input));
   
-  return 0;
+  return err_none;
 }
 
