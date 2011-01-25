@@ -1,41 +1,31 @@
 CC          := gcc
-CFLAGS      := -Wall -pedantic -std=gnu99 -g
+CFLAGS      := -Wall -Wpointer-arith -Wwrite-strings -Wstrict-prototypes -pedantic -std=gnu99
 
-MODULE_DIR  := main notify config gestures phidgets emotion
-SOURCE_DIR  := $(addprefix source/,$(MODULE_DIR))
-BUILD_DIR   := $(addprefix build/,$(MODULE_DIR))
+all: main
 
-SOURCE      := $(foreach temp, $(SOURCE_DIR), $(wildcard $(temp)/*.c))
-OBJECTS     := $(patsubst source/%.c, build/%.o, $(SOURCE))
-INCLUDES    := $(addprefix -I,$(SOURCE_DIR))
-LIBRARIES   := -lssl -loauth -lm -lphidget21 -ljansson -lcurl
-LIBRARIES_MAC:= -lssl -loauth -lm -ljansson -lcurl -framework Phidget21
-
-vpath %.c $(SOURCE_DIR)
-
-define compile
-$1/%.o: %.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c $$< -o $$@
-endef
-
-.PHONY: all checkdirs clean mac debug
-
-all: checkdirs build/ebuddy.exe
+main: build/config.o 
+	$(CC) $(CFLAGS) build/config.o -ljansson -lcurl -lphidget21 -loauth -o build/main
 	
-mac: checkdirs build/ebuddy 
+build/config.o: source/config.c source/config.h 
+	$(CC) $(CFLAGS) -c source/config.c -o build/config.o
 
-build/ebuddy.exe: $(OBJECTS)
-	$(CC) $(LIBRARIES) $^ -o $@
-	
-build/ebuddy: $(OBJECTS)
-	$(CC) $(LIBRARIES_MAC) $^ -o $@
+build/notify.o: source/notify.c source/notify.h
+	$(CC) $(CFLAGS) -c source/notify.c -o build/notify.o
 
-checkdirs: $(BUILD_DIR)
+build/emotion.o: source/emotion.c source/emotion.h
+	$(CC) $(CFLAGS) -c source/emotion.c -o build/emotion.o
 
-$(BUILD_DIR):
-	@mkdir -p $@
+build/phidget.o: source/phidget.c source/phidget.h
+	$(CC) $(CFLAGS) -c source/phidget.c -o build/phidget.o
 
-clean:
-	@rm -rf $(BUILD_DIR)
+build/gesture.o: source/gesture.c source/gesture.h
+	$(CC) $(CFLAGS) -c source/gesture.c -o build/gesture.o
 
-$(foreach temp, $(BUILD_DIR), $(eval $(call compile, $(temp))))
+build/gesture_interface.o: source/gesture_interface.c source/gesture_interface.h
+	$(CC) $(CFLAGS) -c source/gesture_interface.c -o build/gesture_interface.o
+
+build/input.o: source/input.c source/input.h
+	$(CC) $(CFLAGS) -c source/input.c -o build/input.o
+
+config_test: build/config.o build/config_test.o
+  $(CC) $(CFLAGS) build/config.o build/config_test.o -l
