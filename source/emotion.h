@@ -4,13 +4,6 @@
 /* the highest value a level can take (a double) */
 #define EM_MAX_LEVEL 1000
 
-/**
- * \todo Placeholder for em_Response needs to be filled out
- */
-typedef struct em_response {
-  void *example; /* This needs to be filled out */
-} em_Response;
-
 /* the level of an emotion relative to it's event values */
 typedef enum em_condition {
   em_cond_normal = 0,		/* the level is between low and full */
@@ -63,7 +56,6 @@ typedef struct em_reaction {
   double value;				/* the argument for the action */
 } em_Reaction;
 
-int em_init(const char *config);
 
 /* allocate and return a pointer to a new emotional state */
 em_State *em_create(const em_Emotion *values, int num_values);
@@ -72,10 +64,10 @@ em_State *em_create(const em_Emotion *values, int num_values);
 void em_destroy(em_State *state);
 
 /* load an emotional state from a file */
-int em_load(em_State *state, char *path);
+int em_load(em_State *state, const char *path);
 
 /* save state to a file */
-int em_save(em_State *state, char *path);
+int em_save(em_State *state, const char *path);
 
 /* returns the level of an emotion */
 double em_get(em_State *state, int emotion);

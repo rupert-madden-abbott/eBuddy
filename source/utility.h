@@ -10,16 +10,26 @@
 #endif
 #endif
 
+#define ONE_MIN (60)
+#define ONE_HOUR (60*60)
+#define ONE_DAY (24*60*60)
 #define SECONDS_IN_AN_HOUR (60*60)
 
-enum os { LINUX, OSX, WINDOWS };
+enum os {
+  LINUX,
+  OSX,
+  WINDOWS
+};
 
 typedef enum error_code {
-  err_unknown = -1,	/* unknow error */ 
-  err_none = 0,		/* no error */
-  err_bad_path,		/* file path is invalid */
-  err_bad_file,		/* file is corrupt */
-  err_bad_arg
+  ERR_UNKNOWN = -1,	/* unknown error */ 
+  ERR_NONE = 0,		/* no error */
+  ERR_BAD_PATH,		/* file path is invalid */
+  ERR_BAD_FILE,		/* file is corrupt */
+  ERR_BAD_ARG
 } error_code;
+
+/* test to see if a path is valid and writable */
+int test_path(const char *path);
 
 #endif

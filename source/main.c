@@ -1,69 +1,79 @@
-//#include "main.h"
-/*#include "notify.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <phidget21.h>
+#include <jansson.h>
+
+#include "utility.h"
+#include "notify.h"
 #include "phidget.h"
 #include "gesture_interface.h"
 #include "emotion.h"
-#include "config.h"*/
+#include "config.h"
+#include "main.h"
 
 int main(void) {
-  #if 0
-  const char    *phidget_config = NULL, *notify_config = NULL, 
-                *gesture_config = NULL, *input_config = NULL, 
-                *emotion_config = NULL; 
-  cf_json       *root = NULL;
-  nt_node       *queue = NULL;
-  PhidgetHandle *phidgets;
-  int           *input_buffer, rc;
-  
-  /* load config */
-  root = cf_read(CONFIG_PATH);
-  if(!root) return err_unknown;
-  
-  phidget_config = cf_get_string(root, "phidget_config");
-  notify_config = cf_get_string(root, "notify_config");
-  gesture_config = cf_get_string(root, "gesture_config");
-  input_config = cf_get_string(root, "input_config");
-  emotion_config = cf_get_string(root, "emotion_config");
-  cf_free(root);
-  if(!phidget_config || !notify_config || !gesture_config) return err_unknown;
+  em_State *emotions;
+  error_code rc;
   
   /* initialise the phidgets */
-  rc = ph_init(phidgets, phidget_config);
-  if(rc) return err_unknown;
-  
-  /* initialise the gesture library */
-  rc = gs_init(phidgets, gesture_config);
+  rc = ph_init(CONFIG_PATH);
   
   /* check for errors */
   if(rc) {
+  	printf("Error initialising phidgits\n");
+  	exit(1);
   }
   
-  rc = nt_init(queue, notify_config);
+  /* initialise notification system */
+  //rc = nt_init(queue, notify_config);
+  
+  /* create a new emotion state using the emotion table */
+  emotions = em_create(EMOTIONS, NUM_EMOTIONS);
   
   /* check for errors */
-  if(rc) {
+  if(!emotions) {
+    printf("Error initialising emotions\n");
+    printf("Check enough memory is available and try again\n");
+  	exit(1);
   }
   
-  rc = em_init(emotion_config);
+  /* load the emotion values from the last session */
+  rc = em_load(emotions, EM_STATE_PATH);
   
-  /* check for errors */
-  if(rc) {
+  /* if file is corrupt keep running using defaults */
+  if(rc == ERR_BAD_FILE) {
+    printf("Error: state file is corrupt\n");
+    printf("Reseting to defaults\n");
+  }
+  
+  /* if file doesn't exist but path is valid keep running */
+  else if(rc == ERR_BAD_PATH && test_path(EM_STATE_PATH)) {
+    printf("Could not find state file\n");
+    printf("Reseting to defaults\n");
+  }
+  
+  /* all other errors are fatal */
+  else {
+    printf("Error reading state file\n");
+    exit(1);
   }
   
   /* initialise the input library */
   //rc = ip_init(phidgets, input_config)
 
-  rc = run_mode(config, input_buffer, emotions, notifications, mode_interactive);
+  //rc = run_mode(config, input_buffer, emotions, notifications, mode_interactive);
   
-  /* check for errors */
-  if(rc) {
-  }
+
   
   /* finalise and unload all modules */
-  #endif
+  em_save(emotions, EM_STATE_PATH);
+  em_destroy(emotions);
   
   return 0;
 }
+
 #if 0
 /* hooks to different modes go here */
 int run_mode(const char *config, int *input_buffer, em_State *emotions, 

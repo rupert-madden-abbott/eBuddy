@@ -6,10 +6,6 @@
 #include "utility.h"
 #include "emotion.h"
 
-int em_init(const char *config) {
-  return 0;
-}
-
 /* allocate and return a pointer to a new emotional state */
 em_State *em_create(const em_Emotion *emotions, int num_emotions) {
   em_State *state;
@@ -70,7 +66,7 @@ void em_reset(em_State *state) {
 }
 
 /* load an emotional state from a file */
-int em_load(em_State *state, char *path) {
+int em_load(em_State *state, const char *path) {
   FILE *file;
   struct tm timestamp;
   time_t now;
@@ -84,7 +80,7 @@ int em_load(em_State *state, char *path) {
 	
   /* check file opened correctly */
   if(!file) {
-    return err_bad_path;
+    return ERR_BAD_PATH;
   }
 	
   /* read the value and timestamp of each level from the file */
@@ -94,7 +90,7 @@ int em_load(em_State *state, char *path) {
     
     /* return an error if items diddn't scan */
     if(rc != 7) {
-      return err_bad_file;
+      return ERR_BAD_FILE;
     }
     
     /* convert calendar time to a time_t */
@@ -113,7 +109,7 @@ int em_load(em_State *state, char *path) {
 } 
 
 /* save state to a file */
-int em_save(em_State *state, char *path) {
+int em_save(em_State *state, const char *path) {
   struct tm *time;
   FILE *file;
   int i;
@@ -123,7 +119,7 @@ int em_save(em_State *state, char *path) {
 
   /* check file is open */
   if(!file) {
-    return err_bad_path;
+    return ERR_BAD_PATH;
   }
 
   /* write time and value of each level */
@@ -203,7 +199,7 @@ int em_set(em_State *state, int emotion, double value) {
 
   /* check bounds */
   if(value > EM_MAX_LEVEL || value < 0) {
-    return err_bad_arg;
+    return ERR_BAD_ARG;
   }
 	
   state->levels[emotion].last_value = value;
@@ -288,6 +284,7 @@ int em_react(em_State *state, em_Reaction *reaction) {
     return em_update(state, reaction->emotion, reaction->value);
   }
   
+  /* otherwise return an error */
   else {
     return 1;
   }

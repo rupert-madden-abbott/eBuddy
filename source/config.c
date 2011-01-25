@@ -32,10 +32,10 @@ int cf_write(const cf_json *root, const char *input) {
   /* input is automatically formatted to ensure configuration files are 
      consistently formatted */
   if(json_dump_file(root, input, JSON_INDENT(2) || JSON_SORT_KEYS)) {
-    return err_unknown;
+    return ERR_UNKNOWN;
   }
   
-  return err_none;
+  return ERR_NONE;
 }
 
 void cf_free(cf_json *root) {
@@ -95,33 +95,33 @@ int cf_set_string(cf_json *root, const char *key, const char *value) {
   json_t *object = NULL;
 
   object = json_string(value);
-  if(object == NULL) return err_unknown;
+  if(object == NULL) return ERR_UNKNOWN;
   
-  if(cf_set_object(root, key, object)) return err_unknown;
+  if(cf_set_object(root, key, object)) return ERR_UNKNOWN;
     
-  return err_none;
+  return ERR_NONE;
 }
 
 int cf_set_integer(cf_json *root, const char *key, int value) {
   json_t *object = NULL;
 
   object = json_integer(value);
-  if(object == NULL) return err_unknown;
+  if(object == NULL) return ERR_UNKNOWN;
   
-  if(cf_set_object(root, key, object)) return err_unknown;
+  if(cf_set_object(root, key, object)) return ERR_UNKNOWN;
   
-  return err_none;
+  return ERR_NONE;
 }
 
 int cf_set_double(cf_json *root, const char *key, double value) {
   json_t *object = NULL;
 
   object = json_real(value);
-  if(object == NULL) return err_unknown;
+  if(object == NULL) return ERR_UNKNOWN;
   
-  if(cf_set_object(root, key, object)) return err_unknown;
+  if(cf_set_object(root, key, object)) return ERR_UNKNOWN;
     
-  return err_none;
+  return ERR_NONE;
 }
 
 /* This is handy for quickly checking whether a JSON object contains the 
@@ -129,8 +129,8 @@ int cf_set_double(cf_json *root, const char *key, double value) {
    that it will look identical to the configuration files */
 int cf_printf(const cf_json *root) {
   if(json_dumpf(root, stdout, JSON_INDENT(2) || JSON_SORT_KEYS)) {
-    return err_unknown;
+    return ERR_UNKNOWN;
   }
   
-  return err_none;
+  return ERR_NONE;
 }

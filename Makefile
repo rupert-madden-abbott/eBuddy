@@ -9,12 +9,12 @@ INCLUDE     := -Isource/
 
 all: checkdir linux
 
-linux: main.o config.o notify.o emotion.o phidget.o gesture.o gesture_interface.o input.o
-	$(CC) $(CFLAGS) build/main.o build/config.o build/notify.o build/emotion.o build/phidget.o build/gesture.o build/gesture_interface.o build/input.o $(LIB) $(LIB_LINUX) -o build/linux
+linux: main.o config.o notify.o emotion.o phidget.o gesture.o gesture_interface.o input.o utility.o
+	$(CC) $(CFLAGS) build/main.o build/config.o build/notify.o build/emotion.o build/phidget.o build/gesture.o build/gesture_interface.o build/input.o build/utility.o $(LIB) $(LIB_LINUX) -o build/linux
 
-osx: main.o config.o notify.o emotion.o phidget.o gesture.o gesture_interface.o input.o
-	$(CC) $(CFLAGS) build/main.o build/config.o build/notify.o build/emotion.o build/phidget.o build/gesture.o build/gesture_interface.o build/input.o $(LIB) $(LIB_OSX) -o build/osx
-	
+osx: main.o config.o notify.o emotion.o phidget.o gesture.o gesture_interface.o input.o utility.o
+	$(CC) $(CFLAGS) build/main.o build/config.o build/notify.o build/emotion.o build/phidget.o build/gesture.o build/gesture_interface.o build/input.o build/utility.o $(LIB) $(LIB_OSX) -o build/osx
+
 main.o: source/main.c source/main.h
 	$(CC) $(CFLAGS) -c source/main.c -o build/main.o
 	
@@ -35,6 +35,9 @@ gesture.o: source/gesture.c source/gesture.h
 
 gesture_interface.o: source/gesture_interface.c source/gesture_interface.h
 	$(CC) $(CFLAGS) -c source/gesture_interface.c -o build/gesture_interface.o
+
+utility.o: source/utility.c source/utility.h
+	$(CC) $(CFLAGS) -c source/utility.c -o build/utility.o
 
 input.o: source/input.c source/input.h
 	$(CC) $(CFLAGS) -c source/input.c -o build/input.o

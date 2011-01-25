@@ -12,10 +12,10 @@ extern int gsi_test(void);
 extern int gsi_printLCD(const char* str);
 
 /* representation of a gesture [needs to go in gesture] */
-typedef struct gsi_Response {
+typedef struct gsi_reaction {
   int (*gesture)(void);	/* pointer to the gesture that should be called */
-  char *message;	/* string to display on the lcd screen */
-} gsi_Response;
+  const char *message;	/* string to display on the lcd screen */
+} gsi_Reaction;
 
-int gsi_respond(gsi_Response *resp);
+int gsi_react(gsi_Reaction *resp);
 #endif
