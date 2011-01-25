@@ -7,17 +7,21 @@
 
 int main(void) {
   qu_queue *queue = NULL;
-  char     name[] = "sdsdsgffgjgjdrd";
-  int      length, i;
+  char     *first = "hello";
+  char     *second = "goodbye";
   
   queue = qu_init();
   if(!queue) fail("Failed to create new queue");
 
-  qu_push(queue, (void *)name[i]);
-
+  qu_push(queue, first);
+  qu_push(queue, second);
+    qu_free(queue);
+  
   qu_pop(queue);
+  /*printf("%s", (char *) qu_pop(queue));
+    printf("%s", (char *) qu_pop(queue));
+  */
 
-  qu_free(queue);
 
   return 0;
 }

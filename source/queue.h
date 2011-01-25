@@ -20,8 +20,9 @@ typedef struct qu_queue {
 } qu_queue;
 
 qu_queue *qu_init(void);
+void qu_free(qu_queue *queue);
 int qu_push(qu_queue *queue, void *data);
-void *qu_pop(qu_queue *queue, int release);
+void *qu_pop(qu_queue *queue);
 
 #endif
 

@@ -6,12 +6,28 @@
 #include "queue.h"
 
 qu_queue *qu_init(void) {
-  qu_queue *queue;
+  qu_queue *queue = malloc(sizeof(qu_queue));
+  
+  if(!queue) return NULL;
   
   queue->size = 0;
-  queue->head = q->tail = NULL;
+  queue->head = queue->tail = NULL;
 
   return queue;
+}
+
+void qu_free(qu_queue *queue) {
+  qu_node *node;
+  
+  while(queue->size > 0) {
+    node = queue->head;
+    queue->head = queue->head->link;
+    free(node);
+    
+    queue->size--;
+  }
+  
+  free(queue);  
 }
 
 int qu_push(qu_queue *queue, void *data) {
@@ -19,7 +35,7 @@ int qu_push(qu_queue *queue, void *data) {
     queue->head = (qu_node *)malloc(sizeof(qu_node));
     if(!queue->head) return -1;
     
-    queue->head->data = element;
+    queue->head->data = data;
     queue->tail = queue->head;
   } 
   else {
@@ -36,10 +52,12 @@ int qu_push(qu_queue *queue, void *data) {
   return 0;
 }
 
-void *queue_pop(qu_queue *queue) {
+void *qu_pop(qu_queue *queue) {
   qu_node *node;
+
+  if(!queue) return NULL;
   
-  if (queue->size) {
+  if(queue->size > 0) {
     node = queue->head;
     queue->size--;
     if(queue->size) {
