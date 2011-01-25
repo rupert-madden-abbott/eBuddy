@@ -3,6 +3,7 @@
  * @author Rupert Madden-Abbott
 */
 
+#include "utility.h"
 #include "queue.h"
 
 qu_queue *qu_init(void) {
@@ -33,14 +34,14 @@ void qu_free(qu_queue *queue) {
 int qu_push(qu_queue *queue, void *data) {
   if(!queue->head) {
     queue->head = (qu_node *)malloc(sizeof(qu_node));
-    if(!queue->head) return -1;
+    if(!queue->head) return ERR_UNKNOWN;
     
     queue->head->data = data;
     queue->tail = queue->head;
   } 
   else {
     queue->tail->link = (qu_node *)malloc(sizeof(qu_node));
-    if(!queue->tail->link) return -1;
+    if(!queue->tail->link) return ERR_UNKNOWN;
     
     queue->tail = queue->tail->link;
     queue->tail->data = data;
@@ -49,7 +50,7 @@ int qu_push(qu_queue *queue, void *data) {
   queue->tail->link = NULL;
   queue->size++;
   
-  return 0;
+  return ERR_NONE;
 }
 
 void *qu_pop(qu_queue *queue) {
