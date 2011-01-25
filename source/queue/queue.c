@@ -3,12 +3,15 @@
  * @author Rupert Madden-Abbott
 */
 
-#include <stdlib.h>
 #include "queue.h"
 
-void qu_init(qu_queue *queue) {
+qu_queue *qu_init(void) {
+  qu_queue *queue;
+  
   queue->size = 0;
   queue->head = q->tail = NULL;
+
+  return queue;
 }
 
 int qu_push(qu_queue *queue, void *data) {
@@ -17,7 +20,7 @@ int qu_push(qu_queue *queue, void *data) {
     if(!queue->head) return -1;
     
     queue->head->data = element;
-    queue->tail = q->head;
+    queue->tail = queue->head;
   } 
   else {
     queue->tail->link = (qu_node *)malloc(sizeof(qu_node));
@@ -34,10 +37,10 @@ int qu_push(qu_queue *queue, void *data) {
 }
 
 void *queue_pop(qu_queue *queue) {
-  qu_node *old;
+  qu_node *node;
   
   if (queue->size) {
-    old = queue->head;
+    node = queue->head;
     queue->size--;
     if(queue->size) {
       queue->head = queue->head->link;
@@ -45,7 +48,7 @@ void *queue_pop(qu_queue *queue) {
     else {
       queue->head = queue->tail = NULL;
     }
-  return old->data;
+  return node->data;
   }
   
   return NULL;

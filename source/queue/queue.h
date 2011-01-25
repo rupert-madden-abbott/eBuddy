@@ -6,6 +6,8 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+#include <stdlib.h>
+
 typedef struct qu_node {
     void *data;
     struct qu_node *link;
@@ -17,9 +19,9 @@ typedef struct qu_queue {
     qu_node *tail;
 } qu_queue;
 
-void qu_init(qu_queue *queue);
-int queue_push(qu_queue *queue, void *data);
-void *queue_pop(Queue *q, int release);
+qu_queue *qu_init(void);
+int qu_push(qu_queue *queue, void *data);
+void *qu_pop(qu_queue *queue, int release);
 
 #endif
 

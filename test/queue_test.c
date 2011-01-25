@@ -2,7 +2,6 @@
  * @file   queue_test.c
  * @author Rupert Madden-Abbott
  */
-#include <string.h>
 #include "queue.h"
 #include "test.h"
 
