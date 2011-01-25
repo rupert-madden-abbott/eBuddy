@@ -1,15 +1,15 @@
 #ifndef NOTIFY_H
 #define NOTIFY_H
 
-#include "main.h"
-#include "config.h"
-#include <pthread.h>
-#include <oauth.h>
 #include <string.h>
-#include <ctype.h>
 #include <curl/curl.h>
+#include <pthread.h>
+#include <unistd.h>
+#include <oauth.h>
+#include <ctype.h>
+#include "config.h"
 
-#define NT_CONF_FILE "ntfy.conf"
+#define NT_CONF_FILE "notify.conf"
 
 #define NT_TWITTER_REQUEST "https://api.twitter.com/oauth/request_token"
 #define NT_TWITTER_ACCESS "https://api.twitter.com/oauth/access_token"
@@ -46,7 +46,7 @@ typedef struct nt_node {
 
 int nt_init(nt_node *queue, const char *config);
 int nt_destroy(void);
-int nt_authenticate(nt_token app, nt_token *user, char *config);
+int nt_authenticate(nt_token app, nt_token *user, const char *config);
 int nt_request_token(char *uri, nt_token app, nt_token *user);
 int nt_parse_response(char *response, nt_token *token);
 int nt_parse_arg(char *arg, char *type, char *value);

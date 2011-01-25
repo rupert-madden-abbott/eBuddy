@@ -1,7 +1,7 @@
 #include "notify.h"
 
-int nt_init(nt_node *queue, const char *config);
-  char input = '\0', *config = "conf/notify.json";
+int nt_init(nt_node *queue, const char *config) {
+  char input = '\0';
   nt_token user = { "", "" }, app = { "", "" };
   cf_json *root = NULL;
   int authenticated, disabled;
@@ -84,7 +84,7 @@ void *nt_poll(void *data) {
   pthread_exit(NULL);
 }
 
-int nt_authenticate(nt_token app, nt_token *user, char *config) {
+int nt_authenticate(nt_token app, nt_token *user, const char *config) {
   int i, j;
   char url[1000], pin[NT_KEY_MAX];
   cf_json *root;
@@ -194,7 +194,7 @@ nt_message nt_get_tweet(char *uri, nt_token app, nt_token user) {
 
   if(response) free(response);
   
-  object = (cf *)json_array_get((const json_t *)root, 0);
+  object = (cf_json *)json_array_get((const json_t *)root, 0);
   
   strncpy(tweet.app, "twitter", NT_APP_MAX);
   strncpy(tweet.text, cf_get_string(object, "text"), NT_TEXT_MAX);
