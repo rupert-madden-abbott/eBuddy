@@ -1,3 +1,5 @@
+#ifndef GESTURE_INTERFACE_H
+#define GESTURE_INTERFACE_H
 #include "gestures.h"
 
 #define GSI_NULL 2
@@ -17,3 +19,4 @@ typedef struct gsi_Response {
 } gsi_Response;
 
 int gsi_respond(gsi_Response *resp);
+#endif

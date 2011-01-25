@@ -1,3 +1,5 @@
+#ifndef GESTURES_H
+#define GESTURES_H
 #include "phidget.h"
 #include "config.h"
 
@@ -48,3 +50,4 @@ extern int gs_eyeflash(CPhidgetInterfaceKitHandle ifkit);
 
 
 int gs_printstring(char* str,CPhidgetTextLCDHandle txt_lcd);
+#endif

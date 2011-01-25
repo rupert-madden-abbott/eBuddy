@@ -1,6 +1,11 @@
+#ifndef PHIDGET_H
+#define PHIDGET_H
 #include <phidget21.h>
+#include "gestures.h"
+#include "input.h"
+#include "main.h"
 
-extern int ph_init(PhidgetHandle *phidgets, const char *config);
+extern int ph_init(const char *config);
 
 extern int ph_destruct(void);
 
@@ -35,3 +40,4 @@ int ph_lcd_DetachHandler(CPhidgetHandle TXT, void *userptr);
 int ph_lcd_AttachHandler(CPhidgetHandle TXT, void *userptr);
 CPhidgetTextLCDHandle ph_lcd_initialise(void);
 CPhidgetTextLCDHandle ph_get_lcd_handle(void);
+#endif
