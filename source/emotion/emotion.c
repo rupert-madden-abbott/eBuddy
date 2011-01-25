@@ -1,4 +1,4 @@
-#include "em.h"
+#include "emotion.h"
 
 int em_init(const char *config) {
   return 0;

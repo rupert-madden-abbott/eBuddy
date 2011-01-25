@@ -10,6 +10,13 @@
 /* the highest value a level can take (a double) */
 #define EM_MAX_LEVEL 1000
 
+/**
+ * \todo Placeholder for em_Response needs to be filled out
+ */
+typedef struct em_response {
+  void *example; /* This needs to be filled out */
+} em_Response;
+
 /* the level of an emotion relative to it's event values */
 typedef enum em_condition {
   em_cond_normal = 0,		/* the level is between low and full */
