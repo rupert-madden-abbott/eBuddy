@@ -1,10 +1,6 @@
 #include "phidget.h"
-#include "main.h"
-#include "gestures.h"
-#include "input.h"
 
-
-extern int ph_init(PhidgetHandle phidgets, const char *config)
+extern int ph_init(const char *config)
 {
     int status;
     CPhidgetInterfaceKitHandle ifkit;
