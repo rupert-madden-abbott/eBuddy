@@ -10,10 +10,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <jansson.h>
-#include <string.h>
-#include "utility.h"
-
 /* Represents a JSON structure (Renamed to maintain a consistent public API) */
 typedef json_t cf_json;
 

@@ -1,3 +1,6 @@
+#include <string.h>
+#include <jansson.h>
+#include "utility.h"
 #include "config.h"
 #include "test.h"
 

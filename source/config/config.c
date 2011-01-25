@@ -1,3 +1,6 @@
+#include <string.h>
+#include <jansson.h>
+#include "utility.h"
 #include "config.h"
 
 cf_json *cf_read(const char *input) {

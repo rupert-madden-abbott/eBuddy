@@ -1,14 +1,6 @@
 #ifndef NOTIFY_H
 #define NOTIFY_H
 
-#include <string.h>
-#include <curl/curl.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <oauth.h>
-#include <ctype.h>
-#include "config.h"
-
 #define NT_CONF_FILE "notify.conf"
 
 #define NT_TWITTER_REQUEST "https://api.twitter.com/oauth/request_token"

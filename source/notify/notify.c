@@ -1,3 +1,13 @@
+#include <string.h>
+#include <curl/curl.h>
+#include <pthread.h>
+#include <unistd.h>
+#include <oauth.h>
+#include <ctype.h>
+#include <string.h>
+#include <jansson.h>
+#include "utility.h"
+#include "config.h"
 #include "notify.h"
 
 int nt_init(nt_node *queue, const char *config) {
