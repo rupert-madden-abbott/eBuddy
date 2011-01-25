@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <phidget21.h>
+#include "gesture.h"
+#include "input.h"
 #include "phidget.h"
 
 extern int ph_init(const char *config)
@@ -261,7 +266,7 @@ int ph_kit_AttachHandler(CPhidgetHandle IFK, void *userptr)
 
 	CPhidget_getDeviceName(IFK, &name);
 	CPhidget_getSerialNumber(IFK, &serialNo);
-	gs_eyeson(IFK);
+	gs_eyeson((CPhidgetInterfaceKitHandle)IFK);
 
 	printf("ebuddy interface kit attached!\n");
 
@@ -275,7 +280,7 @@ int ph_kit_DetachHandler(CPhidgetHandle IFK, void *userptr)
 
 	CPhidget_getDeviceName (IFK, &name);
 	CPhidget_getSerialNumber(IFK, &serialNo);
-        gs_eyesoff(IFK);
+        gs_eyesoff((CPhidgetInterfaceKitHandle)IFK);
 
 	printf("ebuddy interface kit detached!\n");
 
@@ -299,7 +304,7 @@ CPhidgetTextLCDHandle ph_get_lcd_handle(void)
    static CPhidgetTextLCDHandle txt_lcd;
    if (lcd_initialised == 0) {
        lcd_initialised = 1;
-       txt_lcd = lcd_initialise();
+       txt_lcd = ph_lcd_initialise();
    }
    return txt_lcd;
 }

@@ -1,9 +1,9 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "emotion.h"
+/*#include "emotion.h"
 #include "gesture_interface.h"
-#include "notify.h"
+#include "notify.h"*/
 
 /*
 #include <stdio.h>

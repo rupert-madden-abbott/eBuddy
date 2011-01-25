@@ -1,10 +1,5 @@
-#ifndef PHIDGET_H
-#define PHIDGET_H
-#include <phidget21.h>
-#include "gestures.h"
-#include "input.h"
-#include "main.h"
-
+#ifndef PHIDGET2_H
+#define PHIDGET2_H
 extern int ph_init(const char *config);
 
 extern int ph_destruct(void);

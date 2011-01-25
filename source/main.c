@@ -1,11 +1,12 @@
-#include "main.h"
-#include "notify.h"
+//#include "main.h"
+/*#include "notify.h"
 #include "phidget.h"
 #include "gesture_interface.h"
 #include "emotion.h"
-#include "config.h"
+#include "config.h"*/
 
-int main(int argc, char *argv[]) {
+int main(void) {
+  #if 0
   const char    *phidget_config = NULL, *notify_config = NULL, 
                 *gesture_config = NULL, *input_config = NULL, 
                 *emotion_config = NULL; 
@@ -59,8 +60,11 @@ int main(int argc, char *argv[]) {
   }
   
   /* finalise and unload all modules */
+  #endif
+  
+  return 0;
 }
-
+#if 0
 /* hooks to different modes go here */
 int run_mode(const char *config, int *input_buffer, em_State *emotions, 
              nt_node message, int mode); {
@@ -172,3 +176,4 @@ int interactive_mode(const char *config, int *input_buffer, em_State *emotions,
   
   sleep(1)
 }
+#endif

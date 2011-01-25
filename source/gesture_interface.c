@@ -1,20 +1,27 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <phidget21.h>
+#include <jansson.h>
+#include "utility.h"
+#include "phidget.h"
+#include "config.h"
+#include "gesture.h"
 #include "gesture_interface.h"
-#include "main.h"
-
-
 
 int gsi_respond(gsi_Response *resp)
 {
-    int error = GSI_OK
+    int error = GSI_OK;
     if(resp->gesture == NULL){
         return GSI_NULL;
     }
-    if(resp->gesture(void) == GSI_PHER){
+    if(resp->gesture() == GSI_PHER){
         error = GSI_PHER;
     }
     if(resp->message != NULL){
         if(gsi_printLCD(resp->message) == GSI_PHER){
-            error = ER_PHER;
+            error = GSI_PHER;
         }
     }
     return GSI_OK;
@@ -77,15 +84,15 @@ int gsi_eyeflash(void)
     return GSI_OK;
 }
 
-int gsi_printLCD(char* str)
+int gsi_printLCD(const char* str)
 {
     int status;
-    CPhidgetTextLCDHandle txt_lcd = lcd_get_lcd_handle();
-    CPhidget_getDeviceStatus((CPhidgetHandle)ifkit, &status);
+    CPhidgetTextLCDHandle txt_lcd = ph_get_lcd_handle();
+    CPhidget_getDeviceStatus((CPhidgetHandle)txt_lcd, &status);
     if(status == PHIDGET_NOTATTACHED){
         return GSI_PHER;
     }
-   lcd_printstring(str,txt_lcd);
+   gs_printstring(str,txt_lcd);
    return GSI_OK;
 }
 

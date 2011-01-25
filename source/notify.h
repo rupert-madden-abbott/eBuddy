@@ -39,10 +39,10 @@ typedef struct nt_node {
 int nt_init(nt_node *queue, const char *config);
 int nt_destroy(void);
 int nt_authenticate(nt_token app, nt_token *user, const char *config);
-int nt_request_token(char *uri, nt_token app, nt_token *user);
+int nt_request_token(const char *uri, nt_token app, nt_token *user);
 int nt_parse_response(char *response, nt_token *token);
-int nt_parse_arg(char *arg, char *type, char *value);
-nt_message nt_get_tweet(char *uri, nt_token app, nt_token user);
+int nt_parse_arg(char *arg, const char *type, char *value);
+nt_message nt_get_tweet(const char *uri, nt_token app, nt_token user);
 char *nt_curl_get (const char *uri, const char *query);
 size_t WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data);
 void *nt_poll(void *data);
@@ -51,7 +51,7 @@ void *nt_poll(void *data);
 int nt_isyes(char input);
 int nt_isno(char input);
 int nt_isans(char input);
-int nt_ask(char *question, char *input);
+int nt_ask(const char *question, char *input);
 int nt_flush(void);
 int nt_validate_int(char *line);
 

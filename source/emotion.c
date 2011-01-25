@@ -1,3 +1,9 @@
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <math.h>
+#include "utility.h"
 #include "emotion.h"
 
 int em_init(const char *config) {
@@ -50,7 +56,7 @@ void em_destroy(em_State *state) {
 }
 
 /* return all levels to their default values (0) */
-int em_reset(em_State *state) {
+void em_reset(em_State *state) {
   time_t now;
   int i;
 	
@@ -280,5 +286,9 @@ int em_react(em_State *state, em_Reaction *reaction) {
   /* update it if action is update */
   else if(reaction->action == em_action_update) {
     return em_update(state, reaction->emotion, reaction->value);
+  }
+  
+  else {
+    return 1;
   }
 }

@@ -1,8 +1,13 @@
-#include "gestures.h"
-
-int gs_init(PhidgetHandle *phidgets, const char *config) {
-  return 0;
-}
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <phidget21.h>
+#include <jansson.h>
+#include "utility.h"
+#include "phidget.h"
+#include "config.h"
+#include "gesture.h"
 
 /*servo gestures*/
 
@@ -149,7 +154,7 @@ int gs_shake_head(CPhidgetAdvancedServoHandle servo)
 int gs_move_arms(CPhidgetAdvancedServoHandle servo)
 {
     GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
-	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
+	  GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
     GS_SETPOS (servo, GS_SERVO_LEFTARM, 200);
     GS_SETPOS (servo, GS_SERVO_RIGHTARM, 200);
     usleep(GS_MICRO * 500);
@@ -190,38 +195,6 @@ int gs_turn(CPhidgetAdvancedServoHandle servo)
 	return 0;
 }
 
-
-
-/*sound functions*/
-int gs_sound(int sound, int itineration)
-{
-    int i = 0;
-    char *filepath;
-    char command[MAX_CHARS + 10];
-    char num[10];
-    filepath = (char *) malloc(sizeof(char) * MAX_CHARS);
-    if (filepath == NULL){
-	printf("Unable to allocate memory\n");
-	exit(1);
-    }
-    sprintf(num, "%d", sound);
-    //get sound configuration
-    if(conf_read("sound.conf", "sound", num, &filepath)) {
-        return 1;
-    }
-    command[0] ='\0';
-    strcpy(command, MP3PLAYERCMD);
-    strcat(command, filepath);
-    while(i < itineration){
-        //make system call to play sound
-        system(command);
-        i++;
-
-    }
-    return 0;
-}
-
-
 /*LED functions*/
 int gs_eyesoff(CPhidgetInterfaceKitHandle ifkit)
 {
@@ -259,7 +232,7 @@ int gs_eyeflash(CPhidgetInterfaceKitHandle ifkit)
 	return 0;
 }
 
-int gs_printstring(char* string,CPhidgetTextLCDHandle txt_lcd)
+int gs_printstring(const char* string,CPhidgetTextLCDHandle txt_lcd)
 {
    int flag=0;
    int length=strlen(string);printf("length=%d\n",length);
@@ -267,8 +240,10 @@ int gs_printstring(char* string,CPhidgetTextLCDHandle txt_lcd)
    int row=0,startpoint=0;
    char tmp[10000];
    char str1[10000];
-   CPhidgetTextLCD_setDisplayString (txt_lcd,0,"");
-   CPhidgetTextLCD_setDisplayString (txt_lcd,1,"");
+   char blank[1] = "\0";
+   
+   CPhidgetTextLCD_setDisplayString (txt_lcd,0,blank);
+   CPhidgetTextLCD_setDisplayString (txt_lcd,1,blank);
    CPhidgetTextLCD_setBacklight(txt_lcd,1);
    for (j=0;j<length;j++) {
       tmp[j]=string[j];
@@ -304,12 +279,12 @@ int gs_printstring(char* string,CPhidgetTextLCDHandle txt_lcd)
       }
    }
    if (row==1) {
-      CPhidgetTextLCD_setDisplayString (txt_lcd,1,"");
+      CPhidgetTextLCD_setDisplayString (txt_lcd,1,blank);
       usleep(SCROLLSPEED);
    }
    CPhidgetTextLCD_setBacklight(txt_lcd,0);
-   CPhidgetTextLCD_setDisplayString (txt_lcd,0,"");
-   CPhidgetTextLCD_setDisplayString (txt_lcd,1,"");
+   CPhidgetTextLCD_setDisplayString (txt_lcd,0,blank);
+   CPhidgetTextLCD_setDisplayString (txt_lcd,1,blank);
    return 0;
 }
 

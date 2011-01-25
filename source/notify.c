@@ -75,7 +75,7 @@ int nt_destroy() {
 void *nt_poll(void *data) {
   cf_json *root;
   nt_message tweet; 
-  char *config = "conf/notify.json";
+  const char *config = "conf/notify.json";
   nt_token user = { "", "" }, app = { "", "" };
   
   root = cf_read(config);
@@ -149,7 +149,7 @@ int nt_authenticate(nt_token app, nt_token *user, const char *config) {
   return err_none;
 }
 
-int nt_request_token(char *uri, nt_token app, nt_token *user) {
+int nt_request_token(const char *uri, nt_token app, nt_token *user) {
   char *url = NULL, *response = NULL, *postargs;
   
   url = oauth_sign_url2(uri, &postargs, OA_HMAC, "POST", app.key, 
@@ -175,7 +175,7 @@ int nt_parse_response(char *response, nt_token *token) {
   return err_none;
 }
 
-int nt_parse_arg(char *arg, char *type, char *value) {
+int nt_parse_arg(char *arg, const char *type, char *value) {
   char *piece;
   
   piece = strtok(arg, "=");
@@ -188,7 +188,7 @@ int nt_parse_arg(char *arg, char *type, char *value) {
   return err_none;
 }
 
-nt_message nt_get_tweet(char *uri, nt_token app, nt_token user) {
+nt_message nt_get_tweet(const char *uri, nt_token app, nt_token user) {
   nt_message tweet;
   cf_json *root, *object;
   char *url = NULL, *postargs = NULL, *response = NULL;
@@ -288,7 +288,7 @@ int nt_isans(char input) {
   else return err_none;
 }
 
-int nt_ask(char *question, char *input) {
+int nt_ask(const char *question, char *input) {
   int i = 0;
   
   printf("%s (y/n)\n", question);

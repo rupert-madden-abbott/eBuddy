@@ -1,7 +1,5 @@
 #ifndef GESTURES_H
 #define GESTURES_H
-#include "phidget.h"
-#include "config.h"
 
 
 #define LCDWIDTH 20
@@ -35,7 +33,6 @@
 
 CPhidgetAdvancedServoHandle gs_get_servo_handle(void);
 
-int gs_init(PhidgetHandle *phidgets, const char *config);
 int gs_set_pos(CPhidgetAdvancedServoHandle servo);
 extern int gs_dance_basic(CPhidgetAdvancedServoHandle servo);
 extern int gs_sound(int sound, int itineration);
@@ -49,5 +46,5 @@ extern int gs_eyesoff(CPhidgetInterfaceKitHandle ifkit);
 extern int gs_eyeflash(CPhidgetInterfaceKitHandle ifkit);
 
 
-int gs_printstring(char* str,CPhidgetTextLCDHandle txt_lcd);
+int gs_printstring(const char* str,CPhidgetTextLCDHandle txt_lcd);
 #endif
