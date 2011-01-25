@@ -1,7 +1,5 @@
 lib/
-<<<<<<< HEAD
 out/
 .DS_Store
-=======
 build/
->>>>>>> 6ea2529ba03dadeb39197c0b7f55e2cc5305b429
+*.o
