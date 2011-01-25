@@ -1,5 +1,5 @@
 /**
- * @file   cfig.h
+ * @file   config.h
  * @author Rupert Madden-Abbott
  *
  * This module wraps the jansson library to simplify and standardise 
@@ -10,7 +10,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "main.h"
+#include <jansson.h>
+#include <string.h>
+#include "utility.h"
 
 /* Represents a JSON structure (Renamed to maintain a consistent public API) */
 typedef json_t cf_json;
