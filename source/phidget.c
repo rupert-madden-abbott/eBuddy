@@ -11,9 +11,12 @@ extern int ph_init(const char *config)
     CPhidgetInterfaceKitHandle ifkit;
     ph_get_servo_handle();
 
-    //ph_get_RFID_handle();
+    ph_get_RFID_handle();
 
     ifkit = ph_get_kit_handle();
+
+    ph_get_lcd_handle();
+
     CPhidget_getDeviceStatus((CPhidgetHandle)ifkit, &status);
     if(status == PHIDGET_ATTACHED){
 	gs_eyeson(ifkit);
@@ -198,7 +201,7 @@ int ph_RFID_DetachHandler(CPhidgetHandle RFID, void *userptr)
 
 int ph_RFID_ErrorHandler(CPhidgetHandle RFID, void *userptr, int ErrorCode, const char *unknown)
 {
-	printf("eBuddy RFID error %d - %s\n", ErrorCode, unknown);
+	//printf("eBuddy RFID error %d - %s\n", ErrorCode, unknown);
 	return 0;
 }
 
@@ -289,7 +292,7 @@ int ph_kit_DetachHandler(CPhidgetHandle IFK, void *userptr)
 
 int ph_kit_ErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const char *unknown)
 {
-	printf("ebuddy interface kit Error handled. %d - %s", ErrorCode, unknown);
+	//printf("ebuddy interface kit Error handled. %d - %s", ErrorCode, unknown);
 	return 0;
 }
 

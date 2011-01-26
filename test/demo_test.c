@@ -36,9 +36,6 @@ int main(void) {
   	printf("Error initialising notifications\n");
   	exit(1);
   }
-  
-  printf("hello");
-  fflush(stdout);
 
   pthread_create(&thread, NULL, nt_poll, queue);
   
@@ -46,7 +43,8 @@ int main(void) {
     sleep(1);
     if(qu_size(queue) > 0) {
       message = qu_pop(queue);
-      printf("%s", message->text);
+      printf("%s\n", message->text);
+      gsi_printLCD(message->text);
       fflush(stdout);
     }
   }

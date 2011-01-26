@@ -87,15 +87,17 @@ void *nt_poll(void *queue) {
   strncpy(user.key, cf_get_string(root, "user_key"), NT_KEY_MAX);
   strncpy(user.secret, cf_get_string(root, "user_secret"), NT_KEY_MAX);
 
-  while(1) {
-    sleep(1);
-    tweet = nt_get_tweet("http://api.twitter.com/1/statuses/friends_timeline.json?count=1", app, user);
+  strncpy(last_tweet, cf_get_string(root, "last_tweet"), NT_ID_MAX);
 
-    strncpy(last_tweet, cf_get_string(root, "last_tweet"), NT_ID_MAX);
+  while(1) {
+    sleep(10);
+    tweet = nt_get_tweet("http://api.twitter.com/1/statuses/friends_timeline.json?count=1", app, user);
     
-    printf("Last Tweet: %s This Tweet: %s\n\n", last_tweet, tweet->id);
+    printf("Outside: Last Tweet: %s This Tweet: %s\n\n", last_tweet, tweet->id);
     fflush(stdout);
     if(strcmp(tweet->id, last_tweet)) {
+      printf("Inside: Last Tweet: %s This Tweet: %s\n\n", last_tweet, tweet->id);
+      strncpy(last_tweet, tweet->id, NT_ID_MAX);
       cf_set_string(root, "last_tweet", tweet->id);
       cf_write(root, config);
       qu_push(queue, tweet);
