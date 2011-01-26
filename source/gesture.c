@@ -179,15 +179,16 @@ int gs_turn(CPhidgetAdvancedServoHandle servo)
 	GS_SETPOS(servo, GS_SERVO_LEFTARM, 100);
 	GS_SETPOS(servo, GS_SERVO_RIGHTARM, 100);
 	usleep(GS_MICRO * 500);
+	printf("qqqqqqqqqqqqqq\n");
 	GS_SETPOS(servo, GS_SERVO_TORSO, 50);
 	GS_SETPOS(servo, GS_SERVO_HEAD, 160);
-	usleep(GS_MICRO * 2);
+	usleep(GS_MICRO * 2000);
 	GS_SETPOS(servo, GS_SERVO_TORSO, GS_STARTPOS_TORSO);
 	GS_SETPOS(servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
-	usleep(GS_MICRO * 1);
+	usleep(GS_MICRO * 1000);
 	GS_SETPOS(servo, GS_SERVO_TORSO, 160);
 	GS_SETPOS(servo, GS_SERVO_HEAD, 60);
-	usleep(GS_MICRO * 2);
+	usleep(GS_MICRO * 2000);
 	gs_set_pos(servo);
 
 

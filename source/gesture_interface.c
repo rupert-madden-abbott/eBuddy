@@ -68,6 +68,8 @@ int gsi_test(void)
     }
 	gs_move_arms(servo);
 	gs_shake_head(servo);
+	gs_turn(servo);
+	
 
 	return GSI_OK;
 }
