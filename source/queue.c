@@ -3,6 +3,8 @@
  * @author Rupert Madden-Abbott
 */
 
+#include <stdlib.h>
+#include <pthread.h>
 #include "utility.h"
 #include "queue.h"
 
@@ -32,16 +34,27 @@ void qu_free(qu_queue *queue) {
 }
 
 int qu_push(qu_queue *queue, void *data) {
+  int rc;
+  
+  rc = pthread_mutex_trylock(&(queue->mutex));
+  if(rc) return ERR_UNKNOWN;
+  
   if(!queue->head) {
     queue->head = (qu_node *)malloc(sizeof(qu_node));
-    if(!queue->head) return ERR_UNKNOWN;
+    if(!queue->head) {
+      pthread_mutex_unlock(&(queue->mutex));
+      return ERR_UNKNOWN;
+    }
     
     queue->head->data = data;
     queue->tail = queue->head;
   } 
   else {
     queue->tail->link = (qu_node *)malloc(sizeof(qu_node));
-    if(!queue->tail->link) return ERR_UNKNOWN;
+    if(!queue->tail->link) {
+      pthread_mutex_unlock(&(queue->mutex));
+      return ERR_UNKNOWN;
+    }
     
     queue->tail = queue->tail->link;
     queue->tail->data = data;
@@ -50,13 +63,19 @@ int qu_push(qu_queue *queue, void *data) {
   queue->tail->link = NULL;
   queue->size++;
   
+  pthread_mutex_unlock(&(queue->mutex));
+  
   return ERR_NONE;
 }
 
 void *qu_pop(qu_queue *queue) {
-  qu_node *node;
+  int rc;
+  qu_node *node = NULL;
 
   if(!queue) return NULL;
+  
+  rc = pthread_mutex_trylock(&(queue->mutex));
+  if(rc) return NULL;
   
   if(queue->size > 0) {
     node = queue->head;
@@ -67,8 +86,23 @@ void *qu_pop(qu_queue *queue) {
     else {
       queue->head = queue->tail = NULL;
     }
-  return node->data;
+    
+    pthread_mutex_unlock(&(queue->mutex));
+    return node->data;
   }
   
+  pthread_mutex_unlock(&(queue->mutex));
+  
   return NULL;
+}
+
+int qu_size(qu_queue *queue) {
+    int size, rc;
+    
+    rc = pthread_mutex_trylock(&(queue->mutex));
+    if(rc) return ERR_UNKNOWN;
+    
+    size = queue->size;
+    pthread_mutex_unlock(&(queue->mutex));
+    return size;
 }
