@@ -90,7 +90,7 @@ void *nt_poll(void *queue) {
   strncpy(last_tweet, cf_get_string(root, "last_tweet"), NT_ID_MAX);
 
   while(1) {
-    sleep(10);
+    sleep(20);
     tweet = nt_get_tweet("http://api.twitter.com/1/statuses/friends_timeline.json?count=1", app, user);
     
     printf("Outside: Last Tweet: %s This Tweet: %s\n\n", last_tweet, tweet->id);
