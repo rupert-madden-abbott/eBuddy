@@ -9,6 +9,10 @@ extern int gsi_happy_level1(void);
 extern int gsi_fun_level1(void);
 extern int gsi_notification(void);
 extern int gsi_test(void);
+extern int gsi_shake_head(void);
+extern int gsi_move_arms(void);
+extern int gsi_raise_arms(void);
+
 extern int gsi_printLCD(const char* str);
 
 /* representation of a gesture [needs to go in gesture] */
