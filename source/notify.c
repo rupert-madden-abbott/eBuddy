@@ -93,8 +93,6 @@ void *nt_poll(void *queue) {
 
     strncpy(last_tweet, cf_get_string(root, "last_tweet"), NT_ID_MAX);
     
-    printf("last_tweet: %s\ntweet->id: %s\n\n", last_tweet, tweet->id);
-    
     if(strcmp(tweet->id, last_tweet)) {
       cf_set_string(root, "last_tweet", tweet->id);
       cf_write(root, config);
