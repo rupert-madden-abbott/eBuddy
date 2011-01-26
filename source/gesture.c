@@ -111,7 +111,7 @@ int gs_raise_arms(CPhidgetAdvancedServoHandle servo)
 int gs_sound(int sound, int itineration)
 {
     int i = 0;
-    const char *filepath = NULL;
+    char filepath[100];
     char command[110];
     char num[10];
     cf_json *root;
@@ -120,7 +120,7 @@ int gs_sound(int sound, int itineration)
     root = cf_read("conf/sound.json");
     if(!root) return 1;
 
-    filepath = cf_get_string(root, num);
+    strncpy(filepath, cf_get_string(root, num), 100);
     cf_free(root);
     if(!filepath) return 1;
 
@@ -236,7 +236,7 @@ int gs_eyeflash(CPhidgetInterfaceKitHandle ifkit)
 int gs_printstring(const char* string,CPhidgetTextLCDHandle txt_lcd)
 {
    int flag=0;
-   int length=strlen(string);printf("length=%d\n",length);
+   int length=strlen(string);
    int j;
    int row=0,startpoint=0;
    char tmp[10000];

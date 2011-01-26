@@ -24,7 +24,7 @@ int gsi_react(gsi_Reaction *resp)
             error = GSI_PHER;
         }
     }
-    return GSI_OK;
+    return error;
 }
 
 int gsi_happy_level1(void)
@@ -96,6 +96,58 @@ int gsi_printLCD(const char* str)
     }
    gs_printstring(str,txt_lcd);
    return GSI_OK;
+}
+
+int gsi_turn(void)
+{
+    int status;
+    CPhidgetAdvancedServoHandle servo = ph_get_servo_handle();
+    CPhidget_getDeviceStatus((CPhidgetHandle)servo, &status);
+    if(status == PHIDGET_NOTATTACHED){
+        return GSI_PHER;
+    }
+    gs_turn(servo);
+    return GSI_OK;
+
+}
+
+int gsi_shake_head(void)
+{
+    int status;
+    CPhidgetAdvancedServoHandle servo = ph_get_servo_handle();
+    CPhidget_getDeviceStatus((CPhidgetHandle)servo, &status);
+    if(status == PHIDGET_NOTATTACHED){
+        return GSI_PHER;
+    }
+    gs_shake_head(servo);
+    return GSI_OK;
+
+}
+
+int gsi_move_arms(void)
+{
+    int status;
+    CPhidgetAdvancedServoHandle servo = ph_get_servo_handle();
+    CPhidget_getDeviceStatus((CPhidgetHandle)servo, &status);
+    if(status == PHIDGET_NOTATTACHED){
+        return GSI_PHER;
+    }
+    gs_move_arms(servo);
+    return GSI_OK;
+
+}
+
+int gsi_raise_arms(void)
+{
+    int status;
+    CPhidgetAdvancedServoHandle servo = ph_get_servo_handle();
+    CPhidget_getDeviceStatus((CPhidgetHandle)servo, &status);
+    if(status == PHIDGET_NOTATTACHED){
+        return GSI_PHER;
+    }
+    gs_raise_arms(servo);
+    return GSI_OK;
+
 }
 
 

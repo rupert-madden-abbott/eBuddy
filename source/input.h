@@ -1,11 +1,17 @@
 #ifndef INPUT_H
 #define INPUT_H
+#define IN_PRESS 400
+#define IN_DISC 386
+#define IN_CARD 601
+#define IN_KEYFOB 252
+
 
 enum in_input_type{
-battery = 386,
-oil = 601,
-nuts_and_bolts = 558,
-nothing = 0
+nothing = 0,
+battery = 1,
+oil = 2,
+nuts_and_bolts = 3,
+laughing = 4,
 };
 typedef enum in_input_type in_input_type;
 

@@ -69,6 +69,6 @@ const InputAction input_actions[] = {
 
 void end(void);
 int main_loop(void);
-int enter_mode(const char *config, int *input_buffer, em_State *emotions, nt_node message, int mode);
+int enter_mode(const char *config, int *input_buffer, em_State *emotions, qu_queue *message, int mode);
 
 #endif

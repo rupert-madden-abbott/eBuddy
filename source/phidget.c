@@ -11,9 +11,12 @@ extern int ph_init(const char *config)
     CPhidgetInterfaceKitHandle ifkit;
     ph_get_servo_handle();
 
-    //ph_get_RFID_handle();
+    ph_get_RFID_handle();
 
     ifkit = ph_get_kit_handle();
+
+    ph_get_lcd_handle();
+
     CPhidget_getDeviceStatus((CPhidgetHandle)ifkit, &status);
     if(status == PHIDGET_ATTACHED){
 	gs_eyeson(ifkit);
@@ -198,7 +201,7 @@ int ph_RFID_DetachHandler(CPhidgetHandle RFID, void *userptr)
 
 int ph_RFID_ErrorHandler(CPhidgetHandle RFID, void *userptr, int ErrorCode, const char *unknown)
 {
-	printf("eBuddy RFID error %d - %s\n", ErrorCode, unknown);
+	//printf("eBuddy RFID error %d - %s\n", ErrorCode, unknown);
 	return 0;
 }
 
@@ -289,7 +292,7 @@ int ph_kit_DetachHandler(CPhidgetHandle IFK, void *userptr)
 
 int ph_kit_ErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const char *unknown)
 {
-	printf("ebuddy interface kit Error handled. %d - %s", ErrorCode, unknown);
+	//printf("ebuddy interface kit Error handled. %d - %s", ErrorCode, unknown);
 	return 0;
 }
 
@@ -328,26 +331,18 @@ CPhidgetTextLCDHandle ph_lcd_initialise(void)
 	CPhidget_open((CPhidgetHandle)txt_lcd, -1);
 
 	//get the program to wait for an TextLCD device to be attached
-	printf("Waiting for LCD to be attached....");
-	if((result = CPhidget_waitForAttachment((CPhidgetHandle)txt_lcd, 10000)))
+	if((result = CPhidget_waitForAttachment((CPhidgetHandle)txt_lcd, 5000)))
 	{
 		CPhidget_getErrorDescription(result, &err);
 		printf("Problem waiting for attachment: %s\n", err);
 		return 0;
 	}
-        CPhidgetTextLCD_setBacklight(txt_lcd,1);
         CPhidgetTextLCD_setContrast (txt_lcd, 100);
         return txt_lcd;
 }
 
-int ph_lcd_AttachHandler(CPhidgetHandle TXT, void *userptr)
-{
-	int serialNo;
-	const char *name;
-
-	CPhidget_getDeviceName (TXT, &name);
-	CPhidget_getSerialNumber(TXT, &serialNo);
-	printf("%s %10d attached!\n", name, serialNo);
+int ph_lcd_AttachHandler(CPhidgetHandle TXT, void *userptr) {
+	printf("ebuddy LCD attached!\n");
 
 	return 0;
 }

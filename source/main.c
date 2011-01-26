@@ -2,10 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 #include <phidget21.h>
 #include <jansson.h>
+#include <pthread.h>
 
 #include "utility.h"
+#include "queue.h"
 #include "notify.h"
 #include "phidget.h"
 #include "gesture_interface.h"
@@ -16,23 +19,26 @@
 int main(void) {
   em_State *emotions;
   error_code rc;
+  qu_queue *queue = qu_init();
+  nt_message *message = NULL;
   
-  /* initialise the phidgets */
+  /*//initialise the phidgets
   rc = ph_init(CONFIG_PATH);
-  
-  /* check for errors */
   if(rc) {
   	printf("Error initialising phidgits\n");
   	exit(1);
+  }*/
+  
+  //initialise notification system
+  rc = nt_init(queue, "conf/notify.json");
+  if(rc) {
+  	printf("Error initialising notifications\n");
+  	exit(1);
   }
-  
-  /* initialise notification system */
-  //rc = nt_init(queue, notify_config);
-  
-  /* create a new emotion state using the emotion table */
+
+/*
+  //create a new emotion state using the emotion table
   emotions = em_create(EMOTIONS, NUM_EMOTIONS);
-  
-  /* check for errors */
   if(!emotions) {
     printf("Error initialising emotions\n");
     printf("Check enough memory is available and try again\n");

@@ -8,9 +8,10 @@
 #include <jansson.h>
 #include "utility.h"
 #include "config.h"
+#include "queue.h"
 #include "notify.h"
 
-int nt_init(nt_node *queue, const char *config) {
+int nt_init(qu_queue *queue, const char *config) {
   char input = '\0';
   nt_token user = { "", "" }, app = { "", "" };
   cf_json *root = NULL;
@@ -62,7 +63,7 @@ int nt_init(nt_node *queue, const char *config) {
     else return ERR_UNKNOWN;
   }
 
-  pthread_create(&thread, NULL, nt_poll, NULL);  
+  pthread_create(&thread, NULL, nt_poll, queue);  
 
   return ERR_NONE;
 }
@@ -72,10 +73,11 @@ int nt_destroy() {
   return ERR_NONE;
 }
 
-void *nt_poll(void *data) {
+void *nt_poll(void *queue) {
   cf_json *root;
-  nt_message tweet; 
+  nt_message *tweet; 
   const char *config = "conf/notify.json";
+  char last_tweet[NT_ID_MAX];
   nt_token user = { "", "" }, app = { "", "" };
   
   root = cf_read(config);
@@ -85,11 +87,21 @@ void *nt_poll(void *data) {
   strncpy(user.key, cf_get_string(root, "user_key"), NT_KEY_MAX);
   strncpy(user.secret, cf_get_string(root, "user_secret"), NT_KEY_MAX);
 
+  strncpy(last_tweet, cf_get_string(root, "last_tweet"), NT_ID_MAX);
+
   while(1) {
-    sleep(5);
+    sleep(20);
     tweet = nt_get_tweet("http://api.twitter.com/1/statuses/friends_timeline.json?count=1", app, user);
     
-    printf("USER: %s\nID: %s\nTEXT: %s\n\n", tweet.user, tweet.id, tweet.text);
+    printf("Outside: Last Tweet: %s This Tweet: %s\n\n", last_tweet, tweet->id);
+    fflush(stdout);
+    if(strcmp(tweet->id, last_tweet)) {
+      printf("Inside: Last Tweet: %s This Tweet: %s\n\n", last_tweet, tweet->id);
+      strncpy(last_tweet, tweet->id, NT_ID_MAX);
+      cf_set_string(root, "last_tweet", tweet->id);
+      cf_write(root, config);
+      qu_push(queue, tweet);
+    }
   }
   pthread_exit(NULL);
 }
@@ -188,8 +200,8 @@ int nt_parse_arg(char *arg, const char *type, char *value) {
   return ERR_NONE;
 }
 
-nt_message nt_get_tweet(const char *uri, nt_token app, nt_token user) {
-  nt_message tweet;
+nt_message *nt_get_tweet(const char *uri, nt_token app, nt_token user) {
+  nt_message *tweet = malloc(sizeof(nt_message));
   cf_json *root, *object;
   char *url = NULL, *postargs = NULL, *response = NULL;
   url = oauth_sign_url2(uri, &(postargs), OA_HMAC, "GET", app.key, app.secret, 
@@ -206,10 +218,10 @@ nt_message nt_get_tweet(const char *uri, nt_token app, nt_token user) {
   
   object = (cf_json *)json_array_get((const json_t *)root, 0);
   
-  strncpy(tweet.app, "twitter", NT_APP_MAX);
-  strncpy(tweet.text, cf_get_string(object, "text"), NT_TEXT_MAX);
-  strncpy(tweet.user, cf_get_string(cf_get_object(object, "user"), "screen_name"), NT_USER_MAX);
-  strncpy(tweet.id, cf_get_string(object, "id_str"), NT_ID_MAX);  
+  strncpy(tweet->app, "twitter", NT_APP_MAX);
+  strncpy(tweet->text, cf_get_string(object, "text"), NT_TEXT_MAX);
+  strncpy(tweet->user, cf_get_string(cf_get_object(object, "user"), "screen_name"), NT_USER_MAX);
+  strncpy(tweet->id, cf_get_string(object, "id_str"), NT_ID_MAX);  
     
   return tweet;
 }

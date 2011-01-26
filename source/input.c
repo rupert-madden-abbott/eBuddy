@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <phidget21.h>
 #include "input.h"
 
@@ -28,19 +29,19 @@ int in_RFID_TagLostHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char 
 void in_RFID_savetag(int tagv)
 {
 
-if(tagv==oil)
+if(tagv==IN_DISC)
 	{
 		
 			in_set_input(oil);//oil
 		
 	}
-if(tagv==battery)
+if(tagv==IN_CARD)
 	{
 		
 			in_set_input(battery);//battery
 		
 	}
-if(tagv==nuts_and_bolts)
+if(tagv==IN_KEYFOB)
 	{
 	
 			in_set_input(nuts_and_bolts);//nuts and bolts
@@ -64,17 +65,39 @@ int in_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int
 
 void in_kit_laugh(int sindex, int svalue)
 {
-	if(svalue > 0)
+	if(svalue > IN_PRESS)
 		{
-			printf("I am Laughing\n");
+			static time_t last=0;
+			time_t current;
+			double dif;
+			time(&current);
+			if(last==0)
+				{
+					last=current;
+					in_set_input(laughing);//laughing
+				}
+			else
+				{
+					dif= difftime(current,last);
+					last=current;
+					if(dif>1)
+						{
+							in_set_input(laughing);//laughing
+						}
+				}
+
+			
 		}
 }
 
 /*in_input_type functions*/
 int in_get_input(void)
+
 {
-return in_last_input;
+int temp;
+temp=in_last_input;
 in_last_input=nothing;
+return temp;
 }
 void in_set_input(int input)
 {
