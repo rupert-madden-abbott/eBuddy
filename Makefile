@@ -7,12 +7,15 @@ LIB_OSX     := -framework Phidget21
 
 INCLUDE     := -Isource/
 
-all: checkdir linux
+all: linux
 
-linux: main.o config.o notify.o emotion.o phidget.o gesture.o gesture_interface.o input.o utility.o queue.o
+demo: checkdir demo_test.o config.o notify.o emotion.o phidget.o gesture.o gesture_interface.o input.o utility.o queue.o
+	$(CC) $(CFLAGS) build/demo_test.o build/config.o build/notify.o build/emotion.o build/phidget.o build/gesture.o build/gesture_interface.o build/input.o build/utility.o build/queue.o $(LIB) $(LIB_LINUX) -o build/demo
+
+linux: checkdir main.o config.o notify.o emotion.o phidget.o gesture.o gesture_interface.o input.o utility.o queue.o
 	$(CC) $(CFLAGS) build/main.o build/config.o build/notify.o build/emotion.o build/phidget.o build/gesture.o build/gesture_interface.o build/input.o build/utility.o build/queue.o $(LIB) $(LIB_LINUX) -o build/ebuddy
 
-osx: main.o config.o notify.o emotion.o phidget.o gesture.o gesture_interface.o input.o utility.o queue.o
+osx: checkdir main.o config.o notify.o emotion.o phidget.o gesture.o gesture_interface.o input.o utility.o queue.o
 	$(CC) $(CFLAGS) build/main.o build/config.o build/notify.o build/emotion.o build/phidget.o build/gesture.o build/gesture_interface.o build/input.o build/utility.o $(LIB) $(LIB_OSX) build/queue.o -o build/ebuddy
 
 main.o: source/main.c source/main.h
@@ -65,6 +68,9 @@ notify_test: notify_test.o notify.o config.o queue.o
 
 notify_test.o: test/notify_test.c test/test.h source/notify.h
 	$(CC) $(CFLAGS) -c test/notify_test.c -o build/notify_test.o $(INCLUDE)
+
+demo_test.o: test/demo_test.c test/test.h source/main.h
+	$(CC) $(CFLAGS) -c test/demo_test.c -o build/demo_test.o $(INCLUDE)
 	
 clean:
 	@rm -rf build/*

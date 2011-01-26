@@ -21,6 +21,7 @@ int main(void) {
   error_code rc;
   qu_queue *queue = qu_init();
   nt_message *message = NULL;
+  pthread_t thread;
   
   //initialise the phidgets
   rc = ph_init(CONFIG_PATH);
@@ -35,14 +36,17 @@ int main(void) {
   	printf("Error initialising notifications\n");
   	exit(1);
   }
+  
+  printf("hello");
+  fflush(stdout);
 
-    pthread_create(&thread, NULL, nt_poll, queue);
+  pthread_create(&thread, NULL, nt_poll, queue);
   
   while(1) {
     sleep(1);
     if(qu_size(queue) > 0) {
-      msg = qu_pop(queue);
-      printf("%s", msg->text);
+      message = qu_pop(queue);
+      printf("%s", message->text);
       fflush(stdout);
     }
   }
