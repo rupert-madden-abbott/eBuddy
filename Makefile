@@ -1,7 +1,7 @@
 CC          := gcc
-CFLAGS      := -Wall -Wpointer-arith -Wwrite-strings -Wstrict-prototypes -pedantic -std=gnu99
+CFLAGS      := -Wall -Wpointer-arith -Wwrite-strings -Wstrict-prototypes -pedantic -std=gnu99 -g
 
-LIB         := -ljansson -lcurl -loauth
+LIB         := -ljansson -lcurl -loauth -pthread
 LIB_LINUX   := -lphidget21
 LIB_OSX     := -framework Phidget21
 
@@ -46,13 +46,25 @@ queue.o: source/queue.c source/queue.h
 	$(CC) $(CFLAGS) -c source/queue.c -o build/queue.o
   
 # TESTS
-test: config_test
+test: queue_test config_test notify_test
 
+queue_test: queue_test.o queue.o
+	$(CC) $(CFLAGS) build/queue_test.o build/queue.o $(LIB) $(LIB_LINUX) -o build/queue_test
+
+queue_test.o: test/queue_test.c test/test.h source/queue.h
+	$(CC) $(CFLAGS) -c test/queue_test.c -o build/queue_test.o $(INCLUDE)
+	
 config_test: config.o config_test.o
 	$(CC) $(CFLAGS) build/config.o build/config_test.o $(LIB) $(LIB_LINUX) -o build/config_test
 
 config_test.o: test/config_test.c test/test.h source/config.h
 	$(CC) $(CFLAGS) -c test/config_test.c -o build/config_test.o $(INCLUDE)
+
+notify_test: notify_test.o notify.o config.o queue.o
+	$(CC) $(CFLAGS) build/notify_test.o build/notify.o build/config.o build/queue.o $(LIB) $(LIB_LINUX) -o build/notify_test
+
+notify_test.o: test/notify_test.c test/test.h source/notify.h
+	$(CC) $(CFLAGS) -c test/notify_test.c -o build/notify_test.o $(INCLUDE)
 	
 clean:
 	@rm -rf build/*
