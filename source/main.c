@@ -4,6 +4,7 @@
 #include <time.h>
 #include <phidget21.h>
 #include <jansson.h>
+#include <pthread.h>
 
 #include "utility.h"
 #include "queue.h"
