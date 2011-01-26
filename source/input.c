@@ -72,9 +72,12 @@ void in_kit_laugh(int sindex, int svalue)
 
 /*in_input_type functions*/
 int in_get_input(void)
+
 {
-return in_last_input;
+int temp;
+temp=in_last_input;
 in_last_input=nothing;
+return temp;
 }
 void in_set_input(int input)
 {
