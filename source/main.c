@@ -6,6 +6,7 @@
 #include <jansson.h>
 
 #include "utility.h"
+#include "queue.h"
 #include "notify.h"
 #include "phidget.h"
 #include "gesture_interface.h"
