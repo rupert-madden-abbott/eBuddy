@@ -331,26 +331,18 @@ CPhidgetTextLCDHandle ph_lcd_initialise(void)
 	CPhidget_open((CPhidgetHandle)txt_lcd, -1);
 
 	//get the program to wait for an TextLCD device to be attached
-	printf("Waiting for LCD to be attached....");
-	if((result = CPhidget_waitForAttachment((CPhidgetHandle)txt_lcd, 10000)))
+	if((result = CPhidget_waitForAttachment((CPhidgetHandle)txt_lcd, 5000)))
 	{
 		CPhidget_getErrorDescription(result, &err);
 		printf("Problem waiting for attachment: %s\n", err);
 		return 0;
 	}
-        CPhidgetTextLCD_setBacklight(txt_lcd,1);
         CPhidgetTextLCD_setContrast (txt_lcd, 100);
         return txt_lcd;
 }
 
-int ph_lcd_AttachHandler(CPhidgetHandle TXT, void *userptr)
-{
-	int serialNo;
-	const char *name;
-
-	CPhidget_getDeviceName (TXT, &name);
-	CPhidget_getSerialNumber(TXT, &serialNo);
-	printf("%s %10d attached!\n", name, serialNo);
+int ph_lcd_AttachHandler(CPhidgetHandle TXT, void *userptr) {
+	printf("ebuddy LCD attached!\n");
 
 	return 0;
 }

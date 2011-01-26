@@ -235,7 +235,7 @@ int gs_eyeflash(CPhidgetInterfaceKitHandle ifkit)
 int gs_printstring(const char* string,CPhidgetTextLCDHandle txt_lcd)
 {
    int flag=0;
-   int length=strlen(string);printf("length=%d\n",length);
+   int length=strlen(string);
    int j;
    int row=0,startpoint=0;
    char tmp[10000];
