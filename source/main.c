@@ -22,13 +22,6 @@ int main(void) {
   em_State *emotions;
   qu_queue *notifications;
   error_code rc;
-  
-  //initialise the phidgets
-  rc = ph_init(CONFIG_PATH);
-  if(rc) {
-  	printf("Error initialising phidgits\n");
-  	exit(1);
-  }
 
   //create a new emotion state using the emotion table
   emotions = em_create(EMOTIONS, NUM_EMOTIONS);
@@ -58,6 +51,13 @@ int main(void) {
   else if(rc) {
     printf("Error reading state file\n");
     exit(1);
+  }
+  
+  //initialise the phidgets
+  rc = ph_init(CONFIG_PATH);
+  if(rc) {
+  	printf("Error initialising phidgits\n");
+  	exit(1);
   }
   
   //create the notification queue
