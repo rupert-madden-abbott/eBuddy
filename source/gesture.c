@@ -154,7 +154,7 @@ int gs_shake_head(CPhidgetAdvancedServoHandle servo)
 int gs_move_arms(CPhidgetAdvancedServoHandle servo)
 {
     GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
-	  GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
+    GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
     GS_SETPOS (servo, GS_SERVO_LEFTARM, 200);
     GS_SETPOS (servo, GS_SERVO_RIGHTARM, 200);
     usleep(GS_MICRO * 500);
@@ -171,17 +171,16 @@ int gs_move_arms(CPhidgetAdvancedServoHandle servo)
 
 int gs_turn(CPhidgetAdvancedServoHandle servo)
 {
-	GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
-	GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
-	GS_SETENG(servo, GS_SERVO_HEAD, 1);
-	GS_SETENG(servo, GS_SERVO_TORSO, 1);
+    GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
+    GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
+    GS_SETENG(servo, GS_SERVO_HEAD, 1);
+    GS_SETENG(servo, GS_SERVO_TORSO, 1);
 
-	GS_SETPOS(servo, GS_SERVO_LEFTARM, 100);
-	GS_SETPOS(servo, GS_SERVO_RIGHTARM, 100);
-	usleep(GS_MICRO * 500);
-	printf("qqqqqqqqqqqqqq\n");
-	GS_SETPOS(servo, GS_SERVO_TORSO, 50);
-	GS_SETPOS(servo, GS_SERVO_HEAD, 160);
+    GS_SETPOS(servo, GS_SERVO_LEFTARM, 100);
+    GS_SETPOS(servo, GS_SERVO_RIGHTARM, 100);
+    usleep(GS_MICRO * 500);
+    GS_SETPOS(servo, GS_SERVO_TORSO, 50);
+    GS_SETPOS(servo, GS_SERVO_HEAD, 160);
 	usleep(GS_MICRO * 2000);
 	GS_SETPOS(servo, GS_SERVO_TORSO, GS_STARTPOS_TORSO);
 	GS_SETPOS(servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
@@ -191,6 +190,7 @@ int gs_turn(CPhidgetAdvancedServoHandle servo)
 	usleep(GS_MICRO * 2000);
 	gs_set_pos(servo);
 
+	
 
 
 	return 0;

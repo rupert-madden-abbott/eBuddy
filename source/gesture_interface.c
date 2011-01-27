@@ -54,7 +54,7 @@ int gsi_fun_level1(void)
 
 int gsi_notification(void)
 {
-    gs_sound(3, 4);
+    gs_sound(7, 1);
     return GSI_OK;
 }
 
