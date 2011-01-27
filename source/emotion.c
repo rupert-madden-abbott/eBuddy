@@ -161,19 +161,19 @@ int level;
 level = em_get(state, emotion);
 
 if(level > state->emotions[emotion].full) {
-  return em_cond_full;
+  return EM_COND_FULL;
 }
 
 else if(level < state->emotions[emotion].critical) {
-  return em_cond_critical;
+  return EM_COND_CRITICAL;
 }
 
 else if(level < state->emotions[emotion].low) {
-  return em_cond_low;
+  return EM_COND_LOW;
 }
 
 else {
-  return em_cond_normal;
+  return EM_COND_NORMAL;
 }
 }
 
@@ -272,20 +272,27 @@ int em_check(em_State *state, em_Event *event) {
 }
 
 /* updates a state according to the a reaction struct. */
-int em_react(em_State *state, em_Reaction *reaction) {
+int em_react(em_State *state, const em_Reaction *reaction) {
   
   /* set the emotion to the value if action is set */
-  if(reaction->action == em_action_set) {
+  if(reaction->action == EM_ACTION_SET) {
+  	printf("set\n");
   	return em_set(state, reaction->emotion, reaction->value);
   }
   
   /* update it if action is update */
-  else if(reaction->action == em_action_update) {
+  else if(reaction->action == EM_ACTION_UPDATE) {
+  	printf("update\n");
     return em_update(state, reaction->emotion, reaction->value);
+  }
+  
+  /* do nothing if action is none */
+  else if(reaction->action == EM_ACTION_NONE) {
+    return ERR_NONE;
   }
   
   /* otherwise return an error */
   else {
-    return 1;
+    return ERR_BAD_ACTION;
   }
 }

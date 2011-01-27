@@ -6,17 +6,17 @@
 
 /* the level of an emotion relative to it's event values */
 typedef enum em_condition {
-  em_cond_normal = 0,		/* the level is between low and full */
-  em_cond_full,				/* the level is above full */
-  em_cond_low,				/* the level is between critical and low */
-  em_cond_critical			/* the level is below critical */
+  EM_COND_NORMAL = 0,		/* the level is between low and full */
+  EM_COND_FULL,				/* the level is above full */
+  EM_COND_LOW,				/* the level is between critical and low */
+  EM_COND_CRITICAL			/* the level is below critical */
 } em_condition;
 
 /* represents a type of reaction */
 typedef enum em_action {
-  em_action_none = 0,		/* do nothing */
-  em_action_set,			/* set the emotion to the value */
-  em_action_update			/* update the emotion  by the value */
+  EM_ACTION_NONE = 0,		/* do nothing */
+  EM_ACTION_SET,			/* set the emotion to the value */
+  EM_ACTION_UPDATE			/* update the emotion  by the value */
 } em_action;
 
 /* represents a type of emotion and gives decay times etc. */
@@ -93,7 +93,7 @@ int em_update(em_State *state, int emotion, double value);
 int em_check(em_State *state, em_Event *event);
 
 /* updates a state according to the a reaction struct. */
-int em_react(em_State *state, em_Reaction *reaction);
+int em_react(em_State *state, const em_Reaction *reaction);
 
 void em_reset(em_State *state);
 
