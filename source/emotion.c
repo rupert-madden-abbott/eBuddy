@@ -35,9 +35,9 @@ em_State *em_create(const em_Emotion *emotions, int num_emotions) {
     return NULL;
   }
 	
-  /* initialise each level */
+  /* initialise each level to maximum */
   for(i = 0; i < num_emotions; i++) {
-    state->levels[i].last_value = 0;
+    state->levels[i].last_value = EM_MAX_LEVEL;
 	state->levels[i].last_update = now;
 	state->levels[i].last_event = now;
   }
