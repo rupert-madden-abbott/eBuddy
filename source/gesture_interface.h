@@ -12,6 +12,7 @@ extern int gsi_test(void);
 extern int gsi_shake_head(void);
 extern int gsi_move_arms(void);
 extern int gsi_raise_arms(void);
+extern int gsi_eyeflash(void);
 
 extern int gsi_printLCD(const char* str);
 
