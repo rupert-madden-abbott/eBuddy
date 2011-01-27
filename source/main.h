@@ -2,7 +2,9 @@
 #define MAIN_H
 
 #define CONFIG_PATH "conf/"
+#define NT_CONFIG CONFIG_PATH "notify.json"
 #define EM_STATE_PATH CONFIG_PATH "em_state"
+
 
 /* number of emotions in the emotion table */
 #define NUM_EMOTIONS 2
@@ -10,7 +12,8 @@
 typedef enum run_mode {
   MODE_NONE = 0,
   MODE_KILL = -1,
-  MODE_INT,
+  MODE_MAIN,
+  MODE_DEMO,
   MODE_GUESS,
 } run_mode;
 
@@ -62,13 +65,15 @@ const EmotionAction emotion_actions[] = {
 };
 
 const InputAction input_actions[] = {
-  {{0,	0,	0},	{0,	0,	0}, {NULL,	""}, {NULL,	""}, {NULL,	""},	MODE_NONE}	/* somthing happens */
+  {{0,	0,	0}, {0,	0,	0}, {NULL,	"ewww"}, {NULL,	"mmm"}, {gsi_shake_head,	"yummm!!!"}, MODE_NONE},	/* battery */
+  {{0,	0,	0}, {0,	0,	0}, {NULL,	"naah"}, {gsi_fun_level1,	"glug"}, {gsi_fun_level1,	"gulp"}, MODE_NONE},	/* somthing happens */
 
 };
 
+const gsi_Reaction message_action = {NULL, ""};
 
-void end(void);
-int main_loop(void);
-int enter_mode(const char *config, int *input_buffer, em_State *emotions, qu_queue *message, int mode);
+int enter_mode(run_mode mode, em_State *emotions, qu_queue *notifications);
+int run_demo(em_State *emotions, qu_queue *notifications);
+int run_main(em_State *emotions, qu_queue *notifications);
 
 #endif
