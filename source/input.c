@@ -32,19 +32,19 @@ void in_RFID_savetag(int tagv)
 if(tagv==IN_DISC)
 	{
 		
-			in_set_input(oil);//oil
+			in_set_input(INPT_OIL);//oil
 		
 	}
 if(tagv==IN_CARD)
 	{
 		
-			in_set_input(battery);//battery
+			in_set_input(INPT_BATTERY);//battery
 		
 	}
 if(tagv==IN_KEYFOB)
 	{
 	
-			in_set_input(nuts_and_bolts);//nuts and bolts
+			in_set_input(INPT_BOLTS);//nuts and bolts
 		
 	}
 }
@@ -74,7 +74,7 @@ void in_kit_laugh(int sindex, int svalue)
 			if(last==0)
 				{
 					last=current;
-					in_set_input(laughing);//laughing
+					in_set_input(INPT_FORCE);//laughing
 				}
 			else
 				{
@@ -82,7 +82,7 @@ void in_kit_laugh(int sindex, int svalue)
 					last=current;
 					if(dif>1)
 						{
-							in_set_input(laughing);//laughing
+							in_set_input(INPT_FORCE);//laughing
 						}
 				}
 
@@ -96,12 +96,12 @@ int in_get_input(void)
 {
 int temp;
 temp=in_last_input;
-in_last_input=nothing;
+in_last_input=INPT_NONE;
 return temp;
 }
 void in_set_input(int input)
 {
-if(in_last_input==nothing)
+if(in_last_input==INPT_NONE)
 	{
 		in_last_input=input;
 	}

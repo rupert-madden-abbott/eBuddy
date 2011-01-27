@@ -7,11 +7,12 @@
 
 
 enum in_input_type{
-nothing = 0,
-battery = 1,
-oil = 2,
-nuts_and_bolts = 3,
-laughing = 4,
+INPT_NONE = 0,
+INPT_BATTERY,
+INPT_OIL,
+INPT_BOLTS,
+INPT_FORCE,
+INPT_POWER
 };
 typedef enum in_input_type in_input_type;
 
