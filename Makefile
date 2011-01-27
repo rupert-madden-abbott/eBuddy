@@ -15,8 +15,11 @@ demo: checkdir demo_test.o config.o notify.o emotion.o phidget.o gesture.o gestu
 linux: checkdir main.o config.o notify.o emotion.o phidget.o gesture.o gesture_interface.o input.o utility.o queue.o
 	$(CC) $(CFLAGS) build/main.o build/config.o build/notify.o build/emotion.o build/phidget.o build/gesture.o build/gesture_interface.o build/input.o build/utility.o build/queue.o $(LIB) $(LIB_LINUX) -o build/ebuddy
 
-osx: checkdir main.o config.o notify.o emotion.o phidget.o gesture.o gesture_interface.o input.o utility.o queue.o
+osx: main.o config.o notify.o emotion.o phidget.o gesture.o gesture_interface.o input.o utility.o queue.o
 	$(CC) $(CFLAGS) build/main.o build/config.o build/notify.o build/emotion.o build/phidget.o build/gesture.o build/gesture_interface.o build/input.o build/utility.o $(LIB) $(LIB_OSX) build/queue.o -o build/ebuddy
+
+simulation: main.o config.o notify.o emotion.o simulation.o sim_wrapper.o utility.o queue.o
+	$(CC) $(CFLAGS) build/main.o build/config.o build/notify.o build/emotion.o build/simulation.o build/sim_wrapper.o build/utility.o build/queue.o $(LIB) -o build/simulation
 
 main.o: source/main.c source/main.h
 	$(CC) $(CFLAGS) -c source/main.c -o build/main.o
@@ -47,6 +50,12 @@ input.o: source/input.c source/input.h
 
 queue.o: source/queue.c source/queue.h
 	$(CC) $(CFLAGS) -c source/queue.c -o build/queue.o
+	
+simulation.o : source/simulation.c source/simulation.h
+	$(CC) $(CFLAGS) -c source/simulation.c -o build/simulation.o
+
+sim_wrapper.o : source/sim_wrapper.c
+	$(CC) $(CFLAGS) -c source/sim_wrapper.c -o build/sim_wrapper.o
   
 # TESTS
 test: queue_test config_test notify_test
