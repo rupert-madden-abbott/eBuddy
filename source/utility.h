@@ -10,10 +10,11 @@
 #endif
 #endif
 
-#define ONE_MIN (60)
-#define ONE_HOUR (60*60)
-#define ONE_DAY (24*60*60)
-#define SECONDS_IN_AN_HOUR (60*60)
+#define UT_MIN (60)
+#define UT_HOUR (60*60)
+#define UT_DAY (24*60*60)
+
+#define UT_EPOCH_YEAR 1900
 
 enum os {
   LINUX,
@@ -28,7 +29,8 @@ typedef enum error_code {
   ERR_BAD_FILE,		//file is corrupt
   ERR_BAD_ARG,		//invalid argument to a function
   ERR_BAD_MODE,		//invalid run mode selected
-  ERR_BAD_ACTION	//an invalid action was requested
+  ERR_BAD_ACTION,	//an invalid action was requested
+  ERR_EMPTY			//no data to read
 } error_code;
 
 /* test to see if a path is valid and writable */
