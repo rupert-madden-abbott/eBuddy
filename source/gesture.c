@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include <unistd.h>
 #include <phidget21.h>
-#include <jansson.h>
+
+#include "config.h"
 #include "utility.h"
 #include "phidget.h"
-#include "config.h"
 #include "gesture.h"
 
 /*servo gestures*/

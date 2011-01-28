@@ -1,0 +1,313 @@
+#include <unistd.h>
+#include <assert.h>
+
+#include "utility.h"
+#include "input.h"
+#include "gesture_interface.h"
+#include "debug.h"
+
+//main menu items
+const char *debug_main_menu[] = {
+  "emotions",
+  "events",
+};
+
+//number of main menu items
+const int debug_main_menu_size = 2;
+
+//emotion menu items
+const char *debug_em_menu[] = {
+  "get",
+  "set",
+  "update"
+};
+
+//number of main menu items
+const int debug_em_menu_size = 3;
+
+//emotion names
+const char *debug_em_list[] = {
+  "hunger",
+  "energy",
+  "cleaness",
+  "social",
+  "fun"
+};
+
+//number of emotions in list
+const int debug_em_list_size = 5;
+
+//debug mode main menu
+//allows access to all debugging tools
+int debug_main(em_State *emotions, qu_queue *notifications) {
+  int item, rc;
+
+  //gsi_enter_debug();
+  
+  //move between different tools until user quits
+  do {
+  	gsi_printLCD("main menu");
+
+    //display the menu
+    item = debug_menu(debug_main_menu, debug_main_menu_size);
+    
+    //run the correct command
+    switch(item) {
+    	
+      //emotion editor
+      case 0:
+        rc = debug_emotions(emotions, notifications);
+        break;
+      
+      //events viewer  
+      case 1:
+        rc = debug_events(emotions, notifications);
+        break;
+        
+    }
+    
+    //pass errors to calling function
+    if(rc) {
+      return rc;
+    }
+    
+  } while(item != DEBUG_EXIT && item != DEBUG_BACK);
+  
+  gsi_printLCD("exit debug");
+  gsi_eyeflash();
+  
+  return ERR_NONE;
+}
+
+//emotion menu allows user to get and set emotion levels
+int debug_emotions(em_State *emotions, qu_queue *notifications) {
+  char num_string[DEBUG_NUM_STR_LEN];
+  int emotion, action;
+  float value;
+  
+  //get emotion to perform an action on
+  gsi_printLCD("select emotion");
+  emotion = debug_menu(debug_em_list, debug_em_list_size);
+  
+  //check for exit
+  if(emotion == DEBUG_BACK || emotion == DEBUG_EXIT) {
+    return ERR_NONE;
+  }
+  
+  //get action to perform
+  gsi_printLCD("select action");  
+  action = debug_menu(debug_em_menu, debug_em_menu_size);
+  
+  //check for exit
+  if(emotion == DEBUG_BACK || emotion == DEBUG_EXIT) {
+    return ERR_NONE;
+  }
+  
+  //if user selected get print value on the screen
+  else if(action == 0) {
+  	
+  	//read the level of the emotion
+  	value = em_get(emotions, emotion);
+  	
+  	//convert value to string and display it to the user
+    sprintf(num_string, "%6lf", value);
+    gsi_printLCD(num_string);
+  }
+  
+  //if user selected set change the value
+  else if(action == 1) {
+  	
+  	//get value from user
+    gsi_printLCD("select value");
+    value = debug_input(0, emotions->emotions[emotion].max, 10);
+    
+    em_set(emotions, emotion, value);
+    gsi_printLCD("set");
+  }
+    
+    //if user selected update update the value
+  else if(action == 2){
+    	
+    //get value from user
+    gsi_printLCD("select value");
+    value = debug_input(0, emotions->emotions[emotion].max, 10);
+      
+    em_update(emotions, emotion, value);
+    gsi_printLCD("updated");	
+  }
+
+  return ERR_NONE;
+}
+
+
+//print event stream to lcd screen
+int debug_events(em_State *emotions, qu_queue *notifications) {
+  in_input_type input_event;
+  em_Event emotion_event;
+  nt_message *message;
+  int running, rc;
+  
+  gsi_printLCD("push power button to exit");
+
+  //loop until user presses power button
+  running = 1;
+
+  while(running) {
+  	
+  	//look for input events
+    input_event = in_get_input();
+  
+    //check for power button press
+    if(input_event == INPT_POWER_OFF) {
+      running = 0;
+    }
+    
+    //print other events to the screen
+    else if(input_event) {
+      gsi_printLCD("input");	
+    }
+  	
+  	//look for emotion events
+    rc = em_check(emotions, &emotion_event);
+  
+    //print events on the screen
+    if(!rc) {
+      gsi_printLCD("emotion");
+    }
+  	
+    //get notification events
+    message = qu_pop(notifications);
+  
+    //print details on the screen
+    if(message) {
+      gsi_printLCD("message");
+    }
+  
+    sleep(1);
+  }
+  
+  gsi_printLCD("exit");
+  return ERR_NONE;
+}
+
+//display a menu on the lcd screen allowing the user to choose between
+//item's. the function returns the item number or debug_none if the operation
+//is canceled
+int debug_menu(const char **items, int num_items) {
+  in_input_type input;
+  int selected, current;
+
+  //start on first item in list
+  current = 0;
+  selected = 0;
+  
+  //loop until an item is chosen or the user exits
+  while(!selected) {
+  	
+  	assert(current >= 0);
+  	assert(current <= num_items);
+  	
+    //print the current item on the screen
+    gsi_printLCD(items[current]);
+    
+    //wait for input from the user
+    do {
+      sleep(1);
+      input = in_get_input();
+      
+    } while(input == INPT_NONE);
+  
+    //left button selects previous
+    if(input == INPT_LEFT_HAND) {
+      current = (current == 0) ? num_items - 1 : current - 1;
+    }
+  
+    //right button selects next
+    else if(input == INPT_RIGHT_HAND) {
+      current = (current == num_items - 1) ? 0 : current + 1;
+    }
+  
+    //force sensor selects item
+    else if(input == INPT_FORCE) {
+      selected = 1;
+    }
+  
+    //touch sensor exits menu
+    else if(input == INPT_TOUCH) {
+      current = DEBUG_BACK;
+      selected = 1;
+    }
+    
+    //power button or debug key quits debug
+    else if(input == INPT_DEBUG || input == INPT_POWER_OFF) {
+      current = DEBUG_EXIT;
+      selected = 1;
+    }
+    
+  }
+  return current;
+}
+
+//get a number from the user between min and max with
+//steps of the given size
+int debug_input(int min, int max, int step) {
+  in_input_type input;
+  char num_string[DEBUG_NUM_STR_LEN];
+  int selected, current;
+
+  //make sure step is at least 1
+  assert(step > 0);
+
+  //start on smallest number
+  current = min;
+  selected = 0;
+  
+  //loop until an item is chosen or the user exits
+  while(!selected) {
+  	
+  	//item must be between max and min
+  	assert(current >= min);
+  	assert(current <= max);
+  	
+    //print the current number on the screen
+    sprintf(num_string, "%d", current);
+    gsi_printLCD(num_string);
+    
+    //wait for input from the user
+    do {
+      sleep(1);
+      input = in_get_input();
+      
+    } while(input == INPT_NONE);
+  
+    //left button increments number
+    if(input == INPT_LEFT_HAND) {
+      current = (current - step < min) ? min : current - step;
+    }
+  
+    //left button decrements number
+    else if(input == INPT_RIGHT_HAND) {
+      current = (current +step > max) ? max : current + step;
+    }
+  
+    //force sensor selects number
+    else if(input == INPT_FORCE) {
+      selected = 1;
+    }
+  
+    //touch sensor exits selection
+    else if(input == INPT_TOUCH) {
+      current = DEBUG_BACK;
+      selected = 1;
+    }
+    
+    //power button or debug key quits debug
+    else if(input == INPT_DEBUG || input == INPT_POWER_OFF) {
+      current = DEBUG_EXIT;
+      selected = 1;
+    }
+    
+  }
+  
+  return current;
+}

@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include <unistd.h>
 #include <phidget21.h>
-#include <jansson.h>
+
 #include "utility.h"
 #include "phidget.h"
-#include "config.h"
 #include "gesture.h"
 #include "gesture_interface.h"
 

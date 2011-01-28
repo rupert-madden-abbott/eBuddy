@@ -6,6 +6,8 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+#include <pthread.h>
+
 typedef struct qu_node {
     void *data;
     struct qu_node *link;

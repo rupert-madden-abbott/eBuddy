@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <phidget21.h>
 
 #include "utility.h"
 #include "phidget.h"
@@ -69,7 +68,7 @@ int gsi_react(const gsi_Reaction *resp) {
 }
 
 int gsi_printLCD(const char* str) {
-  printf(">>%s\n", str);
+  printf("-- %s --\n", str);
   
   return 0;
 }

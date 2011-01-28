@@ -1,23 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-#include <assert.h>
-#include <unistd.h>
-#include <phidget21.h>
-#include <jansson.h>
-#include <pthread.h>
 
 #include "utility.h"
 #include "phidget.h"
 #include "input.h"
 #include "emotion.h"
-#include "gesture.h"
-#include "gesture_interface.h"
-#include "config.h"
 #include "queue.h"
 #include "notify.h"
+#include "mode.h"
 #include "main.h"
+
+//list of emotions and their decay times etc
+//each emotion will decay to 1*factor of its original value
+//after one life. when the level is above full or below low
+//the user will be alerted once every alert time. all times
+//are in seconds.
+const em_Emotion main_emotions[] = {
+	
+//life				factor		alert			max		full	low		critical
+  {UT_HOUR * 24,	0.2,		UT_MIN * 1,		100,	90,		30,		10},	//hunger
+  {UT_HOUR * 18,	0.5,		UT_MIN * 1,		100,	90,		20,		10},	//energy
+  {UT_HOUR * 24,	0.3,		UT_MIN * 1,		150,	100,	50,		10},	//cleanliness
+  {UT_HOUR * 2,		0.9,		UT_MIN * 1,		100,	98,		40,		20},	//social
+  {UT_HOUR * 2,		0.7,		UT_MIN * 2,		100,	98,		20,		5}		//fun
+};
+
 
 int main(void) {
   em_State *emotions;
@@ -25,7 +33,7 @@ int main(void) {
   error_code rc;
 
   //create a new emotion state using the emotion table
-  emotions = em_create(EMOTIONS, NUM_EMOTIONS);
+  emotions = em_create(main_emotions, NUM_EMOTIONS);
 
   if(!emotions) {
     printf("Error initialising emotions\n");
@@ -79,7 +87,7 @@ int main(void) {
   }
   
   //enter main interactive mode
-  rc = main_run(STARTUP_MODE, emotions, notifications);
+  rc = mode_run(STARTUP_MODE, emotions, notifications);
   
   //finalise and unload all modules
   printf("Shutting down\n");
@@ -89,165 +97,3 @@ int main(void) {
   ph_destruct();
   return 0;
 }
-
-
-//takes a run_mode and calls the appropriate function
-int main_run(run_mode mode, em_State *emotions, qu_queue *notifications) {
-	
-  /* main mode */
-  if(mode == MODE_MAIN) {
-    return main_loop(emotions, notifications);
-  }
-  
-  /* demo moode */
-  else if(mode == MODE_DEMO) {
-    return main_demo(emotions, notifications);
-  }
-  
-  /* guessing game */
-  else if(mode == MODE_GUESS) {
-    //return game_run_guess(emotions, notifications);
-  }
-  
-  //check for incorrect mode number
-  return ERR_BAD_MODE;
-}
-
-
-
-//Demo mode
-int main_demo(em_State *emotions, qu_queue *notifications) {
-  nt_message *message;
-
-  while(1) {
-    sleep(1);
-    if(qu_size(notifications) > 0) {
-      printf("Before POP: %i\n", qu_size(notifications));
-      message = qu_pop(notifications);
-      printf("After POP: %i\n", qu_size(notifications));
-      printf("%s\n", message->text);
-      gsi_eyeflash();
-      gsi_raise_arms();
-      gsi_notification();
-      gsi_printLCD(message->text);
-      
-      fflush(stdout);
-    }
-      if(in_get_input() == INPT_BATTERY)
-	{
-            
-		gsi_happy_level1();
-	}
-  }
-
-
-  return 1;
-}
-
-
-//Main loop
-int main_loop(em_State *emotions, qu_queue *notifications) {
-  const EmotionAction *em_action;
-  const InputAction *in_action;
-  nt_message *message;
-  em_Event emotion_event; 
-  em_condition condition;
-  int input_event, rc;
-
-  while(1) {
-
-  //look for input events
-  input_event = in_get_input();
-  
-  //react to events
-  if(input_event) {
-  	
-  	//get action from table
-  	in_action = &input_actions[input_event - 1];
-  	
-  	//get condition of primary emotion before update
-  	if(in_action->primary_emotion.emotion != EMO_NONE) {
-      condition = em_get_condition(emotions, in_action->primary_emotion.emotion);
-  	}
-  	
-  	//if emotion is none use full gesture
-  	else {
-  		condition = EM_COND_FULL;
-  	}
-  	
-  	//update primary emotion
-  	rc = em_react(emotions, &in_action->primary_emotion);
-  	
-  	//check for errors in reaction table
-  	assert(rc ==0);
-  	
-  	//update secondary emotion
-    rc = em_react(emotions, &in_action->secondary_emotion);
-    
-  	//check for errors in reaction table
-  	assert(rc ==0);
-    
-    //if emotion was full do full gesture
-    if(condition == EM_COND_FULL) {
-      gsi_react(&in_action->full_gesture);
-    }
-    
-    //if it was normal do normal gesture
-    else if(condition == EM_COND_NORMAL) {
-      gsi_react(&in_action->normal_gesture);
-    }
-    
-    //otherwise do low gesture
-    else {
-      gsi_react(&in_action->low_gesture);
-    }
-    
-    //if the input triggers a mode change switch to that mode
-    if(in_action->mode) {
-      rc = main_run(in_action->mode, emotions, notifications);
-      
-      //return errors to parent mode
-      if(rc) {
-        return rc;
-      }
-    }
-  }
-  
-  //look for emotion events
-  rc = em_check(emotions, &emotion_event);
-  
-  /* react to events if there was one */
-  if(!rc) {
-  	
-  	/* get the correct set of reations */
-  	em_action = &emotion_actions[emotion_event.emotion];
-  	
-  	/* do full gesture if condition is full */
-    if(emotion_event.type == EM_COND_FULL) {
-      gsi_react(&em_action->full_gesture);
-    }
-    
-    /* do low gesture if condition is low */
-    else if(emotion_event.type == EM_COND_LOW) {
-      gsi_react(&em_action->low_gesture);
-    }
-    
-    /* do critical gesture if condition is critical */
-    else {
-      gsi_react(&em_action->low_gesture);
-    }
-  }
-  
-  //get notification events
-  message = qu_pop(notifications);
-  
-  //run the reaction directly
-  if(message) {
-    gsi_react(&message_action);
-    gsi_printLCD(message->text);
-  }
-  
-  sleep(1);
-}
-}
-

@@ -1,13 +1,10 @@
 /* the simulation module is used by the simulation
- * wrapper to allow it to emulate the phidgits. although
- * it does not depend on the phidgit library, it must be included
- * as needs access to the input codes defined in input.h */
+ * wrapper to allow it to emulate the phidgits. */
  
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
-#include <phidget21.h>
 
 #include "utility.h"
 #include "input.h"
@@ -19,7 +16,7 @@ int sim_in_init(sim_Reader *reader) {
   int rc;
 	
   //clear input buffer
-  reader->buffer = 0;
+  reader->buffer = INPT_NONE;
   
   //set mode to running
   reader->mode = SIM_IN_RUN;
@@ -86,6 +83,12 @@ void *sim_in_loop(void *reader_pointer) {
   printf("eBuddy text interface\n");
   printf("type h for help\n");
   
+  //send power on signal
+  pthread_mutex_lock(&reader->mutex);
+  reader->buffer = INPT_POWER_ON;
+  pthread_mutex_unlock(&reader->mutex);
+  
+  //loop until quit signal
   running = 1;
   
   while(running) {
@@ -107,11 +110,16 @@ void *sim_in_loop(void *reader_pointer) {
     //print out help message
     else if(input == SIM_IN_HELP) {
       printf("=== commands ===\n");
-      printf("n(uts)\t\t- feed nuts and bolts\n");
-      printf("b(attery)\t- feed battery\n");
-      printf("o(il)\t\t- feed oil\n");
-      printf("f(orce)\t\t- force sensor\n");	
-      printf("q(uit)\t\t- exit the program\n");
+      printf("n(uts)\t\t- nuts and bolts key\n");
+      printf("b(attery)\t- battery key\n");
+      printf("o(il)\t\t- oil key\n");
+      printf("f(orce)\t\t- force sensor\n");
+      printf("t(ouch)\t\t- touch sensor\n");
+      printf("l(eft)\t\t- left hand\n");
+      printf("r(ight)\t\t- right hand\n");
+      printf("s(tart demo)\t- demo key\n");
+      printf("d(ebug)\t\t- debug key\n");	
+      printf("q(uit)\t\t- send shutdown signal\n");
       printf("h(elp)\t\t- print out this message\n");
     }
       
@@ -129,8 +137,8 @@ void *sim_in_loop(void *reader_pointer) {
       //unlock the struct
       pthread_mutex_unlock(&reader->mutex);
       
-      //sleep for a second to allow command to be processed
-      sleep(1);
+      //sleep for a while to allow command to be processed
+      sleep(SIM_IN_PAUSE);
     }
     
     //check mode for quit signal
@@ -170,9 +178,29 @@ int sim_get_input(char *command) {
     case 'f':
       return INPT_FORCE;
       
+    //touch sensor
+    case 't':
+      return INPT_TOUCH;
+    
+    //press left hand
+    case 'l':
+      return INPT_LEFT_HAND;
+    
+    //press right hand
+    case 'r':
+      return INPT_RIGHT_HAND;
+      
     //power button
     case 'q':
-      return INPT_POWER;
+      return INPT_POWER_OFF;
+    
+    //demo key
+    case 's':
+      return INPT_DEMO;
+     
+    //debug key 
+    case 'd':
+      return INPT_DEBUG;
   	
   	//help
     case 'h':

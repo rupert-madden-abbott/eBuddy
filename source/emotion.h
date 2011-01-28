@@ -1,6 +1,8 @@
 #ifndef EM_H
 #define EM_H
 
+#include <time.h>
+
 //number of items on one line of the state file
 #define EM_LINE_ITEMS 7
 

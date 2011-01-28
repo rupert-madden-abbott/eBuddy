@@ -1,5 +1,8 @@
 #ifndef PHIDGET2_H
 #define PHIDGET2_H
+
+#include <phidget21.h>
+
 extern int ph_init(const char *config);
 
 extern int ph_destruct(void);

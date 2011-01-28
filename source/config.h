@@ -4,11 +4,13 @@
  *
  * This module wraps the jansson library to simplify and standardise 
  * interaction with JSON objects. It provides functions for parsing JSON 
- * contained in either cfiguration files or network responses.
+ * contained in either configuration files or network responses.
  */
 
 #ifndef CONFIG_H
 #define CONFIG_H
+
+#include <jansson.h>
 
 /* Represents a JSON structure (Renamed to maintain a consistent public API) */
 typedef json_t cf_json;

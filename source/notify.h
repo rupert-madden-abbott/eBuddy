@@ -1,6 +1,9 @@
 #ifndef NOTIFY_H
 #define NOTIFY_H
 
+#include "config.h"
+#include "queue.h"
+
 #define NT_CONF_FILE "notify.conf"
 
 #define NT_TWITTER_REQUEST "https://api.twitter.com/oauth/request_token"

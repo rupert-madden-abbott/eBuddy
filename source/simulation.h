@@ -1,3 +1,8 @@
+#ifndef SIM_H
+#define SIM_H
+
+//pause time between commands
+#define SIM_IN_PAUSE 2
 
 //size of the input buffer
 #define SIM_IN_BUFF_SIZE 20
@@ -37,3 +42,5 @@ void *sim_in_loop(void *reader);
 //map an command string to an input number
 //uses only the first letter of the command
 int sim_get_input(char *command);
+
+#endif

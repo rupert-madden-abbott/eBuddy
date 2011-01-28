@@ -1,6 +1,7 @@
 #ifndef GESTURES_H
 #define GESTURES_H
 
+#include <phidget21.h>
 
 #define LCDWIDTH 20
 #define SCROLLSPEED 1500000
