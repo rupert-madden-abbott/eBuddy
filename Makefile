@@ -1,7 +1,7 @@
 CC          := gcc
 CFLAGS      := -Wall -Wpointer-arith -Wwrite-strings -Wstrict-prototypes -pedantic -std=gnu99 -g
 
-LIB         := -ljansson -lcurl -loauth
+LIB         := -ljansson -lcurl -loauth -lm
 LIB_LINUX   := -lphidget21
 LIB_OSX     := -framework Phidget21
 
