@@ -10,7 +10,7 @@
 #include "gesture.h"
 #include "gesture_interface.h"
 
-int gsi_react(gsi_Reaction *resp)
+int gsi_react(const gsi_Reaction *resp)
 {
     int error = GSI_OK;
     if(resp->gesture == NULL){

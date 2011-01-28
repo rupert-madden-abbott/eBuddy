@@ -22,5 +22,5 @@ typedef struct gsi_reaction {
   const char *message;	/* string to display on the lcd screen */
 } gsi_Reaction;
 
-int gsi_react(gsi_Reaction *resp);
+int gsi_react(const gsi_Reaction *resp);
 #endif
