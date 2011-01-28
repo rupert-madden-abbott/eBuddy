@@ -8,11 +8,11 @@
 
 enum in_input_type{
 INPT_NONE = 0,
-INPT_BATTERY,
-INPT_OIL,
-INPT_BOLTS,
-INPT_FORCE,
-INPT_POWER
+INPT_BOLTS = 1,
+INPT_OIL = 2,
+INPT_BATTERY = 3,
+INPT_FORCE = 4,
+INPT_POWER = 5
 };
 typedef enum in_input_type in_input_type;
 
