@@ -124,7 +124,7 @@ int gs_sound(int sound, int itineration)
     cf_free(root);
 
     command[0] ='\0';
-    strcpy(command, "mpg123 -q ");
+    strcpy(command, "mpg123 -q & ");
     strcat(command, filepath);
     while(i < itineration){
         system(command);
