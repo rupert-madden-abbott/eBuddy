@@ -1,6 +1,9 @@
 #ifndef EM_H
 #define EM_H
 
+//number of items on one line of the state file
+#define EM_LINE_ITEMS 7
+
 /* the level of an emotion relative to it's event values */
 typedef enum em_condition {
   EM_COND_NORMAL = 0,		/* the level is between low and full */
@@ -18,7 +21,7 @@ typedef enum em_action {
 
 /* represents a type of emotion and gives decay times etc. */
 typedef struct em_emotion {
-	int decay_time;			//the time it takes for this emotion to decay in hours
+	int decay_time;			//the time it takes for this emotion to decay in seconds
 	double factor;			//the value the emotion will have after one deacy time (eg 1/2, 0)	
 	int event_time;			//the amount of time in seconds between event notifications
 	double max;				//the highest value an emotion can take

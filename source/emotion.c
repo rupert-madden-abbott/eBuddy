@@ -89,13 +89,13 @@ int em_load(em_State *state, const char *path) {
                   &timestamp.tm_year, &timestamp.tm_hour, &timestamp.tm_min, &timestamp.tm_sec, &state->levels[i].last_value);
     
     /* return an error if items diddn't scan */
-    if(rc != 7) {
+    if(rc != EM_LINE_ITEMS) {
       return ERR_BAD_FILE;
     }
     
     /* convert calendar time to a time_t */
     timestamp.tm_isdst = -1;
-    timestamp.tm_year -= 1900;
+    timestamp.tm_year -= UT_EPOCH_YEAR;
     timestamp.tm_mon--;
     
     state->levels[i].last_update = mktime(&timestamp);
@@ -130,7 +130,7 @@ int em_save(em_State *state, const char *path) {
   	
   	/* print the value and the date to the file */
     fprintf(file, "%02d/%02d/%02d %02d:%02d:%02d  %lf\n", time->tm_mday, time->tm_mon + 1,
-              time->tm_year + 1900, time->tm_hour, time->tm_min, time->tm_sec, state->levels[i].last_value);
+              time->tm_year + UT_EPOCH_YEAR, time->tm_hour, time->tm_min, time->tm_sec, state->levels[i].last_value);
   }
   
   /* close and return */
@@ -146,7 +146,7 @@ double em_get(em_State *state, int emotion) {
   difference = difftime(time(NULL), state->levels[emotion].last_update);
   
   /* work out the number of decay times that have passed */
-  num_decays = difference / (double) SECONDS_IN_AN_HOUR * (double) state->emotions[emotion].decay_time;
+  num_decays = difference / (double) state->emotions[emotion].decay_time;
   
   /* caluclate the current value */
   value = state->levels[emotion].last_value  * pow(state->emotions[emotion].factor, num_decays);
@@ -240,7 +240,7 @@ int em_update(em_State *state, int emotion, double value) {
 }
 
 /* checks for emotional events and stores the first one found in event.
- * returns 0 if an event was found or 1 otherwise */
+ * returns ERR_NONE if an event was found or ERR_EMPTY otherwise */
 int em_check(em_State *state, em_Event *event) {
   em_condition condition;
   time_t now;
@@ -267,13 +267,13 @@ int em_check(em_State *state, em_Event *event) {
   	  	event->type = condition;
   	  	event->emotion = i;
   	  	
-  	    return 0;
+  	    return ERR_NONE;
   	  }
     } 
   }
   
   /* return no event */
-  return 1;
+  return ERR_EMPTY;
 }
 
 /* updates a state according to the a reaction struct. */
@@ -281,13 +281,11 @@ int em_react(em_State *state, const em_Reaction *reaction) {
   
   /* set the emotion to the value if action is set */
   if(reaction->action == EM_ACTION_SET) {
-  	printf("set\n");
   	return em_set(state, reaction->emotion, reaction->value);
   }
   
   /* update it if action is update */
   else if(reaction->action == EM_ACTION_UPDATE) {
-  	printf("update\n");
     return em_update(state, reaction->emotion, reaction->value);
   }
   
