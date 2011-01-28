@@ -12,6 +12,7 @@
 #include "phidget.h"
 #include "input.h"
 #include "emotion.h"
+#include "gesture.h"
 #include "gesture_interface.h"
 #include "config.h"
 #include "queue.h"
@@ -70,7 +71,7 @@ int main(void) {
   }
   
   //initialise notification system
-  rc = nt_init(notifications, NT_CONFIG);
+  //rc = nt_init(notifications, NT_CONFIG);
   
   if(rc) {
   	printf("Error initialising notification system\n");
@@ -78,7 +79,7 @@ int main(void) {
   }
   
   //enter main interactive mode
-  rc = enter_mode(MODE_MAIN, emotions, notifications);
+  rc = enter_mode(STARTUP_MODE, emotions, notifications);
   
   //finalise and unload all modules
   printf("Shutting down\n");
@@ -164,23 +165,24 @@ int run_main(em_State *emotions, qu_queue *notifications) {
   	//get action from table
   	in_action = &input_actions[input_event - 1];
   	
-  	printf("got input %d\n", input_event);
-  	
   	//get condition of primary emotion before update
-  	condition = em_get_condition(emotions, in_action->primary_emotion.emotion);
+  	if(in_action->primary_emotion.emotion != EMO_NONE) {
+      condition = em_get_condition(emotions, in_action->primary_emotion.emotion);
+  	}
+  	
+  	//if emotion is none use full gesture
+  	else {
+  		condition = EM_COND_FULL;
+  	}
   	
   	//update primary emotion
   	rc = em_react(emotions, &in_action->primary_emotion);
-  	
-  	printf("got rc %d\n", rc);
   	
   	//check for errors in reaction table
   	assert(rc ==0);
   	
   	//update secondary emotion
     rc = em_react(emotions, &in_action->secondary_emotion);
-    
-    printf("got rc %d\n", rc);
     
   	//check for errors in reaction table
   	assert(rc ==0);
@@ -218,7 +220,7 @@ int run_main(em_State *emotions, qu_queue *notifications) {
   if(!rc) {
   	
   	/* get the correct set of reations */
-  	em_action = &emotion_actions[emotion_event.emotion];
+  	em_action = &emotion_actions[emotion_event.emotion - 1];
   	
   	/* do full gesture if condition is full */
     if(emotion_event.type == EM_COND_FULL) {
@@ -236,12 +238,13 @@ int run_main(em_State *emotions, qu_queue *notifications) {
     }
   }
   
-  /* get notification events */
+  //get notification events
   message = qu_pop(notifications);
   
-  /* run the reaction directly */
+  //run the reaction directly
   if(message) {
     gsi_react(&message_action);
+    gsi_printLCD(message->text);
   }
   
   sleep(1);
