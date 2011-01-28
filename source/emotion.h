@@ -1,9 +1,6 @@
 #ifndef EM_H
 #define EM_H
 
-/* the highest value a level can take (a double) */
-#define EM_MAX_LEVEL 1000
-
 /* the level of an emotion relative to it's event values */
 typedef enum em_condition {
   EM_COND_NORMAL = 0,		/* the level is between low and full */
@@ -21,12 +18,13 @@ typedef enum em_action {
 
 /* represents a type of emotion and gives decay times etc. */
 typedef struct em_emotion {
-	int decay_time;			/* the time it takes for this emotion to decay in hours */
-	double factor;			/* the value the emotion will have after one deacy time (eg 1/2, 0) */
-	int event_time;			/* the amount of time in seconds between event notifications */
-	double full;			/* above this value the emotion is full */
-	double low;				/* below this value the emotion is low */
-	double critical;		/* below this value the emotion is critical */
+	int decay_time;			//the time it takes for this emotion to decay in hours
+	double factor;			//the value the emotion will have after one deacy time (eg 1/2, 0)	
+	int event_time;			//the amount of time in seconds between event notifications
+	double max;				//the highest value an emotion can take
+	double full;			//above this value the emotion is full
+	double low;				//below this value the emotion is low
+	double critical;		//below this value the emotion is critical
 } em_Emotion;
 
 /* represents the current level of an emotion */

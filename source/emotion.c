@@ -35,9 +35,9 @@ em_State *em_create(const em_Emotion *emotions, int num_emotions) {
     return NULL;
   }
 	
-  /* initialise each level to maximum */
+  //initialise each level to full level
   for(i = 0; i < num_emotions; i++) {
-    state->levels[i].last_value = EM_MAX_LEVEL;
+    state->levels[i].last_value = emotions[i].full;
 	state->levels[i].last_update = now;
 	state->levels[i].last_event = now;
   }
@@ -151,6 +151,11 @@ double em_get(em_State *state, int emotion) {
   /* caluclate the current value */
   value = state->levels[emotion].last_value  * pow(state->emotions[emotion].factor, num_decays);
   
+  //dont let value go above the max
+  if(value > state->emotions[emotion].max) {
+    value = state->emotions[emotion].max;
+  }
+  
   return value;
 }
 
@@ -198,7 +203,7 @@ double em_overall(em_State *state) {
 int em_set(em_State *state, int emotion, double value) {
 
   /* check bounds */
-  if(value > EM_MAX_LEVEL || value < 0) {
+  if(value > state->emotions[emotion].max || value < 0) {
     return ERR_BAD_ARG;
   }
 	
@@ -217,8 +222,8 @@ int em_update(em_State *state, int emotion, double value) {
   total = value + em_get(state, emotion);
 	
   /* if the total is above the maximum level then set the level to maximum */
-  if (total > EM_MAX_LEVEL) {
-    em_set(state, emotion, EM_MAX_LEVEL);
+  if (total > state->emotions[emotion].max) {
+    em_set(state, emotion, state->emotions[emotion].max);
   }
   
   /* if the total is smaller than zero set the level to zero */
