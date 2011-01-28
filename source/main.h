@@ -53,16 +53,17 @@ typedef struct PhidgetHandle {
 
 //list of emotions and their decay times etc
 //each emotion will decay to 1*factor of its original value
-//after one life (in hours). when the level is above full or
-//below once low every alert time (in minutes)
+//after one life. when the level is above full or below low
+//the user will be alerted once every alert time. all times
+//are in seconds.
 const em_Emotion EMOTIONS[] = {
 	
-//life		factor	alert	max		full	low		critical
-  {24,		0.5,	10,		100,	90,		30,		10},	//hunger
-  {18,		0.5,	10,		100,	90,		20,		10},	//energy
-  {6,		0.5,	5,		150,	100,	50,		10},	//cleanliness
-  {6,		0.5,	10,		100,	98,		40,		20},	//social
-  {24,		0.5,	20,		100,	98,		20,		5}		//fun
+//life				factor		alert			max		full	low		critical
+  {UT_HOUR * 24,	0.5,		UT_MIN * 10,	100,	90,		30,		10},	//hunger
+  {UT_HOUR * 18,	0.5,		UT_MIN * 10,	100,	90,		20,		10},	//energy
+  {UT_HOUR * 6,		0.5,		UT_MIN * 5,		150,	100,	50,		10},	//cleanliness
+  {UT_HOUR * 6,		0.5,		UT_MIN * 10,	100,	98,		40,		20},	//social
+  {UT_HOUR * 24,	0.5,		UT_MIN * 20,	100,	98,		20,		5}		//fun
 };
 
 //list of alerts for each emotion
@@ -94,8 +95,9 @@ const InputAction input_actions[] = {
 
 const gsi_Reaction message_action = {gsi_shake_head, "beep beep"};
 
-int enter_mode(run_mode mode, em_State *emotions, qu_queue *notifications);
-int run_demo(em_State *emotions, qu_queue *notifications);
-int run_main(em_State *emotions, qu_queue *notifications);
+int main(void);
+int main_run(run_mode mode, em_State *emotions, qu_queue *notifications);
+int main_demo(em_State *emotions, qu_queue *notifications);
+int main_loop(em_State *emotions, qu_queue *notifications);
 
 #endif

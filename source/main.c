@@ -79,7 +79,7 @@ int main(void) {
   }
   
   //enter main interactive mode
-  rc = enter_mode(STARTUP_MODE, emotions, notifications);
+  rc = main_run(STARTUP_MODE, emotions, notifications);
   
   //finalise and unload all modules
   printf("Shutting down\n");
@@ -92,16 +92,16 @@ int main(void) {
 
 
 //takes a run_mode and calls the appropriate function
-int enter_mode(run_mode mode, em_State *emotions, qu_queue *notifications) {
+int main_run(run_mode mode, em_State *emotions, qu_queue *notifications) {
 	
   /* main mode */
   if(mode == MODE_MAIN) {
-    return run_main(emotions, notifications);
+    return main_loop(emotions, notifications);
   }
   
   /* demo moode */
   else if(mode == MODE_DEMO) {
-    return run_demo(emotions, notifications);
+    return main_demo(emotions, notifications);
   }
   
   /* guessing game */
@@ -116,7 +116,7 @@ int enter_mode(run_mode mode, em_State *emotions, qu_queue *notifications) {
 
 
 //Demo mode
-int run_demo(em_State *emotions, qu_queue *notifications) {
+int main_demo(em_State *emotions, qu_queue *notifications) {
   nt_message *message;
 
   while(1) {
@@ -146,7 +146,7 @@ int run_demo(em_State *emotions, qu_queue *notifications) {
 
 
 //Main loop
-int run_main(em_State *emotions, qu_queue *notifications) {
+int main_loop(em_State *emotions, qu_queue *notifications) {
   const EmotionAction *em_action;
   const InputAction *in_action;
   nt_message *message;
@@ -204,7 +204,7 @@ int run_main(em_State *emotions, qu_queue *notifications) {
     
     //if the input triggers a mode change switch to that mode
     if(in_action->mode) {
-      rc = enter_mode(in_action->mode, emotions, notifications);
+      rc = main_run(in_action->mode, emotions, notifications);
       
       //return errors to parent mode
       if(rc) {
@@ -220,7 +220,7 @@ int run_main(em_State *emotions, qu_queue *notifications) {
   if(!rc) {
   	
   	/* get the correct set of reations */
-  	em_action = &emotion_actions[emotion_event.emotion - 1];
+  	em_action = &emotion_actions[emotion_event.emotion];
   	
   	/* do full gesture if condition is full */
     if(emotion_event.type == EM_COND_FULL) {
