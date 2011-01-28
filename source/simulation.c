@@ -144,7 +144,7 @@ void *sim_in_loop(void *reader_pointer) {
   }
 
   //exit thread when loop ends
-  printf("input closed\n");
+  printf("Console closed\n");
   
   return NULL;
 }
@@ -169,6 +169,10 @@ int sim_get_input(char *command) {
     //force sensor
     case 'f':
       return INPT_FORCE;
+      
+    //power button
+    case 'q':
+      return INPT_POWER;
   	
   	//help
     case 'h':
