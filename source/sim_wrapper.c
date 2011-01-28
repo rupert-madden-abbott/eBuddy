@@ -51,7 +51,7 @@ int in_get_input() {
 }
 
 //output the given reaction to the user in text form
-int gsi_react(gsi_Reaction *resp) {
+int gsi_react(const gsi_Reaction *resp) {
 	
   //check message is not null or null string
   if(resp->message && *(resp->message)) {
@@ -113,3 +113,4 @@ int gsi_eyeflash(void) {
   printf("*flashes eyes*\n");
   return 0;
 }
+
