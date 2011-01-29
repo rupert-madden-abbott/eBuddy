@@ -4,7 +4,10 @@
 #include <time.h>
 
 //number of items on one line of the state file
-#define EM_LINE_ITEMS 7
+#define EM_LINE_ITEMS 8
+
+//maximum name length of an emotion
+#define EM_NAME_LEN 12
 
 /* the level of an emotion relative to it's event values */
 typedef enum em_condition {
@@ -23,13 +26,14 @@ typedef enum em_action {
 
 /* represents a type of emotion and gives decay times etc. */
 typedef struct em_emotion {
-	int decay_time;			//the time it takes for this emotion to decay in seconds
-	double factor;			//the value the emotion will have after one deacy time (eg 1/2, 0)	
-	int event_time;			//the amount of time in seconds between event notifications
-	double max;				//the highest value an emotion can take
-	double full;			//above this value the emotion is full
-	double low;				//below this value the emotion is low
-	double critical;		//below this value the emotion is critical
+  char name[EM_NAME_LEN];	//the id of this emotion (string of any alphanum chars)
+  int decay_time;			//the time it takes for this emotion to decay in seconds
+  double factor;			//the value the emotion will have after one deacy time (eg 1/2, 0)	
+  int event_time;			//the amount of time in seconds between event notifications
+  double max;				//the highest value an emotion can take
+  double full;				//above this value the emotion is full
+  double low;				//below this value the emotion is low
+  double critical;			//below this value the emotion is critical
 } em_Emotion;
 
 /* represents the current level of an emotion */
@@ -98,6 +102,16 @@ int em_check(em_State *state, em_Event *event);
 /* updates a state according to the a reaction struct. */
 int em_react(em_State *state, const em_Reaction *reaction);
 
+//reset a state back to its defaults
 void em_reset(em_State *state);
+
+//return the number of an emotion given its name
+int em_get_id(em_State *state, const char *name, int *id);
+
+//return a pointer to the name of an emotion given its number
+int em_get_name(em_State *state, int id, const char **name);
+
+//store the list of emotions names of a state in an array
+void em_get_names(em_State *state, const char **names);
 
 #endif

@@ -4,9 +4,11 @@
 #include "emotion.h"
 #include "notify.h"
 
-//size of the buffer used to store number strings
-//this value is large enough to store -2^32
-#define DEBUG_NUM_STR_LEN 12
+//size between steps when setting or updating emotions
+#define DEBUG_EM_STEP 10
+
+//size of the buffer used to store generated text
+#define DEBUG_BUFF_SIZE 32
 
 //menu item number used to exit menu
 #define DEBUG_BACK -1

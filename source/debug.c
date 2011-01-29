@@ -6,40 +6,11 @@
 #include "gesture_interface.h"
 #include "debug.h"
 
-//main menu items
-const char *debug_main_menu[] = {
-  "emotions",
-  "events",
-};
-
-//number of main menu items
-const int debug_main_menu_size = 2;
-
-//emotion menu items
-const char *debug_em_menu[] = {
-  "get",
-  "set",
-  "update"
-};
-
-//number of main menu items
-const int debug_em_menu_size = 3;
-
-//emotion names
-const char *debug_em_list[] = {
-  "hunger",
-  "energy",
-  "cleaness",
-  "social",
-  "fun"
-};
-
-//number of emotions in list
-const int debug_em_list_size = 5;
-
 //debug mode main menu
 //allows access to all debugging tools
 int debug_main(em_State *emotions, qu_queue *notifications) {
+  const char *menu[] = {"emotions", "events"};
+  const int menu_size = 2;
   int item, rc;
 
   //gsi_enter_debug();
@@ -49,7 +20,7 @@ int debug_main(em_State *emotions, qu_queue *notifications) {
   	gsi_printLCD("main menu");
 
     //display the menu
-    item = debug_menu(debug_main_menu, debug_main_menu_size);
+    item = debug_menu(menu, menu_size);
     
     //run the correct command
     switch(item) {
@@ -81,13 +52,19 @@ int debug_main(em_State *emotions, qu_queue *notifications) {
 
 //emotion menu allows user to get and set emotion levels
 int debug_emotions(em_State *emotions, qu_queue *notifications) {
-  char num_string[DEBUG_NUM_STR_LEN];
+  const char *action_menu[] = {"get", "set", "update"};
+  const int action_menu_size = 3;
+  const char *emotion_names[emotions->num_emotions];
+  char num_string[DEBUG_BUFF_SIZE];
   int emotion, action;
   float value;
   
+  //get the emotion names
+  em_get_names(emotions, emotion_names);
+  
   //get emotion to perform an action on
   gsi_printLCD("select emotion");
-  emotion = debug_menu(debug_em_list, debug_em_list_size);
+  emotion = debug_menu(emotion_names, emotions->num_emotions);
   
   //check for exit
   if(emotion == DEBUG_BACK || emotion == DEBUG_EXIT) {
@@ -96,7 +73,7 @@ int debug_emotions(em_State *emotions, qu_queue *notifications) {
   
   //get action to perform
   gsi_printLCD("select action");  
-  action = debug_menu(debug_em_menu, debug_em_menu_size);
+  action = debug_menu(action_menu, action_menu_size);
   
   //check for exit
   if(emotion == DEBUG_BACK || emotion == DEBUG_EXIT) {
@@ -119,7 +96,7 @@ int debug_emotions(em_State *emotions, qu_queue *notifications) {
   	
   	//get value from user
     gsi_printLCD("select value");
-    value = debug_input(0, emotions->emotions[emotion].max, 10);
+    value = debug_input(0, emotions->emotions[emotion].max, DEBUG_EM_STEP);
     
     em_set(emotions, emotion, value);
     gsi_printLCD("set");
@@ -130,7 +107,7 @@ int debug_emotions(em_State *emotions, qu_queue *notifications) {
     	
     //get value from user
     gsi_printLCD("select value");
-    value = debug_input(0, emotions->emotions[emotion].max, 10);
+    value = debug_input(-emotions->emotions[emotion].max, emotions->emotions[emotion].max, DEBUG_EM_STEP);
       
     em_update(emotions, emotion, value);
     gsi_printLCD("updated");	
@@ -145,6 +122,7 @@ int debug_events(em_State *emotions, qu_queue *notifications) {
   in_input_type input_event;
   em_Event emotion_event;
   nt_message *message;
+  char buffer[DEBUG_BUFF_SIZE];
   int running, rc;
   
   gsi_printLCD("push power button to exit");
@@ -164,7 +142,8 @@ int debug_events(em_State *emotions, qu_queue *notifications) {
     
     //print other events to the screen
     else if(input_event) {
-      gsi_printLCD("input");	
+      sprintf(buffer, "input %02d", input_event);
+      gsi_printLCD(buffer);	
     }
   	
   	//look for emotion events
@@ -172,7 +151,8 @@ int debug_events(em_State *emotions, qu_queue *notifications) {
   
     //print events on the screen
     if(!rc) {
-      gsi_printLCD("emotion");
+      sprintf(buffer, "emotion %02d %02d", emotion_event.type, emotion_event.emotion);
+      gsi_printLCD(buffer);
     }
   	
     //get notification events
@@ -180,7 +160,9 @@ int debug_events(em_State *emotions, qu_queue *notifications) {
   
     //print details on the screen
     if(message) {
-      gsi_printLCD("message");
+      sprintf(buffer, "message %10s: %10s", message->app, message->user);
+      gsi_printLCD(buffer);
+      gsi_printLCD(message->text);
     }
   
     sleep(1);
@@ -252,14 +234,14 @@ int debug_menu(const char **items, int num_items) {
 //steps of the given size
 int debug_input(int min, int max, int step) {
   in_input_type input;
-  char num_string[DEBUG_NUM_STR_LEN];
+  char num_string[DEBUG_BUFF_SIZE];
   int selected, current;
 
   //make sure step is at least 1
   assert(step > 0);
 
-  //start on smallest number
-  current = min;
+  //start at average value
+  current = (min + max) / 2;
   selected = 0;
   
   //loop until an item is chosen or the user exits
@@ -270,7 +252,7 @@ int debug_input(int min, int max, int step) {
   	assert(current <= max);
   	
     //print the current number on the screen
-    sprintf(num_string, "%d", current);
+    sprintf(num_string, "%8d", current);
     gsi_printLCD(num_string);
     
     //wait for input from the user

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+#include <assert.h>
 #include <math.h>
 
 #include "utility.h"
@@ -10,7 +12,6 @@
 em_State *em_create(const em_Emotion *emotions, int num_emotions) {
   em_State *state;
   time_t now;
-  int i;
   
   /* get current time */
   now = time(NULL);
@@ -35,12 +36,8 @@ em_State *em_create(const em_Emotion *emotions, int num_emotions) {
     return NULL;
   }
 	
-  //initialise each level to full level
-  for(i = 0; i < num_emotions; i++) {
-    state->levels[i].last_value = emotions[i].full;
-	state->levels[i].last_update = now;
-	state->levels[i].last_event = now;
-  }
+  //set state to default values
+  em_reset(state);
 	
   return state;
 }
@@ -58,8 +55,9 @@ void em_reset(em_State *state) {
 	
   now = time(NULL);
 	
+  //initialise each level to full level
   for(i = 0; i < state->num_emotions; i++) {
-    state->levels[i].last_value = 0;
+    state->levels[i].last_value = state->emotions[i].full;
     state->levels[i].last_update = now;
     state->levels[i].last_event = now;
   }
@@ -67,10 +65,12 @@ void em_reset(em_State *state) {
 
 /* load an emotional state from a file */
 int em_load(em_State *state, const char *path) {
+  char name[EM_NAME_LEN];
   FILE *file;
   struct tm timestamp;
   time_t now;
-  int i, rc;
+  double value;
+  int id, rc;
 
   /* get current time */
   now = time(NULL);
@@ -84,9 +84,9 @@ int em_load(em_State *state, const char *path) {
   }
 	
   /* read the value and timestamp of each level from the file */
-  for(i = 0; i < state->num_emotions; i++) {
-    rc = fscanf(file, "%d/%d/%d %d:%d:%d  %lf\n", &timestamp.tm_mday, &timestamp.tm_mon,
-                  &timestamp.tm_year, &timestamp.tm_hour, &timestamp.tm_min, &timestamp.tm_sec, &state->levels[i].last_value);
+  do {
+    rc = fscanf(file, "%10s %d/%d/%d %d:%d:%d  %lf\n", name, &timestamp.tm_mday, &timestamp.tm_mon,
+                  &timestamp.tm_year, &timestamp.tm_hour, &timestamp.tm_min, &timestamp.tm_sec, &value);
     
     /* return an error if items diddn't scan */
     if(rc != EM_LINE_ITEMS) {
@@ -98,14 +98,23 @@ int em_load(em_State *state, const char *path) {
     timestamp.tm_year -= UT_EPOCH_YEAR;
     timestamp.tm_mon--;
     
-    state->levels[i].last_update = mktime(&timestamp);
+    rc = em_get_id(state, name, &id);
+    
+    if(rc) {
+      return ERR_BAD_FILE;
+    }
+    
+    state->levels[id].last_value = value;
+    state->levels[id].last_update = mktime(&timestamp);
     
     /* set the last event time to now */
-    state->levels[i].last_event = now;
-  }
+    state->levels[id].last_event = now;
+    
+  //loop until end of file
+  } while(!feof(file));
 	
   fclose(file);
-  return 0;
+  return ERR_NONE;
 } 
 
 /* save state to a file */
@@ -129,7 +138,7 @@ int em_save(em_State *state, const char *path) {
   	time = gmtime(&state->levels[i].last_update);
   	
   	/* print the value and the date to the file */
-    fprintf(file, "%02d/%02d/%02d %02d:%02d:%02d  %lf\n", time->tm_mday, time->tm_mon + 1,
+    fprintf(file, "%10s %02d/%02d/%02d %02d:%02d:%02d  %lf\n", state->emotions[i].name, time->tm_mday, time->tm_mon + 1,
               time->tm_year + UT_EPOCH_YEAR, time->tm_hour, time->tm_min, time->tm_sec, state->levels[i].last_value);
   }
   
@@ -297,5 +306,44 @@ int em_react(em_State *state, const em_Reaction *reaction) {
   /* otherwise return an error */
   else {
     return ERR_BAD_ACTION;
+  }
+}
+
+//return the number of an emotion given its name
+int em_get_id(em_State *state, const char *name, int *id) {
+  int i;
+  
+  //loop through all emotions
+  for(i = 0; i < state->num_emotions; i++) {
+  	
+  	//check if names match
+  	if(strcmp(state->emotions[i].name, name) == 0){
+ 
+  	  //if store number and return
+  	  *id = i;
+  	  return ERR_NONE;
+  	}
+  }
+  
+  //if not found return bad arg
+  return ERR_BAD_ARG;
+}
+
+//return a pointer to the name of an emotion given its number
+int em_get_name(em_State *state, int id, const char **name) {
+  assert(id > 0);
+  assert(id < state->num_emotions);
+	
+  //look name up in emotion array
+  *name = state->emotions[id].name;
+  return ERR_NONE;
+}
+
+//store the list of emotions names of a state in an array
+void em_get_names(em_State *state, const char **names) {
+  int i;
+	
+  for(i = 0; i < state->num_emotions; i++) {
+  	names[i] = state->emotions[i].name;
   }
 }
