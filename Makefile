@@ -17,10 +17,10 @@ demo: checkdir config.o demo.o demo_test.o emotion.o gesture.o gesture_interface
 linux: checkdir config.o debug.o demo.o emotion.o phidget.o gesture.o gesture_interface.o input.o main.o mode.o notify.o  queue.o react.o utility.o 
 	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/gesture.o build/gesture_interface.o build/input.o build/main.o build/mode.o build/notify.o build/phidget.o build/queue.o build/react.o build/utility.o $(LIB) $(LIB_LINUX) -o build/ebuddy
 
-osx: config.o debug.o demo.o emotion.o phidget.o gesture.o gesture_interface.o input.o mode.o main.o notify.o queue.o react.o utility.o
+osx: checkdir config.o debug.o demo.o emotion.o phidget.o gesture.o gesture_interface.o input.o mode.o main.o notify.o queue.o react.o utility.o
 	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/gesture.o build/gesture_interface.o build/input.o build/main.o build/mode.o build/notify.o build/phidget.o build/queue.o build/react.o build/utility.o $(LIB) $(LIB_OSX) -o build/ebuddy
 
-simulation: config.o debug.o demo.o emotion.o phidget.o gesture.o gesture_interface.o input.o notify.o main.o mode.o queue.o react.o simulation.o sim_wrapper.o utility.o
+simulation: checkdir config.o debug.o demo.o emotion.o phidget.o gesture.o gesture_interface.o input.o notify.o main.o mode.o queue.o react.o simulation.o sim_wrapper.o utility.o
 	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/main.o build/mode.o build/notify.o build/queue.o build/react.o build/simulation.o build/sim_wrapper.o build/utility.o $(LIB) -o build/simulation
 	
 
@@ -103,4 +103,4 @@ clean:
 	@rm -rf build/*
 
 checkdir:
-	@mkdir build/ -p
+	@mkdir -p build/
