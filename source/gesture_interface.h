@@ -28,7 +28,7 @@ extern int gsi_printLCD(const char* str);
 
 /* representation of a gesture [needs to go in gesture] */
 typedef struct gsi_reaction {
-  int (*gesture)(void);	/* pointer to the gesture that should be called */
+  int (*gesture)(Phhandle);	/* pointer to the gesture that should be called */
   const char *message;	/* string to display on the lcd screen */
 } gsi_Reaction;
 
