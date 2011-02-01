@@ -5,10 +5,16 @@
 
 #include <phidget21.h>
 
-#include "input.h"
-#include "gesture.h"
 
-extern int ph_init(const char *config);
+
+typedef struct Phhandle{
+CPhidgetAdvancedServoHandle servohandle
+CPhidgetRFIDHandle          RFIDhandle
+CPhidgetInterfaceKitHandle  IFKhandle
+CPhidgetTextLCDHandle       LCDhandle
+}
+
+extern int ph_init(const char *config, Phhandle *handle);
 
 extern int ph_destruct(void);
 

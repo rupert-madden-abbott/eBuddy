@@ -1,61 +1,35 @@
 #include "phidget.h"
 
-extern int ph_init(const char *config)
+int ph_init(const char *config, Phhandle *handle)
 {
-    int status;
-    CPhidgetInterfaceKitHandle ifkit;
-    ph_get_servo_handle();
-
-    ph_get_RFID_handle();
-
-    ifkit = ph_get_kit_handle();
-
-    ph_get_lcd_handle();
-
-    CPhidget_getDeviceStatus((CPhidgetHandle)ifkit, &status);
-    if(status == PHIDGET_ATTACHED){
-	gs_eyeson(ifkit);
-    }
-
-
-
-    return 0;
+	ph_servo_init(handle->servohandle);
+	ph_RFID_rfid_init(handle->RFIDhandle);
+	ph_kit_init(handle->IFKhandle);
+	ph_LCD_init(handle->LCDhandle);
+	
+	return 0;
 }
 
-int ph_destruct(void)
+int ph_destruct(Phhandle handle)
 {
-    ph_servo_close((CPhidgetHandle)ph_get_servo_handle());
-    ph_RFID_closerfid();
-
-    ph_kit_closekit();
-    return 0;
+	ph_servo_close(handle->servohandle);
+	ph_RFID_close(handle->RFIDhandle);
+	ph_lcd_close(handle->LCDhandle);
+	ph_kit_close((CPhidgetHandle)handle->IFKhandle);
+	return 0;
 }
 
 /*Servo Header*/
-CPhidgetAdvancedServoHandle ph_get_servo_handle(void)
+
+
+int ph_servo_init(CPhidgetAdvancedServoHandle *servohandle)
 {
-   static int servo_initialised = 0;
-   static CPhidgetAdvancedServoHandle servo;
-   if(servo_initialised == 0){
-       servo_initialised = 1;
-       servo = ph_servo_initialise();
-
-
-   }
-   return servo;
-
-}
-
-
-
-CPhidgetAdvancedServoHandle ph_servo_initialise(void)
-{
-    double minAccel, maxVel;
-    int servo_wait_result;
-    const char *servo_attach_error;
-    CPhidgetAdvancedServoHandle servo = 0;
-    CPhidgetAdvancedServo_create(&servo);
-    CPhidget_set_OnAttach_Handler((CPhidgetHandle)servo, ph_servo_AttachHandler, NULL);
+	double minAccel, maxVel;
+	int servo_wait_result;
+	const char *servo_attach_error;
+	CPhidgetAdvancedServoHandle servo = 0;
+	CPhidgetAdvancedServo_create(&servo);
+	CPhidget_set_OnAttach_Handler((CPhidgetHandle)servo, ph_servo_AttachHandler, NULL);
 	CPhidget_set_OnDetach_Handler((CPhidgetHandle)servo, ph_servo_DetachHandler, NULL);
 	CPhidget_set_OnError_Handler((CPhidgetHandle)servo, ph_servo_ErrorHandler, NULL);
 
@@ -67,20 +41,10 @@ CPhidgetAdvancedServoHandle ph_servo_initialise(void)
 		printf("Error eBuddy servo not connected: %s\n", servo_attach_error);
 	}
 
-
-    CPhidgetAdvancedServo_getAccelerationMax(servo, 0, &minAccel);
-
+	CPhidgetAdvancedServo_getAccelerationMax(servo, 0, &minAccel);
 	CPhidgetAdvancedServo_getVelocityMax(servo, 0, &maxVel);
-
-
-
-	gs_set_pos(servo);
-
-
-
-
-	return servo;
-
+	servohandle = &servo;
+	return 0;
 
 
 }
@@ -109,30 +73,17 @@ int ph_servo_ErrorHandler(CPhidgetHandle phidget_servo, void *p, int ErrorCode, 
 	return 0;
 }
 
-int ph_servo_close(CPhidgetHandle phidget_servo)
+int ph_servo_close(CPhidgetHandle servo)
 {
-	CPhidget_close(phidget_servo);
-	CPhidget_delete(phidget_servo);
+	CPhidget_close((CPhidgethandle) phidget_servo);
+	CPhidget_delete((CPhidgethandle) phidget_servo);
 
 	return 0;
 }
 
 /*RFID*/
 
-CPhidgetRFIDHandle ph_get_RFID_handle (void)
-{
-	static int RFID_initialised=0;
-	static CPhidgetRFIDHandle rfid =0;
-	if(RFID_initialised ==0)
-		{
-			RFID_initialised=1;
-			rfid=ph_RFID_openrfid();
-
-		}
-	return rfid;
-}
-
-CPhidgetRFIDHandle ph_RFID_openrfid(void)
+int ph_RFID_rfid_init(CPhidgetRFIDHandle RFIDhandle)
 {
 int static result;
 const char *err;
@@ -158,13 +109,13 @@ if((result = CPhidget_waitForAttachment((CPhidgetHandle)rfid, 10000)))
 		//exit (1);
 	}
 CPhidgetRFID_setAntennaOn(rfid, 1);
-return rfid;
+RFIDhandle = &RFID;
+return 0;
 }
 
-void ph_RFID_closerfid(void)
+void ph_RFID_close(CPhidgetRFIDHandle rfid)
 {
-CPhidgetRFIDHandle rfid;
-rfid=ph_get_RFID_handle();
+
 CPhidget_close((CPhidgetHandle)rfid);
 CPhidget_delete((CPhidgetHandle)rfid);
 }
@@ -203,20 +154,8 @@ int ph_RFID_ErrorHandler(CPhidgetHandle RFID, void *userptr, int ErrorCode, cons
 
 
 /*Interface Kit*/
-CPhidgetInterfaceKitHandle ph_get_kit_handle (void)
-{
-	static int kit_initialised=0;
-	static CPhidgetInterfaceKitHandle ifKit =0;
-	if(kit_initialised ==0)
-		{
-			kit_initialised=1;
-			ifKit=ph_kit_openkit();
 
-		}
-	return ifKit;
-}
-
-CPhidgetInterfaceKitHandle ph_kit_openkit(void)
+int ph_kit_init(CPhidgetInterfaceKitHandle *IFKhandle)
 {
 	int result;
 	const char *err;
@@ -244,16 +183,14 @@ CPhidgetInterfaceKitHandle ph_kit_openkit(void)
 		//exit(1);
 	}
 
-
-return ifKit;
+	IFKhandle = &ifkit;
+	return 0;
 }
 
-void ph_kit_closekit(void)
+void ph_kit_close(CPhidgetInterfaceKitHandle IFK)
 {
-	CPhidgetInterfaceKitHandle ifKit;
-	ifKit=ph_get_kit_handle();
-	CPhidget_close((CPhidgetHandle)ifKit);
-	CPhidget_delete((CPhidgetHandle)ifKit);
+	CPhidget_close((CPhidgetHandle)IFK);
+	CPhidget_delete((CPhidgetHandle)IFK);
 
 }
 
@@ -264,7 +201,6 @@ int ph_kit_AttachHandler(CPhidgetHandle IFK, void *userptr)
 
 	CPhidget_getDeviceName(IFK, &name);
 	CPhidget_getSerialNumber(IFK, &serialNo);
-	gs_eyeson((CPhidgetInterfaceKitHandle)IFK);
 
 	printf("ebuddy interface kit attached!\n");
 
@@ -296,18 +232,8 @@ int ph_kit_ErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const 
 
 
 //LCD
-CPhidgetTextLCDHandle ph_get_lcd_handle(void)
-{
-   static int lcd_initialised = 0;
-   static CPhidgetTextLCDHandle txt_lcd;
-   if (lcd_initialised == 0) {
-       lcd_initialised = 1;
-       txt_lcd = ph_lcd_initialise();
-   }
-   return txt_lcd;
-}
 
-CPhidgetTextLCDHandle ph_lcd_initialise(void)
+int ph_lcd_init(CPhidgetTextLCDHandle *LCDhandle)
 {
         int result;
 	const char *err;
@@ -333,7 +259,8 @@ CPhidgetTextLCDHandle ph_lcd_initialise(void)
 		return 0;
 	}
         CPhidgetTextLCD_setContrast (txt_lcd, 100);
-        return txt_lcd;
+	LCDhandle = &txt_lcd;
+        return 0;
 }
 
 int ph_lcd_AttachHandler(CPhidgetHandle TXT, void *userptr) {
@@ -358,6 +285,12 @@ int ph_lcd_ErrorHandler(CPhidgetHandle TXT, void *userptr, int ErrorCode, const 
 {
 	printf("Error handled. %d - %s\n", ErrorCode, Description);
 	return 0;
+}
+
+int ph_lcd_close(CPhidgetTextLCDHandle lcd)
+{
+	CPhidget_close((CPhidgetHandle)lcd);
+	CPhidget_delete((CPhidgetHandle)lcd);
 }
 
 // end of LCD code
