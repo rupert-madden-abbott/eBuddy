@@ -12,19 +12,16 @@
 #define GSI_PHER 1
 #define GSI_OK 0
 
-extern int gsi_happy_level1(void);
-extern int gsi_fun_level1(void);
+extern int gsi_happy_level1(Phhandle handle);
+extern int gsi_fun_level1(Phhandle handle);
 extern int gsi_notification(void);
-extern int gsi_test(void);
-extern int gsi_shake_head(void);
-extern int gsi_move_arms(void);
-extern int gsi_raise_arms(void);
-extern int gsi_eyeflash(void);
-int gsi_wave_right(void);
-int gsi_wave_left(void);
-int gsi_raise_right(void);
-int gsi_raise_left(void);
-extern int gsi_printLCD(const char* str);
+extern int gsi_test(Phhandle handle);
+extern int gsi_shake_head(Phhandle handle);
+extern int gsi_move_arms(Phhandle handle);
+extern int gsi_raise_arms(Phhandle handle);
+extern int gsi_eyeflash(Phhandle handle);
+
+extern int gsi_printLCD(const char* str, Phhandle handle);
 
 /* representation of a gesture [needs to go in gesture] */
 typedef struct gsi_reaction {
@@ -32,5 +29,5 @@ typedef struct gsi_reaction {
   const char *message;	/* string to display on the lcd screen */
 } gsi_Reaction;
 
-int gsi_react(const gsi_Reaction *resp);
+int gsi_react(const gsi_Reaction *resp, Phhandle handle);
 #endif
