@@ -1,22 +1,22 @@
 #include "phidget.h"
 
-int ph_init(const char *config, Phhandle *handle)
+int ph_init(const char *config, ph_handle *handle)
 {
-	ph_servo_init(handle->servohandle);
-	ph_RFID_rfid_init(handle->RFIDhandle);
-	ph_kit_init(handle->IFKhandle);
-	ph_LCD_init(handle->LCDhandle);
+    ph_servo_init(handle->servohandle);
+    ph_RFID_rfid_init(handle->RFIDhandle);
+    ph_kit_init(handle->IFKhandle);
+    ph_lcd_init(handle->LCDhandle);
 	
-	return 0;
+    return 0;
 }
 
-int ph_destruct(Phhandle handle)
+int ph_destruct(ph_handle *handle)
 {
-	ph_servo_close(handle->servohandle);
-	ph_RFID_close(handle->RFIDhandle);
-	ph_lcd_close(handle->LCDhandle);
-	ph_kit_close((CPhidgetHandle)handle->IFKhandle);
-	return 0;
+    ph_servo_close(*handle->servohandle);
+    ph_RFID_close(*handle->RFIDhandle);
+    ph_lcd_close(*handle->LCDhandle);
+    ph_kit_close(*handle->IFKhandle);
+    return 0;
 }
 
 /*Servo Header*/
@@ -24,34 +24,34 @@ int ph_destruct(Phhandle handle)
 
 int ph_servo_init(CPhidgetAdvancedServoHandle *servohandle)
 {
-	double minAccel, maxVel;
-	int servo_wait_result;
-	const char *servo_attach_error;
-	CPhidgetAdvancedServoHandle servo = 0;
-	CPhidgetAdvancedServo_create(&servo);
-	CPhidget_set_OnAttach_Handler((CPhidgetHandle)servo, ph_servo_AttachHandler, NULL);
-	CPhidget_set_OnDetach_Handler((CPhidgetHandle)servo, ph_servo_DetachHandler, NULL);
-	CPhidget_set_OnError_Handler((CPhidgetHandle)servo, ph_servo_ErrorHandler, NULL);
+    double minAccel, maxVel;
+    int servo_wait_result;
+    const char *servo_attach_error;
+    CPhidgetAdvancedServoHandle servo = 0;
+    CPhidgetAdvancedServo_create(&servo);
+    CPhidget_set_OnAttach_Handler((CPhidgetHandle)servo, ph_servo_AttachHandler, NULL);
+    CPhidget_set_OnDetach_Handler((CPhidgetHandle)servo, ph_servo_DetachHandler, NULL);
+    CPhidget_set_OnError_Handler((CPhidgetHandle)servo, ph_servo_ErrorHandler, NULL);
 
-	CPhidget_open((CPhidgetHandle)servo, -1);
+    CPhidget_open((CPhidgetHandle)servo, -1);
 
-	if((servo_wait_result = CPhidget_waitForAttachment((CPhidgetHandle)servo, 10000)))
-	{
-		CPhidget_getErrorDescription(servo_wait_result, &servo_attach_error);
-		printf("Error eBuddy servo not connected: %s\n", servo_attach_error);
-	}
+    if((servo_wait_result = CPhidget_waitForAttachment((CPhidgetHandle)servo, 10000)))
+    {
+        CPhidget_getErrorDescription(servo_wait_result, &servo_attach_error);
+        printf("Error eBuddy servo not connected: %s\n", servo_attach_error);
+    }
 
-	CPhidgetAdvancedServo_getAccelerationMax(servo, 0, &minAccel);
-	CPhidgetAdvancedServo_getVelocityMax(servo, 0, &maxVel);
-	servohandle = &servo;
-	return 0;
+    CPhidgetAdvancedServo_getAccelerationMax(servo, 0, &minAccel);
+    CPhidgetAdvancedServo_getVelocityMax(servo, 0, &maxVel);
+    servohandle = &servo;
+    return 0;
 
 
 }
 
 int ph_servo_DetachHandler(CPhidgetHandle phidget_servo, void *p)
 {
-    ph_servo_close(phidget_servo);
+    ph_servo_close((CPhidgetAdvancedServoHandle) phidget_servo);
     printf("eBuddy servo detatched\n");
 
 	return 0;
@@ -59,7 +59,7 @@ int ph_servo_DetachHandler(CPhidgetHandle phidget_servo, void *p)
 
 int ph_servo_AttachHandler(CPhidgetHandle phidget_servo, void *p)
 {
-    ph_get_servo_handle();
+    
     printf("eBuddy servo attached\n");
 
 	return 0;
@@ -73,17 +73,17 @@ int ph_servo_ErrorHandler(CPhidgetHandle phidget_servo, void *p, int ErrorCode, 
 	return 0;
 }
 
-int ph_servo_close(CPhidgetHandle servo)
+int ph_servo_close(CPhidgetAdvancedServoHandle servo)
 {
-	CPhidget_close((CPhidgethandle) phidget_servo);
-	CPhidget_delete((CPhidgethandle) phidget_servo);
+	CPhidget_close((CPhidgetHandle) servo);
+	CPhidget_delete((CPhidgetHandle) servo);
 
 	return 0;
 }
 
 /*RFID*/
 
-int ph_RFID_rfid_init(CPhidgetRFIDHandle RFIDhandle)
+int ph_RFID_rfid_init(CPhidgetRFIDHandle *RFIDhandle)
 {
 int static result;
 const char *err;
@@ -94,10 +94,6 @@ CPhidget_set_OnAttach_Handler((CPhidgetHandle)rfid, ph_RFID_AttachHandler, NULL)
 CPhidget_set_OnDetach_Handler((CPhidgetHandle)rfid, ph_RFID_DetachHandler, NULL);
 CPhidget_set_OnError_Handler((CPhidgetHandle)rfid, ph_RFID_ErrorHandler, NULL);
 
-
-CPhidgetRFID_set_OnTag_Handler(rfid, in_RFID_TagHandler, NULL);
-CPhidgetRFID_set_OnTagLost_Handler(rfid, in_RFID_TagLostHandler, NULL);
-
 CPhidget_open((CPhidgetHandle)rfid, -1);
 
 //get the program to wait for an RFID device to be attached
@@ -105,11 +101,11 @@ if((result = CPhidget_waitForAttachment((CPhidgetHandle)rfid, 10000)))
 	{
 		CPhidget_getErrorDescription(result, &err);
 		printf("Error ebuddy RFID not connected: %s\n", err);
-		ph_RFID_closerfid();
-		//exit (1);
+		ph_RFID_close(rfid);
+		
 	}
 CPhidgetRFID_setAntennaOn(rfid, 1);
-RFIDhandle = &RFID;
+RFIDhandle = &rfid;
 return 0;
 }
 
@@ -167,23 +163,17 @@ int ph_kit_init(CPhidgetInterfaceKitHandle *IFKhandle)
 	CPhidget_set_OnError_Handler((CPhidgetHandle)ifKit, ph_kit_ErrorHandler, NULL);
 
 
-	CPhidgetInterfaceKit_set_OnInputChange_Handler (ifKit, in_kit_InputChangeHandler, NULL);
-
-
-	CPhidgetInterfaceKit_set_OnSensorChange_Handler (ifKit, in_kit_SensorChangeHandler, NULL);
-
-
 	CPhidget_open((CPhidgetHandle)ifKit, -1);
 
 	if((result = CPhidget_waitForAttachment((CPhidgetHandle)ifKit, 10000)))
 	{
 		CPhidget_getErrorDescription(result, &err);
 		printf("eBuddy interface kit not connected: %s\n", err);
-		ph_kit_closekit();
+		ph_kit_close(ifKit);
 		//exit(1);
 	}
 
-	IFKhandle = &ifkit;
+	IFKhandle = &ifKit;
 	return 0;
 }
 
@@ -214,7 +204,6 @@ int ph_kit_DetachHandler(CPhidgetHandle IFK, void *userptr)
 
 	CPhidget_getDeviceName (IFK, &name);
 	CPhidget_getSerialNumber(IFK, &serialNo);
-        gs_eyesoff((CPhidgetInterfaceKitHandle)IFK);
 
 	printf("ebuddy interface kit detached!\n");
 
@@ -291,6 +280,7 @@ int ph_lcd_close(CPhidgetTextLCDHandle lcd)
 {
 	CPhidget_close((CPhidgetHandle)lcd);
 	CPhidget_delete((CPhidgetHandle)lcd);
+    return 0;
 }
 
 // end of LCD code

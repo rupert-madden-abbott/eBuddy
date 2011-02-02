@@ -21,10 +21,11 @@ typedef enum run_mode {
 #include "demo.h"
 #include "debug.h"
 #include "emotion.h"
+#include "phidget.h"
 #include "queue.h"
 #include "react.h"
 #include "guess.h"
 
-int mode_run(run_mode mode, em_State *emotions, qu_queue *notifications);
+int mode_run(run_mode mode, em_State *emotions, qu_queue *notifications, ph_handle *phhandle);
 
 #endif

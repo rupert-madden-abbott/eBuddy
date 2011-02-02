@@ -62,7 +62,7 @@ const InputAction rct_sleep_action = {{EM_ACTION_UPDATE,	EMO_ENERGY,	1},	{EM_ACT
 
 
 //Main loop
-int rct_main(em_State *emotions, qu_queue *notifications) {
+int rct_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
   const EmotionAction *em_action;
   const InputAction *in_action;
   nt_message *message;
@@ -109,17 +109,17 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
     
       //if emotion was full do full gesture
       if(condition == EM_COND_FULL) {
-        gsi_react(&in_action->full_gesture);
+        gsi_react(&in_action->full_gesture, phhandle);
       }
     
       //if it was normal do normal gesture
       else if(condition == EM_COND_NORMAL) {
-        gsi_react(&in_action->normal_gesture);
+        gsi_react(&in_action->normal_gesture, phhandle);
       }
     
       //otherwise do low gesture
       else {
-        gsi_react(&in_action->low_gesture);
+        gsi_react(&in_action->low_gesture, phhandle);
       }
       
       //check for shutdown signal
@@ -154,12 +154,12 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
     
     //do low gesture if condition is low
       else if(emotion_event.type == EM_COND_LOW) {
-        gsi_react(&em_action->low_gesture);
+        gsi_react(&em_action->low_gesture, phhandle);
       }
     
       //do critical gesture if condition is critical
       else {
-        gsi_react(&em_action->critical_gesture);
+        gsi_react(&em_action->critical_gesture, phhandle);
         
         //if critical mode is kill end main loop
         if(em_action->critical_mode == MODE_END) {
@@ -178,8 +178,8 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
   
     //do a gesture and print the text on the screen
     if(message) {
-      gsi_react(&rct_msg_action);
-      gsi_printLCD(message->text);
+      gsi_react(&rct_msg_action, phhandle);
+      gsi_printLCD(message->text, phhandle);
     }
   
     sleep(1);

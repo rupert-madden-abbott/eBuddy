@@ -30,21 +30,20 @@
 
 
 //defined servo phidget library fucntions
-#define GS_SETPOS(a, b, c) CPhidgetAdvancedServo_setPosition (a, b, c)
-#define GS_SETENG(a, b, c) CPhidgetAdvancedServo_setEngaged(a, b, c)
-#define GS_SETACC(a, b, c) CPhidgetAdvancedServo_setAcceleration(a, b, c)
-#define GS_SETVEL(a, b, c) CPhidgetAdvancedServo_setVelocityLimit(a, b, c)
+#define GS_SETPOS(a, b, c) error = CPhidgetAdvancedServo_setPosition (a, b, c)
+#define GS_SETENG(a, b, c) error = CPhidgetAdvancedServo_setEngaged(a, b, c)
+#define GS_SETACC(a, b, c) error = CPhidgetAdvancedServo_setAcceleration(a, b, c)
+#define GS_SETVEL(a, b, c) error = CPhidgetAdvancedServo_setVelocityLimit(a, b, c)
 
 #define GS_RIGHTEYE 0
 #define GS_LEFTEYE 2
 
-#define MP3PLAYERCMD "mpg123 -q "
 
 CPhidgetAdvancedServoHandle gs_get_servo_handle(void);
 
 int gs_set_pos(CPhidgetAdvancedServoHandle servo);
 extern int gs_dance_basic(CPhidgetAdvancedServoHandle servo);
-extern int gs_sound(int sound, int itineration);
+int gs_sound(const char *sound, int repeat);
 extern int gs_dance_advanced(CPhidgetAdvancedServoHandle servo);
 extern int gs_raise_arms(CPhidgetAdvancedServoHandle servo);
 extern int gs_shake_head(CPhidgetAdvancedServoHandle servo);

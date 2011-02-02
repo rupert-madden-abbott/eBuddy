@@ -1,67 +1,54 @@
 #include "gesture_interface.h"
 
-int gsi_react(const gsi_Reaction *resp, Phhandle handle)
+
+int gsi_servo_init(ph_handle *handle)
 {
-    int error = GSI_OK;
+    gs_set_pos(*handle->servohandle);
+    return 0;
+}
+
+int gsi_react(const gsi_Reaction *resp, ph_handle *handle)
+{
+    int error;
     if(resp->gesture == NULL){
         return GSI_NULL;
     }
-    if(resp->gesture(handle) == GSI_PHER){
-        error = GSI_PHER;
-    }
+    error = resp->gesture(handle);
+        
     if(resp->message != NULL){
-        if(gsi_printLCD(resp->message, handle->LCDhandle) == GSI_PHER){
-            error = GSI_PHER;
-        }
+        error = gsi_printLCD(resp->message, handle);
+    }
+    if(resp->sound != NULL){
+        error = gs_sound(resp->sound, 1);
     }
     return error;
 }
 
-int gsi_happy_level1(Phandle handle)
+int gsi_happy_level1(ph_handle *handle)
 {
-    int status;
-    CPhidget_getDeviceStatus((CPhidgetHandle)handle->servohandle, &status);
-    if(status == PHIDGET_NOTATTACHED){
-        return GSI_PHER;
-    }
-    gs_dance_basic(handle->servohandle);
-    return GSI_OK;
+    return gs_dance_basic(*handle->servohandle);
 }
 
-int gsi_fun_level1(Phandle handle)
+int gsi_fun_level1(ph_handle *handle)
+{
+    return gs_raise_arms(*handle->servohandle);
+    
+}
+
+
+int gsi_test(ph_handle *handle)
 {
     int status;
     
-    CPhidget_getDeviceStatus((CPhidgetHandle)handle->servohandle, &status);
-    if(status == PHIDGET_NOTATTACHED){
-        return GSI_PHER;
-    }
-    gs_raise_arms(handle->servohandle);
-    return GSI_OK;
-}
-
-int gsi_notification(void)
-{
-    gs_sound(7, 1);
-    return GSI_OK;
-}
-
-int gsi_test(Phandle handle)
-{
-    int status;
-    
-    CPhidget_getDeviceStatus((CPhidgetHandle)handle->servohandle, &status);
-    if(status == PHIDGET_NOTATTACHED){
-        return GSI_PHER;
-    }
-	gs_move_arms(handle->servohandle);
-	gs_shake_head(handle->servohandle);
-	gs_turn(handle->servohandle);
+	status = gs_move_arms(*handle->servohandle);
+	status = gs_shake_head(*handle->servohandle);
+	status = gs_turn(*handle->servohandle);
 	
 
-	return GSI_OK;
+	return status;
 }
 
+<<<<<<< HEAD
 int gsi_wave_right(void)
 {
   gs_wave_right(ph_get_servo_handle());
@@ -86,16 +73,11 @@ int gsi_raise_left(void)
 }
 
 
-int gsi_eyeflash(Phandle handle)
+
+int gsi_eyeflash(ph_handle *handle)
 {
-    int status;
     
-    CPhidget_getDeviceStatus((CPhidgetHandle)handle->IFKhandle, &status);
-    if(status == PHIDGET_NOTATTACHED){
-        return GSI_PHER;
-    }
-    gs_eyeflash(handle->IFKhandle);
-    return GSI_OK;
+    return gs_eyeflash(*handle->IFKhandle);
 }
 
 int gsi_rapid_eyeflash(void)
@@ -104,64 +86,38 @@ int gsi_rapid_eyeflash(void)
   return 0;
 }
 
-int gsi_printLCD(const char* str, Phandle handle)
+int gsi_printLCD(const char* str, ph_handle *handle)
 {
-    int status;
-    CPhidget_getDeviceStatus((CPhidgetHandle)handle->LCDhandle, &status);
-    if(status == PHIDGET_NOTATTACHED){
-        return GSI_PHER;
-    }
-   gs_printstring(str,txt_lcd, handle->LCDhandle);
-   return GSI_OK;
+   return gs_printstring(str, *handle->LCDhandle);
+   
 }
 
-int gsi_turn(Phandle handle)
+int gsi_turn(ph_handle *handle)
 {
-    int status;
-    CPhidget_getDeviceStatus((CPhidgetHandle)handle->servohandle, &status);
-    if(status == PHIDGET_NOTATTACHED){
-        return GSI_PHER;
-    }
-    gs_turn(handle->servohandle);
-    return GSI_OK;
-
-}
-
-int gsi_shake_head(Phandle handle)
-{
-    int status;
-    CPhidget_getDeviceStatus((CPhidgetHandle)handle->servohandle, &status);
-    if(status == PHIDGET_NOTATTACHED){
-        return GSI_PHER;
-    }
-    gs_shake_head(handle->servohandle);
-    return GSI_OK;
-
-}
-
-int gsi_move_arms(Phandle handle)
-{
-    int status;
+    return gs_turn(*handle->servohandle);
     
-    CPhidget_getDeviceStatus((CPhidgetHandle)handle->servohandle, &status);
-    if(status == PHIDGET_NOTATTACHED){
-        return GSI_PHER;
-    }
-    gs_move_arms(handle->servohandle);
-    return GSI_OK;
 
 }
 
-int gsi_raise_arms(Phandle handle)
+int gsi_shake_head(ph_handle *handle)
 {
-    int status;
     
-    CPhidget_getDeviceStatus((CPhidgetHandle)handle->servohandle, &status);
-    if(status == PHIDGET_NOTATTACHED){
-        return GSI_PHER;
-    }
-    gs_raise_arms(handle->servohandle);
-    return GSI_OK;
+    return gs_shake_head(*handle->servohandle);
+    
+
+}
+
+int gsi_move_arms(ph_handle *handle)
+{
+    
+    return gs_move_arms(*handle->servohandle);
+    
+
+}
+
+int gsi_raise_arms(ph_handle *handle)
+{
+    return gs_raise_arms(*handle->servohandle);
 
 }
 
