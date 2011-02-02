@@ -19,11 +19,11 @@
 const em_Emotion main_emotions[] = {
 	
 //name				life			factor		alert			max		full	low		critical
-  {"food",			UT_HOUR * 24,	0.2,		UT_MIN * 1,		100,	90,		30,		10},
-  {"energy",		UT_HOUR * 18,	0.5,		UT_MIN * 22,	100,	90,		20,		10},
-  {"clean",			UT_HOUR * 24,	0.3,		UT_MIN * 13,	150,	100,	50,		10},
-  {"social",		UT_HOUR * 2,	0.9,		UT_MIN * 12,	100,	98,		40,		20},
-  {"fun",			UT_HOUR * 2,	0.7,		UT_MIN * 15,	100,	98,		20,		5}
+  {"hunger",		UT_HOUR * 24,	0.2,		UT_MIN * 5,		100,	95,		30,		10},
+  {"energy",		UT_HOUR * 18,	0.5,		UT_MIN * 13,	100,	95,		20,		10},
+  {"clean",			UT_HOUR * 24,	0.3,		UT_MIN * 7,		150,	100,	50,		10},
+  {"social",		UT_HOUR * 2,	0.9,		UT_MIN * 9,		100,	98,		40,		20},
+  {"fun",			UT_HOUR * 2,	0.7,		UT_MIN * 11,	100,	98,		20,		5}
 };
 
 
