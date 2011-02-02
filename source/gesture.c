@@ -277,7 +277,6 @@ int gs_rapid_eyeflash(CPhidgetInterfaceKitHandle ifkit)
 
 int gs_wave_right(CPhidgetAdvancedServoHandle servo)
 {
-  int error;
   GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
   GS_SETPOS(servo, GS_SERVO_RIGHTARM, 80);
   usleep(MICRO * 300);
@@ -298,7 +297,7 @@ int gs_wave_right(CPhidgetAdvancedServoHandle servo)
   GS_SETPOS(servo, GS_SERVO_RIGHTARM, 80);
   usleep(MICRO * 300);
   gs_set_pos(servo);
-  return error;
+  return 0;
   
 }
 
@@ -308,6 +307,7 @@ int gs_raise_left(CPhidgetAdvancedServoHandle servo)
   GS_SETPOS(servo, GS_SERVO_LEFTARM, 120);
   usleep(MICRO * 1500);
   gs_set_pos(servo);
+  return 0;
 }
 
 int gs_raise_right(CPhidgetAdvancedServoHandle servo)
@@ -316,11 +316,11 @@ int gs_raise_right(CPhidgetAdvancedServoHandle servo)
   GS_SETPOS(servo, GS_SERVO_LEFTARM, 80);
   usleep(MICRO * 1500);
   gs_set_pos(servo);
+  return 0;
 }
 
 int gs_wave_left(CPhidgetAdvancedServoHandle servo)
 {
-  int error;
   GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
   GS_SETPOS(servo, GS_SERVO_LEFTARM, 120);
   usleep(MICRO * 300);
@@ -341,6 +341,7 @@ int gs_wave_left(CPhidgetAdvancedServoHandle servo)
   GS_SETPOS(servo, GS_SERVO_LEFTARM, 120);
   usleep(MICRO * 300);
   gs_set_pos(servo);
+  return 0;
   
 }
 

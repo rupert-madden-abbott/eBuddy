@@ -75,24 +75,24 @@ int gsi_test(void)
 
 int gsi_wave_right(void)
 {
-  gs_wave_right(ph_get_kit_handle());
+  gs_wave_right(ph_get_servo_handle());
   return 0;
 }
 
 int gsi_wave_left(void)
 {
-  gs_wave_left(ph_get_kit_handle());
+  gs_wave_left(ph_get_servo_handle());
   return 0;
 }
 
 int gsi_raise_right(void)
 {
-  gs_raise_right(ph_get_kit_handle());
+  gs_raise_right(ph_get_servo_handle());
   return 0;
 }
 int gsi_raise_left(void)
 {
-  gs_raise_left(ph_get_kit_handle());
+  gs_raise_left(ph_get_servo_handle());
   return 0;
 }
 
