@@ -30,50 +30,54 @@
 const EmotionAction rct_em_action[NUM_EMOTIONS] = {
 	
 //full alert	 					low	alert					critical alert					critical mode
-  {{gsi_eyeflash,	"*gurgle*"},	{NULL,			"hungry"},	{NULL,	"feed me"},					MODE_NONE},	//hunger
-  {{gsi_eyeflash,	"*yawn*"},		{gsi_raise_arms,"*yaawn*"},	{gsi_raise_arms,	"aaauuuoowhh"},	MODE_NONE},	//energy
+  {{gsi_eyeflash,	"*burp*"},		{gsi_eyeflash,	"hungry"},	{gsi_raise_arms,	"feed me"},		MODE_NONE},	//hunger
+  {{gsi_eyeflash,	"aaauuuoowhh"},	{gsi_raise_arms,"*yaawn*"},	{gsi_raise_arms,	"*yaaaaaawn*"},	MODE_SLEEP},//energy
   {{NULL,			""},			{gsi_eyeflash, 	"euhg"},	{gsi_shake_head,	"eeeewwwwww"},	MODE_NONE},	//cleanliness
-  {{NULL,			"lurrrrve"},	{gsi_raise_arms, "hey"},	{gsi_fun_level1,	"helloooo"}, 	MODE_NONE},	//social
-  {{gsi_fun_level1, "wooooo"},		{gsi_eyeflash,	"meh"},		{gsi_shake_head,	"boring"},		MODE_NONE}	//fun
+  {{NULL,			":)"},			{gsi_raise_arms, "hey"},	{gsi_fun_level1,	"helloooo"}, 	MODE_NONE},	//social
+  {{gsi_fun_level1, "wooooo"},		{gsi_eyeflash,	"meh"},		{gsi_shake_head,	"booooring"},	MODE_NONE}	//fun
 };
 
 //list of alerts and updates for each input
 const InputAction rct_in_action[IN_NUM_INPUTS] = {
 
   {{EM_ACTION_UPDATE,	EMO_HUNGER,	50},	{EM_ACTION_NONE,	EMO_NONE,	0},
-  {gsi_shake_head,	"no thanks"},		{gsi_eyeflash,	"mmmm"},		{gsi_shake_head,	"yummm!!!"},	MODE_NONE}, //nuts and bolts
+  {gsi_shake_head,	"no thanks"},		{gsi_eyeflash,	"mmmm"},		{gsi_shake_head,	"yummm!!!"},		MODE_NONE}, //nuts and bolts
   {{EM_ACTION_UPDATE,	EMO_ENERGY,	-15},	{EM_ACTION_UPDATE,	EMO_FUN,	20},
-  {gsi_shake_head,	"i can't"}, 		{gsi_eyeflash,	"glug"}, 		{gsi_fun_level1,	"yay"},			MODE_NONE}, //oil can
-  {{EM_ACTION_UPDATE,	EMO_HUNGER,	20},	{EM_ACTION_UPDATE,	EMO_ENERGY,	20},
-  {gsi_shake_head,	"no thanks"},		{gsi_eyeflash,	"buzzz"},		{gsi_fun_level1, "buzzzzzz"},		MODE_NONE},	//battery
+  {gsi_shake_head,	"i can't"}, 		{gsi_eyeflash,	"glug"}, 		{gsi_fun_level1,	"yay"},				MODE_NONE}, //oil can
+  {{EM_ACTION_UPDATE,	EMO_HUNGER,	35},	{EM_ACTION_UPDATE,	EMO_ENERGY,	20},
+  {gsi_shake_head,	"no thanks"},		{gsi_eyeflash,	"buzzz"},		{gsi_fun_level1, "buzzzzzz"},			MODE_NONE},	//battery
   
   
   {{EM_ACTION_UPDATE,	EMO_SOCIAL,	15},	{EM_ACTION_NONE,	EMO_NONE,	0},
-  {gsi_eyeflash,	"meh"},				{gsi_raise_arms,	"gurrrr"},	{gsi_happy_level1,	"yeaaaa"},		MODE_NONE},	//force sensor
-  {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {gsi_eyeflash,	"meh"},				{gsi_raise_arms,	"gurrrr"},	{gsi_happy_level1,	"yeaaaa"},		MODE_NONE},	//touch sensor
+  {gsi_eyeflash,	"meh"},				{gsi_raise_arms,	"gurrrr"},	{gsi_happy_level1,	"yeaaaa"},			MODE_NONE},	//force sensor
+  {{EM_ACTION_NONE,		EMO_ENERGY,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
+  {gsi_eyeflash,	"meh"},				{gsi_eyeflash,	"yawn"},		{gsi_eyeflash,	"yaaawn"},				MODE_SLEEP},//sleep sensor
   
   
   {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {gsi_eyeflash,		"game"},		{NULL,			""},			{NULL,				""},			MODE_NONE},	//left hand
+  {NULL,			""},				{NULL,			""},			{gsi_eyeflash,		"game"},			MODE_NONE},	//left hand
   {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {gsi_eyeflash,		"game"},		{NULL,			""},			{NULL,				""},			MODE_NONE},	//right hand 
+  {NULL,			""},				{NULL,			""},			{gsi_eyeflash,		"game"},			MODE_NONE},	//right hand 
   
   
   {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},  
-  {gsi_eyeflash,		"i am a robot"},{NULL,			""},			{NULL,				""},			MODE_NONE},	//power on
+  {NULL,			""},				{NULL,			""},			{gsi_eyeflash,		"i am a robot"},	MODE_NONE},	//power on
   {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {gsi_eyeflash,		"bye bye"},		{NULL,			""},			{NULL,				""},			MODE_KILL},	//power off
+  {NULL,			""},				{NULL,			""},			{gsi_eyeflash,		"bye bye"},			MODE_END},	//power off
   
   
   {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {gsi_eyeflash,		"demo"},		{NULL,			""},			{NULL,				""},			MODE_DEMO},	//demo key
+  {NULL,			""},				{NULL,			""},			{gsi_eyeflash,		"demo"},			MODE_DEMO},	//demo key
   {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {gsi_eyeflash,		"debug"},		{NULL,			""},			{NULL,				""},			MODE_DEBUG}	//debug key
+  {NULL,			""},				{NULL,			""},			{gsi_eyeflash,		"debug"},			MODE_DEBUG}	//debug key
 };
 
-//reaction to notifications
+//Reaction to notifications
 const gsi_Reaction rct_msg_action = {gsi_shake_head, "beep beep"};
+
+//Sleeping loop actions
+const InputAction rct_sleep_action = {{EM_ACTION_UPDATE,	EMO_ENERGY,	1},	{EM_ACTION_NONE,	EMO_NONE,	20},
+  {gsi_shake_head,	"..."},		{gsi_eyeflash,	"zzzzz"},		{gsi_eyeflash, "zzZZZzZz"},		MODE_END};
 
 
 
@@ -106,9 +110,9 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
         condition = em_get_condition(emotions, in_action->primary_emotion.emotion);
       }
   	
-      //if emotion is none use full gesture
+      //if emotion is none use critical gesture
       else {
-        condition = EM_COND_FULL;
+        condition = EM_COND_CRITICAL;
       }
   	
       //update primary emotion
@@ -139,12 +143,12 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
       }
       
       //check for shutdown signal
-      if(in_action->mode == MODE_KILL) {
+      if(in_action->mode == MODE_END) {
         running = 0;
       }
     
-      //if the input triggers a mode change switch to that mode
-      else if(in_action->mode) {
+      //if the input triggers a mode change and emotion level isnt full switch mode
+      else if(in_action->mode && condition != EM_COND_FULL) {
         rc = mode_run(in_action->mode, emotions, notifications);
       
         //return errors to parent mode
@@ -178,7 +182,7 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
         gsi_react(&em_action->critical_gesture);
         
         //if critical mode is kill end main loop
-        if(em_action->critical_mode == MODE_KILL) {
+        if(em_action->critical_mode == MODE_END) {
           running = 0;
         }
         
@@ -205,16 +209,96 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
 }
 
 
-//sleeping loop
+//Sleeping loop
 int rct_sleep(em_State *emotions, qu_queue *notifications) {
-  //nt_message *message;
-  //em_Event emotion_event; 
-  //em_condition condition;
-  //int input_event, rc;
+  nt_message *message;
+  em_Event emotion_event; 
+  em_condition condition;
+  in_input_type input_event;
+  int asleep, rc;
+
+  //keep looping until woken up
+  asleep = 1;
   
-  //print zzz
+  while(asleep) {
+
+    //look for input events
+    input_event = in_get_input();
   
-  //wait a few minutes
-  //do a sellping animation
+    //wake up on button press, force sensor or power button
+    if(input_event == INPT_LEFT_HAND || input_event == INPT_RIGHT_HAND ||
+                        input_event == INPT_FORCE || input_event == INPT_POWER_OFF) {
+  	  asleep = 0;
+    }
+ 
+    //look for emotion events but don't respond to them
+    rc = em_check(emotions, &emotion_event);
+  
+    //get notification events
+    message = qu_pop(notifications);
+  
+    //print the text on the screen
+    if(message) {
+      gsi_printLCD(message->text);
+    }
+  	
+    //get condition of primary sleep emotion
+    if(rct_sleep_action.primary_emotion.emotion != EMO_NONE) {
+      condition = em_get_condition(emotions, rct_sleep_action.primary_emotion.emotion);
+    }
+  	
+    //if emotion is none use full gesture
+    else {
+      condition = EM_COND_FULL;
+    }
+  	
+    //update primary emotion
+  	rc = em_react(emotions, &rct_sleep_action.primary_emotion);
+  	
+  	//check for errors in reaction table
+    assert(rc ==0);
+  	
+  	//update secondary emotion
+    rc = em_react(emotions, &rct_sleep_action.secondary_emotion);
+    
+    //check for errors in reaction table
+    assert(rc ==0);
+    
+    //if emotion was full do full gesture
+    if(condition == EM_COND_FULL) {
+      gsi_react(&rct_sleep_action.full_gesture);
+      
+      //check for wake up signal
+      if(rct_sleep_action.mode == MODE_END) {
+        asleep = 0;
+      }
+    
+      //if the input triggers a mode change switch to that mode
+      else if(rct_sleep_action.mode) {
+        rc = mode_run(rct_sleep_action.mode, emotions, notifications);
+      
+        //return errors to parent mode
+        if(rc) {
+          return rc;
+        }
+      }
+    }
+    
+    //if it was normal do normal gesture
+    else if(condition == EM_COND_NORMAL) {
+      gsi_react(&rct_sleep_action.normal_gesture);
+    }
+    
+    //otherwise do low gesture
+    else {
+      gsi_react(&rct_sleep_action.low_gesture);
+    }
+  
+    sleep(5);
+  }
+  
+  //wake up animation
+  gsi_raise_arms();
+  
   return ERR_NONE;
 }
