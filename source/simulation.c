@@ -114,10 +114,10 @@ void *sim_in_loop(void *reader_pointer) {
       printf("b(attery)\t- battery key\n");
       printf("o(il)\t\t- oil key\n");
       printf("f(orce)\t\t- force sensor\n");
-      printf("t(ouch)\t\t- touch sensor\n");
+      printf("s(leep)\t\t- sleep sensor\n");
       printf("l(eft)\t\t- left hand\n");
       printf("r(ight)\t\t- right hand\n");
-      printf("s(tart demo)\t- demo key\n");
+      printf("(dem)m(o)\t- demo key\n");
       printf("d(ebug)\t\t- debug key\n");	
       printf("q(uit)\t\t- send shutdown signal\n");
       printf("h(elp)\t\t- print out this message\n");
@@ -178,9 +178,9 @@ int sim_get_input(char *command) {
     case 'f':
       return INPT_FORCE;
       
-    //touch sensor
-    case 't':
-      return INPT_TOUCH;
+    //sleep sensor
+    case 's':
+      return INPT_DARK;
     
     //press left hand
     case 'l':
@@ -195,7 +195,7 @@ int sim_get_input(char *command) {
       return INPT_POWER_OFF;
     
     //demo key
-    case 's':
+    case 'm':
       return INPT_DEMO;
      
     //debug key 
