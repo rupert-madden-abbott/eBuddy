@@ -10,7 +10,7 @@ int in_RFID_TagHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char *Tag
 {
 	//turn on the Onboard LED
 	CPhidgetRFID_setLEDOn(RFID, 1);
-
+else if(svalue == 0 && sindex==0)
 	
 	printf("Tag Read: %02x%02x%02x%02x%02x\n", TagVal[0], TagVal[1], TagVal[2], TagVal[3], TagVal[4]);
 	in_RFID_savetag(TagVal[0]+TagVal[1]+TagVal[2]+TagVal[3]+TagVal[4]);
@@ -66,7 +66,7 @@ int in_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int
 
 void in_kit_laugh(int sindex, int svalue)
 {
-	if(svalue > IN_PRESS)
+	if(svalue > IN_PRESS && sindex==IN_FORCE)
 		{
 			static time_t last=0;
 			time_t current;
@@ -75,7 +75,7 @@ void in_kit_laugh(int sindex, int svalue)
 			if(last==0)
 				{
 					last=current;
-					in_set_input(INPT_FORCE);//laughing
+					in_set_input(INPT_FORCE);//FORCE
 				}
 			else
 				{
@@ -83,11 +83,19 @@ void in_kit_laugh(int sindex, int svalue)
 					last=current;
 					if(dif>1)
 						{
-							in_set_input(INPT_FORCE);//laughing
+							in_set_input(INPT_FORCE);//FORCE
 						}
 				}
 
 			
+		}
+	else if (svalue==0 && sindex==IN_TOUCHONE)
+		{
+			in_set_input(INPT_RIGHT_HAND);//TOUCH ONE(RIGHT HAND)
+		}
+	else if (svalue==0 && sindex==IN_TOUCHTWO)
+		{
+			in_set_input(INPT_LEFT_HAND);//TOUCH TWO(LEFT HAND)
 		}
 }
 

@@ -7,6 +7,9 @@
 #define IN_DISC 386
 #define IN_CARD 601
 #define IN_KEYFOB 252
+#define IN_TOUCHONE 1
+#define IN_TOUCHTWO 2
+#define IN_FORCE 0
 
 //number of inputs excluding inpt_none
 #define IN_NUM_INPUTS 11
