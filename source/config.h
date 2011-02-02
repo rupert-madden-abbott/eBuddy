@@ -10,9 +10,10 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <jansson.h>
-
-/* Represents a JSON structure (Renamed to maintain a consistent public API) */
+/**
+ * @struct cf_json
+ * Represents a JSON structure (Renamed to maintain a consistent public API)
+ */
 typedef json_t cf_json;
 
 /**
@@ -37,7 +38,7 @@ cf_json *cf_read(const char *input);
  * 
  * @param  root The JSON object to be written to file
  * @param  path The path of the file to be written to
- * @return err_code
+ * @return error code: ERR_JSON_ENCODE
  */
 int cf_write(const cf_json *root, const char *path);
 
@@ -59,7 +60,7 @@ void cf_free(cf_json *root);
  * stored in @p root. Therefore, if cf_free is called on @p root, this object 
  * will also be destroyed.
  *
- * @param  root A JSON object
+ * @param  root The JSON object containing the @p value to be decoded
  * @param  key  The name or index of the @p value to return
  * @return NULL, 0 or 0.0 on error or the value named @p key
  */
@@ -79,10 +80,10 @@ double cf_get_double(const cf_json *root, const char *key);
  * It does not matter if the old and new values differ in type e.g. A string 
  * could be set on a key previously of type int
  *
- * @param  root  A JSON object
+ * @param  root  A JSON object on to which to encode the @p value
  * @param  key   The name of the new @p value
  * @param  value The value to be stored in @p root
- * @return err_code
+ * @return error code: ERR_JSON_ENCODE
  */
 int cf_set_object(cf_json *root, const char *key, cf_json *value);
 int cf_set_string(cf_json *root, const char *key, const char *value);
@@ -95,7 +96,7 @@ int cf_set_double(cf_json *root, const char *key, double value);
  * testing.
  *
  * @param  root A JSON object
- * @return error_code
+ * @return error code: ERR_JSON_ENCODE
  */
 int cf_printf(const cf_json *root);
 

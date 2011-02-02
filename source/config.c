@@ -5,41 +5,35 @@
 
 cf_json *cf_read(const char *input) {
   json_t *root;
-  json_error_t error;
   
-  /* Ensure input is not NULL */ 
+  //Ensure input is set 
   if(!input) return NULL;
   
-  /* Check if input contains JSON or is a path to a file containing JSON */
+  //Check if input contains JSON or is a path to a file containing JSON
   if(strstr(input, ".json")) {
-    root = json_load_file(input, 0, &error);
+    root = json_load_file(input, 0, NULL);
   }
   else {
-    root = json_loads(input, 0, &error);
+    root = json_loads(input, 0, NULL);
   }
   
-  /* Prints out any errors encountered whilst parsing the JSON. */
-  if(!root) {
-    fprintf(stderr, "Error on line: %i, col: %i\n%s\n", error.line, 
-            error.column, error.text);
-    return NULL;
-  }
+  //Return NULL if the JSON could not be decoded
+  if(!root) return NULL;
   
   return root;
 }
 
 int cf_write(const cf_json *root, const char *input) {
-  /* input is automatically formatted to ensure configuration files are 
-     consistently formatted */
+  //Input is automatically formatted to provide consistent config files
   if(json_dump_file(root, input, JSON_INDENT(2) || JSON_SORT_KEYS)) {
-    return ERR_UNKNOWN;
+    return ERR_JSON_ENCODE;
   }
   
   return ERR_NONE;
 }
 
 void cf_free(cf_json *root) {
-  /* jansson uses resource counting to keep track of resources. Each reference
+  /* Jansson uses resource counting to keep track of resources. Each reference
      must be decremented in order to free it. */
   json_decref(root);
 }
@@ -95,9 +89,9 @@ int cf_set_string(cf_json *root, const char *key, const char *value) {
   json_t *object = NULL;
 
   object = json_string(value);
-  if(object == NULL) return ERR_UNKNOWN;
+  if(object == NULL) return ERR_JSON_ENCODE;
   
-  if(cf_set_object(root, key, object)) return ERR_UNKNOWN;
+  if(cf_set_object(root, key, object)) return ERR_JSON_ENCODE;
     
   return ERR_NONE;
 }
@@ -106,9 +100,9 @@ int cf_set_integer(cf_json *root, const char *key, int value) {
   json_t *object = NULL;
 
   object = json_integer(value);
-  if(object == NULL) return ERR_UNKNOWN;
+  if(object == NULL) return ERR_JSON_ENCODE;
   
-  if(cf_set_object(root, key, object)) return ERR_UNKNOWN;
+  if(cf_set_object(root, key, object)) return ERR_JSON_ENCODE;
   
   return ERR_NONE;
 }
@@ -117,9 +111,9 @@ int cf_set_double(cf_json *root, const char *key, double value) {
   json_t *object = NULL;
 
   object = json_real(value);
-  if(object == NULL) return ERR_UNKNOWN;
+  if(object == NULL) return ERR_JSON_ENCODE;
   
-  if(cf_set_object(root, key, object)) return ERR_UNKNOWN;
+  if(cf_set_object(root, key, object)) return ERR_JSON_ENCODE;
     
   return ERR_NONE;
 }
@@ -129,7 +123,7 @@ int cf_set_double(cf_json *root, const char *key, double value) {
    that it will look identical to the configuration files */
 int cf_printf(const cf_json *root) {
   if(json_dumpf(root, stdout, JSON_INDENT(2) || JSON_SORT_KEYS)) {
-    return ERR_UNKNOWN;
+    return ERR_JSON_ENCODE;
   }
   
   return ERR_NONE;
