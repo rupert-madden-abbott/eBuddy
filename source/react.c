@@ -34,42 +34,42 @@ const EmotionAction rct_em_action[NUM_EMOTIONS] = {
   {{gsi_eyeflash,	"aaauuuoowhh"},	{gsi_raise_arms,"*yaawn*"},	{gsi_raise_arms,	"*yaaaaaawn*"},	MODE_SLEEP},//energy
   {{NULL,			""},			{gsi_eyeflash, 	"euhg"},	{gsi_shake_head,	"eeeewwwwww"},	MODE_NONE},	//cleanliness
   {{NULL,			":)"},			{gsi_raise_arms, "hey"},	{gsi_fun_level1,	"helloooo"}, 	MODE_NONE},	//social
-  {{gsi_fun_level1, "wooooo"},		{gsi_eyeflash,	"meh"},		{gsi_shake_head,	"booooring"},	MODE_NONE}	//fun
+  {{gsi_fun_level1, "wooooo"},		{gsi_eyeflash,	":("},		{gsi_shake_head,	"booooring"},	MODE_NONE}	//fun
 };
 
 //list of alerts and updates for each input
 const InputAction rct_in_action[IN_NUM_INPUTS] = {
 
   {{EM_ACTION_UPDATE,	EMO_HUNGER,	50},	{EM_ACTION_NONE,	EMO_NONE,	0},
-  {gsi_shake_head,	"no thanks"},		{gsi_eyeflash,	"mmmm"},		{gsi_shake_head,	"yummm!!!"},		MODE_NONE}, //nuts and bolts
-  {{EM_ACTION_UPDATE,	EMO_ENERGY,	-15},	{EM_ACTION_UPDATE,	EMO_FUN,	20},
-  {gsi_shake_head,	"i can't"}, 		{gsi_eyeflash,	"glug"}, 		{gsi_fun_level1,	"yay"},				MODE_NONE}, //oil can
-  {{EM_ACTION_UPDATE,	EMO_HUNGER,	35},	{EM_ACTION_UPDATE,	EMO_ENERGY,	20},
-  {gsi_shake_head,	"no thanks"},		{gsi_eyeflash,	"buzzz"},		{gsi_fun_level1, "buzzzzzz"},			MODE_NONE},	//battery
+  {gsi_shake_head,	"*burp*"},				{gsi_eyeflash,	"munch munch"},		{gsi_shake_head,	"yummm!!!"},	MODE_NONE}, //nuts and bolts
+  {{EM_ACTION_UPDATE,	EMO_ENERGY,	-25},	{EM_ACTION_UPDATE,	EMO_FUN,	15},
+  {gsi_fun_level1,	"*glug* *glug*"}, 		{gsi_eyeflash,	"glug"}, 			{gsi_shake_head,	"yuck"},		MODE_NONE}, //oil can
+  {{EM_ACTION_UPDATE,	EMO_FUN,	-25},	{EM_ACTION_UPDATE,	EMO_ENERGY,	15},
+  {gsi_raise_arms,	"buzz buzz buzz"},		{gsi_eyeflash,	"buzz..."},			{gsi_shake_head, "..."},			MODE_NONE},	//battery
   
   
-  {{EM_ACTION_UPDATE,	EMO_SOCIAL,	15},	{EM_ACTION_NONE,	EMO_NONE,	0},
-  {gsi_eyeflash,	"meh"},				{gsi_raise_arms,	"gurrrr"},	{gsi_happy_level1,	"yeaaaa"},			MODE_NONE},	//force sensor
+  {{EM_ACTION_UPDATE,	EMO_SOCIAL,	20},	{EM_ACTION_UPDATE,	EMO_FUN,	5},
+  {gsi_eyeflash,	"meh"},					{gsi_move_arms,	"tee he he"},		{gsi_happy_level1,	"yeaaaa"},			MODE_NONE},	//force sensor
   {{EM_ACTION_NONE,		EMO_ENERGY,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {gsi_eyeflash,	"meh"},				{gsi_eyeflash,	"yawn"},		{gsi_eyeflash,	"yaaawn"},				MODE_SLEEP},//sleep sensor
+  {gsi_shake_head,	":("},					{gsi_move_arms,		"yawn"},		{gsi_raise_arms,	"yaaawn"},			MODE_SLEEP},//sleep sensor
   
   
-  {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {NULL,			""},				{NULL,			""},			{gsi_eyeflash,		"game"},			MODE_NONE},	//left hand
-  {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {NULL,			""},				{NULL,			""},			{gsi_eyeflash,		"game"},			MODE_NONE},	//right hand 
+  {{EM_ACTION_NONE,		EMO_FUN,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
+  {gsi_shake_head,	""},					{gsi_raise_left,		":D"},				{gsi_raise_left,	":)"},			MODE_NONE},	//left hand
+  {{EM_ACTION_NONE,		EMO_FUN,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
+  {gsi_shake_head,	""},					{gsi_raise_right,		":D"},				{gsi_raise_right,	":)"},			MODE_NONE},	//right hand 
   
   
   {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},  
-  {NULL,			""},				{NULL,			""},			{gsi_eyeflash,		"i am a robot"},	MODE_NONE},	//power on
+  {NULL,			""},					{NULL,			""},				{gsi_eyeflash,		"i am a robot"},	MODE_NONE},	//power on
   {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {NULL,			""},				{NULL,			""},			{gsi_eyeflash,		"bye bye"},			MODE_END},	//power off
+  {NULL,			""},					{NULL,			""},				{gsi_wave_right,	"bye bye"},			MODE_END},	//power off
   
   
   {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {NULL,			""},				{NULL,			""},			{gsi_eyeflash,		"demo"},			MODE_DEMO},	//demo key
+  {NULL,			""},					{NULL,			""},				{gsi_eyeflash,		"demo"},			MODE_DEMO},	//demo key
   {{EM_ACTION_NONE,		EMO_NONE,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {NULL,			""},				{NULL,			""},			{gsi_eyeflash,		"debug"},			MODE_DEBUG}	//debug key
+  {NULL,			""},					{NULL,			""},				{gsi_eyeflash,		"debug"},			MODE_DEBUG}	//debug key
 };
 
 //Reaction to notifications
@@ -205,7 +205,7 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
     sleep(1);
   }
   
-  return ERR_NONE;
+  return ERR_CLOSE;
 }
 
 
@@ -225,10 +225,14 @@ int rct_sleep(em_State *emotions, qu_queue *notifications) {
     //look for input events
     input_event = in_get_input();
   
-    //wake up on button press, force sensor or power button
-    if(input_event == INPT_LEFT_HAND || input_event == INPT_RIGHT_HAND ||
-                        input_event == INPT_FORCE || input_event == INPT_POWER_OFF) {
+    //wake up on button press or force sensor
+    if(input_event == INPT_LEFT_HAND || input_event == INPT_RIGHT_HAND || input_event == INPT_FORCE) {
   	  asleep = 0;
+    }
+    
+    //shutdown on power button
+    if(input_event == INPT_POWER_OFF) {
+  	  return ERR_CLOSE;
     }
  
     //look for emotion events but don't respond to them

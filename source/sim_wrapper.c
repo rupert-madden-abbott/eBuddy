@@ -113,3 +113,21 @@ int gsi_eyeflash(void) {
   return 0;
 }
 
+int gsi_wave_right(void) {
+  printf("*waves with right hand*\n");
+  return 0;
+}
+
+int gsi_wave_left(void) {
+  printf("*waves with left hand*\n");
+  return 0;
+}
+
+int gsi_raise_right(void) {
+  printf("*raises right hand*\n");
+  return 0;
+}
+int gsi_raise_left(void) {
+  printf("*raises left hand*\n");
+  return 0;
+}

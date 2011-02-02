@@ -27,6 +27,7 @@ enum os {
 typedef enum error_code {
   ERR_UNKNOWN = -1,	//unknown error
   ERR_NONE = 0,		//no error
+  ERR_CLOSE,		//shutdown signal was recieved
   ERR_BAD_PATH,		//file path is invalid
   ERR_BAD_FILE,		//file is corrupt
   ERR_BAD_ARG,		//invalid argument to a function

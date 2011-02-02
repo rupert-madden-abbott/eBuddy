@@ -156,7 +156,7 @@ int debug_events(em_State *emotions, qu_queue *notifications) {
   
     //print events on the screen
     if(!rc) {
-      sprintf(buffer, "emotion %02d %02d", emotion_event.type, emotion_event.emotion);
+      sprintf(buffer, "emotion %10s %02d", emotions->emotions[emotion_event.emotion].name, emotion_event.type);
       gsi_printLCD(buffer);
     }
   	
@@ -193,13 +193,9 @@ int debug_modes(em_State *emotions, qu_queue *notifications) {
     //switch to chosen mode
     rc = mode_run(mode + 1, emotions, notifications);
         
-    //display errors
+    //pass errors to calling function
     if(rc) {
-      gsi_printLCD("exit mode with error");
-    }
-  
-    else {
-      gsi_printLCD("exit mode");
+      return rc;
     }
   }
   
