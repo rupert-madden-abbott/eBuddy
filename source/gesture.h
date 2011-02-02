@@ -19,7 +19,6 @@
 #define GS_STARTPOS_RIGHTARM 200
 #define GS_STARTPOS_LEFTARM 20
 
-#define GS_MICRO 1000
 
 //defined servo phidget library fucntions
 #define GS_SETPOS(a, b, c) CPhidgetAdvancedServo_setPosition (a, b, c)
@@ -45,6 +44,8 @@ extern int gs_turn(CPhidgetAdvancedServoHandle servo);
 extern int gs_eyeson(CPhidgetInterfaceKitHandle ifkit);
 extern int gs_eyesoff(CPhidgetInterfaceKitHandle ifkit);
 extern int gs_eyeflash(CPhidgetInterfaceKitHandle ifkit);
+extern int gs_wave_left(CPhidgetAdvancedServoHandle servo);
+extern int gs_wave_right(CPhidgetAdvancedServoHandle servo);
 
 
 int gs_printstring(const char* str,CPhidgetTextLCDHandle txt_lcd);

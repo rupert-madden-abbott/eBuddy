@@ -16,6 +16,8 @@
 
 #define UT_EPOCH_YEAR 1900
 
+#define MICRO 1000
+
 enum os {
   LINUX,
   OSX,

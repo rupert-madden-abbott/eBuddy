@@ -73,6 +73,17 @@ int gsi_test(void)
 	return GSI_OK;
 }
 
+int gsi_wave_right(void)
+{
+  gs_wave_right(ph_get_kit_handle());
+}
+
+int gsi_wave_left(void)
+{
+  gs_wave_left(ph_get_kit_handle());
+}
+
+
 int gsi_eyeflash(void)
 {
     int status;
