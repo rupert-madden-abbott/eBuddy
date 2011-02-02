@@ -10,7 +10,6 @@ int in_RFID_TagHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char *Tag
 {
 	//turn on the Onboard LED
 	CPhidgetRFID_setLEDOn(RFID, 1);
-else if(svalue == 0 && sindex==0)
 	
 	printf("Tag Read: %02x%02x%02x%02x%02x\n", TagVal[0], TagVal[1], TagVal[2], TagVal[3], TagVal[4]);
 	in_RFID_savetag(TagVal[0]+TagVal[1]+TagVal[2]+TagVal[3]+TagVal[4]);
