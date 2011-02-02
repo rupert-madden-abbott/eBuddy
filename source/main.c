@@ -30,7 +30,7 @@ const em_Emotion main_emotions[] = {
 int main(void) {
   em_State *emotions;
   qu_queue *notifications;
-  ph_handle *phhandle;
+  ph_handle phhandle;
   error_code rc;
 
   //create a new emotion state using the emotion table
@@ -71,17 +71,17 @@ int main(void) {
   }
 
   //initialise gestures
-  gsi_gesture_init(phhandle);
+  rc = gsi_gesture_init(&phhandle);
   if(rc) {
     printf("Error initialising gestures\n");
-    exit(1)
+    exit(1);
   }
 
   //initialise input 
-  in_input_init(phhandle);
+  rc = in_input_init(&phhandle);
   if(rc) {
     printf("Error initialising input\n");
-    exit(1)
+    exit(1);
   }
   
   //create the notification queue
@@ -102,13 +102,13 @@ int main(void) {
   }
   
   //enter main interactive mode
-  rc = mode_run(STARTUP_MODE, emotions, notifications, phhandle);
+  rc = mode_run(STARTUP_MODE, emotions, notifications, &phhandle);
   
   //finalise and unload all modules
   printf("Shutting down\n");
   em_save(emotions, EM_STATE_PATH);
   em_destroy(emotions);
   //nt_destroy();
-  ph_destruct(phhandle);
+  ph_destruct(&phhandle);
   return 0;
 }

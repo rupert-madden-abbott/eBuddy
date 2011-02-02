@@ -20,6 +20,7 @@ int gsi_shake_head(ph_handle *handle);
 int gsi_move_arms(ph_handle *handle);
 int gsi_raise_arms(ph_handle *handle);
 int gsi_eyeflash(ph_handle *handle);
+int gsi_sound(const char *sound, int repeat);
 
 extern int gsi_printLCD(const char* str, ph_handle *handle);
 

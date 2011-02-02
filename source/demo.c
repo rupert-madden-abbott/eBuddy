@@ -11,7 +11,7 @@
 #include "demo.h"
 
 //Demo mode
-int demo_main(em_State *emotions, qu_queue *notifications) {
+int demo_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
   nt_message *message;
 
   while(1) {
@@ -21,17 +21,17 @@ int demo_main(em_State *emotions, qu_queue *notifications) {
       message = qu_pop(notifications);
       printf("After POP: %i\n", qu_size(notifications));
       printf("%s\n", message->text);
-      gsi_eyeflash();
-      gsi_raise_arms();
-      gsi_notification();
-      gsi_printLCD(message->text);
+      gsi_eyeflash(phhandle);
+      gsi_raise_arms(phhandle);
+      gsi_sound("7", 1);
+      gsi_printLCD(message->text, phhandle);
       
       fflush(stdout);
     }
       if(in_get_input() == INPT_BATTERY)
 	{
             
-		gsi_happy_level1();
+		gsi_happy_level1(phhandle);
 	}
   }
 

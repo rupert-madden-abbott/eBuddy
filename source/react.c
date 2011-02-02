@@ -129,7 +129,7 @@ int rct_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
     
       //if the input triggers a mode change and emotion level isnt full switch mode
       else if(in_action->mode && condition != EM_COND_FULL) {
-        rc = mode_run(in_action->mode, emotions, notifications);
+        rc = mode_run(in_action->mode, emotions, notifications, phhandle);
       
         //return errors to parent mode
         if(rc) {
@@ -149,7 +149,7 @@ int rct_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
   	
   	  //do full gesture if condition is full
       if(emotion_event.type == EM_COND_FULL) {
-        gsi_react(&em_action->full_gesture);
+        gsi_react(&em_action->full_gesture, phhandle);
       }
     
     //do low gesture if condition is low
@@ -168,7 +168,7 @@ int rct_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
         
         //check for other mode changes
         else if(em_action->critical_mode) {
-          mode_run(em_action->critical_mode, emotions, notifications);
+          mode_run(em_action->critical_mode, emotions, notifications, phhandle);
         }
       }
     }

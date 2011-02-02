@@ -2,10 +2,10 @@
 
 int ph_init(const char *config, ph_handle *handle)
 {
-    ph_servo_init(handle->servohandle);
-    ph_RFID_rfid_init(handle->RFIDhandle);
-    ph_kit_init(handle->IFKhandle);
-    ph_lcd_init(handle->LCDhandle);
+    ph_servo_init(handle);
+    ph_RFID_rfid_init(handle);
+    ph_kit_init(handle);
+    ph_lcd_init(handle);
 	
     return 0;
 }
@@ -22,7 +22,7 @@ int ph_destruct(ph_handle *handle)
 /*Servo Header*/
 
 
-int ph_servo_init(CPhidgetAdvancedServoHandle *servohandle)
+int ph_servo_init(ph_handle *handle)
 {
     double minAccel, maxVel;
     int servo_wait_result;
@@ -43,7 +43,7 @@ int ph_servo_init(CPhidgetAdvancedServoHandle *servohandle)
 
     CPhidgetAdvancedServo_getAccelerationMax(servo, 0, &minAccel);
     CPhidgetAdvancedServo_getVelocityMax(servo, 0, &maxVel);
-    servohandle = &servo;
+    handle->servohandle = &servo;
     return 0;
 
 
@@ -83,7 +83,7 @@ int ph_servo_close(CPhidgetAdvancedServoHandle servo)
 
 /*RFID*/
 
-int ph_RFID_rfid_init(CPhidgetRFIDHandle *RFIDhandle)
+int ph_RFID_rfid_init(ph_handle *handle)
 {
 int static result;
 const char *err;
@@ -94,7 +94,7 @@ CPhidget_set_OnAttach_Handler((CPhidgetHandle)rfid, ph_RFID_AttachHandler, NULL)
 CPhidget_set_OnDetach_Handler((CPhidgetHandle)rfid, ph_RFID_DetachHandler, NULL);
 CPhidget_set_OnError_Handler((CPhidgetHandle)rfid, ph_RFID_ErrorHandler, NULL);
 
-CPhidget_open((CPhidgetHandle)rfid, -1);
+//CPhidget_open((CPhidgetHandle)rfid, -1);
 
 //get the program to wait for an RFID device to be attached
 if((result = CPhidget_waitForAttachment((CPhidgetHandle)rfid, 10000)))
@@ -104,8 +104,8 @@ if((result = CPhidget_waitForAttachment((CPhidgetHandle)rfid, 10000)))
 		ph_RFID_close(rfid);
 		
 	}
-CPhidgetRFID_setAntennaOn(rfid, 1);
-RFIDhandle = &rfid;
+//CPhidgetRFID_setAntennaOn(rfid, 1);
+handle->RFIDhandle = &rfid;
 return 0;
 }
 
@@ -151,7 +151,7 @@ int ph_RFID_ErrorHandler(CPhidgetHandle RFID, void *userptr, int ErrorCode, cons
 
 /*Interface Kit*/
 
-int ph_kit_init(CPhidgetInterfaceKitHandle *IFKhandle)
+int ph_kit_init(ph_handle *handle)
 {
 	int result;
 	const char *err;
@@ -173,7 +173,7 @@ int ph_kit_init(CPhidgetInterfaceKitHandle *IFKhandle)
 		//exit(1);
 	}
 
-	IFKhandle = &ifKit;
+	handle->IFKhandle = &ifKit;
 	return 0;
 }
 
@@ -222,7 +222,7 @@ int ph_kit_ErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const 
 
 //LCD
 
-int ph_lcd_init(CPhidgetTextLCDHandle *LCDhandle)
+int ph_lcd_init(ph_handle *handle)
 {
         int result;
 	const char *err;
@@ -248,7 +248,7 @@ int ph_lcd_init(CPhidgetTextLCDHandle *LCDhandle)
 		return 0;
 	}
         CPhidgetTextLCD_setContrast (txt_lcd, 100);
-	LCDhandle = &txt_lcd;
+	handle->LCDhandle = &txt_lcd;
         return 0;
 }
 

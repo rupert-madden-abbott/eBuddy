@@ -1,10 +1,17 @@
 #include "gesture_interface.h"
 
 
-int gsi_servo_init(ph_handle *handle)
+int gsi_gesture_init(ph_handle *handle)
 {
     gs_set_pos(*handle->servohandle);
+    gs_eyeson(*handle->IFKhandle);
     return 0;
+}
+
+int gsi_sound(const char *sound, int repeat)
+{
+  gs_sound(sound, repeat);
+  return 0;
 }
 
 int gsi_react(const gsi_Reaction *resp, ph_handle *handle)

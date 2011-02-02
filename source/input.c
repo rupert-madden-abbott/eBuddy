@@ -13,6 +13,8 @@ int in_RFID_init(CPhidgetRFIDHandle RFID)
 {
     CPhidgetRFID_set_OnTag_Handler(RFID, in_RFID_TagHandler, NULL);
     CPhidgetRFID_set_OnTagLost_Handler(RFID, in_RFID_TagLostHandler, NULL);
+    CPhidget_open((CPhidgetHandle)RFID, -1);
+    CPhidgetRFID_setAntennaOn(RFID, 1);
     return 0;
 
 }
