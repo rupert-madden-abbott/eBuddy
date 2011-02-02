@@ -4,13 +4,14 @@
 #include "utility.h"
 #include "input.h"
 #include "gesture_interface.h"
+#include "mode.h"
 #include "debug.h"
 
 //debug mode main menu
 //allows access to all debugging tools
 int debug_main(em_State *emotions, qu_queue *notifications) {
-  const char *menu[] = {"emotions", "events"};
-  const int menu_size = 2;
+  const char *menu[] = {"emotions", "events", "modes"};
+  const int menu_size = 3;
   int item, rc;
 
   //gsi_enter_debug();
@@ -21,6 +22,7 @@ int debug_main(em_State *emotions, qu_queue *notifications) {
 
     //display the menu
     item = debug_menu(menu, menu_size);
+    rc = 0;
     
     //run the correct command
     switch(item) {
@@ -35,6 +37,9 @@ int debug_main(em_State *emotions, qu_queue *notifications) {
         rc = debug_events(emotions, notifications);
         break;
         
+      case 2:
+        rc = debug_modes(emotions, notifications);
+        
     }
     
     //pass errors to calling function
@@ -42,7 +47,7 @@ int debug_main(em_State *emotions, qu_queue *notifications) {
       return rc;
     }
     
-  } while(item != DEBUG_EXIT && item != DEBUG_BACK);
+  } while(item != DEBUG_EXIT);
   
   gsi_printLCD("exit debug");
   gsi_eyeflash();
@@ -67,7 +72,7 @@ int debug_emotions(em_State *emotions, qu_queue *notifications) {
   emotion = debug_menu(emotion_names, emotions->num_emotions);
   
   //check for exit
-  if(emotion == DEBUG_BACK || emotion == DEBUG_EXIT) {
+  if(emotion == DEBUG_EXIT) {
     return ERR_NONE;
   }
   
@@ -76,7 +81,7 @@ int debug_emotions(em_State *emotions, qu_queue *notifications) {
   action = debug_menu(action_menu, action_menu_size);
   
   //check for exit
-  if(emotion == DEBUG_BACK || emotion == DEBUG_EXIT) {
+  if(emotion == DEBUG_EXIT) {
     return ERR_NONE;
   }
   
@@ -172,6 +177,35 @@ int debug_events(em_State *emotions, qu_queue *notifications) {
   return ERR_NONE;
 }
 
+//manually change modes
+int debug_modes(em_State *emotions, qu_queue *notifications) {
+  const char *menu[] = {"react", "sleep", "demo", "debug", "guess"};
+  const int menu_size = 5;
+  int mode, rc;
+  
+  gsi_printLCD("select mode");
+
+  //display mode list
+  mode = debug_menu(menu, menu_size);
+    
+  if(mode != DEBUG_EXIT) {
+  	
+    //switch to chosen mode
+    rc = mode_run(mode + 1, emotions, notifications);
+        
+    //display errors
+    if(rc) {
+      gsi_printLCD("exit mode with error");
+    }
+  
+    else {
+      gsi_printLCD("exit mode");
+    }
+  }
+  
+  return ERR_NONE;
+}
+
 //display a menu on the lcd screen allowing the user to choose between
 //item's. the function returns the item number or debug_none if the operation
 //is canceled
@@ -211,12 +245,6 @@ int debug_menu(const char **items, int num_items) {
   
     //force sensor selects item
     else if(input == INPT_FORCE) {
-      selected = 1;
-    }
-  
-    //touch sensor exits menu
-    else if(input == INPT_TOUCH) {
-      current = DEBUG_BACK;
       selected = 1;
     }
     
@@ -274,12 +302,6 @@ int debug_input(int min, int max, int step) {
   
     //force sensor selects number
     else if(input == INPT_FORCE) {
-      selected = 1;
-    }
-  
-    //touch sensor exits selection
-    else if(input == INPT_TOUCH) {
-      current = DEBUG_BACK;
       selected = 1;
     }
     
