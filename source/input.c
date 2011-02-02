@@ -35,18 +35,31 @@ if(tagv==IN_DISC)
 			in_set_input(INPT_OIL);//oil
 		
 	}
-if(tagv==IN_CARD)
+if(tagv==IN_CARDONE)
 	{
 		
 			in_set_input(INPT_BATTERY);//battery
 		
 	}
-if(tagv==IN_KEYFOB)
+if(tagv==IN_CARDTWO)
+	{
+		
+			in_set_input(INPT_DEMO);//DEMO
+		
+	}
+if(tagv==IN_KEYFOBONE)
 	{
 	
 			in_set_input(INPT_BOLTS);//nuts and bolts
 		
 	}
+if(tagv==IN_KEYFOBTWO)
+	{
+	
+			in_set_input(INPT_DEBUG);//DEBUG
+		
+	}
+
 }
 
 /*Interface Kit input*/

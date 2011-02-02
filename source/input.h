@@ -5,8 +5,10 @@
 
 #define IN_PRESS 400
 #define IN_DISC 386
-#define IN_CARD 601
-#define IN_KEYFOB 252
+#define IN_CARDONE 601
+#define IN_CARDTWO 558
+#define IN_KEYFOBONE 252
+#define IN_KEYFOBTWO 375
 #define IN_TOUCHONE 1
 #define IN_TOUCHTWO 2
 #define IN_FORCE 0
