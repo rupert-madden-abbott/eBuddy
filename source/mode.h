@@ -6,13 +6,13 @@
 
 //list of different run modes
 typedef enum run_mode {
-  MODE_KILL = -1,
+  MODE_END = -1,
   MODE_NONE = 0,
-  MODE_REACT,
-  MODE_SLEEP,
-  MODE_DEMO,
-  MODE_DEBUG,
-  MODE_GUESS,
+  MODE_REACT = 1,
+  MODE_SLEEP = 2,
+  MODE_DEMO = 3,
+  MODE_DEBUG = 4,
+  MODE_GUESS = 5,
 } run_mode;
 
 
