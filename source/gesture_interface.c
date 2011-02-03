@@ -62,27 +62,26 @@ int gsi_test(ph_handle *handle)
 	return status;
 }
 
-<<<<<<< HEAD
-int gsi_wave_right(void)
+int gsi_wave_right(ph_handle *handle)
 {
-  gs_wave_right(ph_get_servo_handle());
+  gs_wave_right(handle->servohandle);
   return 0;
 }
 
-int gsi_wave_left(void)
+int gsi_wave_left(ph_handle *handle)
 {
-  gs_wave_left(ph_get_servo_handle());
+  gs_wave_left(handle->servohandle);
   return 0;
 }
 
-int gsi_raise_right(void)
+int gsi_raise_right(ph_handle *handle)
 {
-  gs_raise_right(ph_get_servo_handle());
+  gs_raise_right(handle->servohandle);
   return 0;
 }
-int gsi_raise_left(void)
+int gsi_raise_left(ph_handle *handle)
 {
-  gs_raise_left(ph_get_servo_handle());
+  gs_raise_left(handle->servohandle);
   return 0;
 }
 
@@ -94,9 +93,9 @@ int gsi_eyeflash(ph_handle *handle)
     return gs_eyeflash(handle->IFKhandle);
 }
 
-int gsi_rapid_eyeflash(void)
+int gsi_rapid_eyeflash(ph_handle *handle)
 {
-  gs_rapid_eyeflash(ph_get_kit_handle());
+  gs_rapid_eyeflash(handle->IFKhandle);
   return 0;
 }
 

@@ -190,7 +190,7 @@ int rct_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
 
 
 //Sleeping loop
-int rct_sleep(em_State *emotions, qu_queue *notifications) {
+int rct_sleep(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
   nt_message *message;
   em_Event emotion_event; 
   em_condition condition;
@@ -223,7 +223,7 @@ int rct_sleep(em_State *emotions, qu_queue *notifications) {
   
     //print the text on the screen
     if(message) {
-      gsi_printLCD(message->text);
+      gsi_printLCD(message->text, phhandle);
     }
   	
     //get condition of primary sleep emotion
@@ -250,7 +250,7 @@ int rct_sleep(em_State *emotions, qu_queue *notifications) {
     
     //if emotion was full do full gesture
     if(condition == EM_COND_FULL) {
-      gsi_react(&rct_sleep_action.full_gesture);
+      gsi_react(&rct_sleep_action.full_gesture, phhandle);
       
       //check for wake up signal
       if(rct_sleep_action.mode == MODE_END) {
@@ -259,7 +259,7 @@ int rct_sleep(em_State *emotions, qu_queue *notifications) {
     
       //if the input triggers a mode change switch to that mode
       else if(rct_sleep_action.mode) {
-        rc = mode_run(rct_sleep_action.mode, emotions, notifications);
+        rc = mode_run(rct_sleep_action.mode, emotions, notifications, phhandle);
       
         //return errors to parent mode
         if(rc) {
@@ -270,19 +270,19 @@ int rct_sleep(em_State *emotions, qu_queue *notifications) {
     
     //if it was normal do normal gesture
     else if(condition == EM_COND_NORMAL) {
-      gsi_react(&rct_sleep_action.normal_gesture);
+      gsi_react(&rct_sleep_action.normal_gesture, phhandle);
     }
     
     //otherwise do low gesture
     else {
-      gsi_react(&rct_sleep_action.low_gesture);
+      gsi_react(&rct_sleep_action.low_gesture, phhandle);
     }
   
     sleep(5);
   }
   
   //wake up animation
-  gsi_raise_arms();
+  gsi_raise_arms(phhandle);
   
   return ERR_NONE;
 }

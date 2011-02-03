@@ -38,7 +38,7 @@ int debug_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle)
         break;
         
       case 2:
-        rc = debug_modes(emotions, notifications);
+        rc = debug_modes(emotions, notifications, phhandle);
         
     }
     
@@ -178,20 +178,20 @@ int debug_events(em_State *emotions, qu_queue *notifications, ph_handle *phhandl
 }
 
 //manually change modes
-int debug_modes(em_State *emotions, qu_queue *notifications) {
+int debug_modes(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
   const char *menu[] = {"react", "sleep", "demo", "debug", "guess"};
   const int menu_size = 5;
   int mode, rc;
   
-  gsi_printLCD("select mode");
+  gsi_printLCD("select mode", phhandle);
 
   //display mode list
-  mode = debug_menu(menu, menu_size);
+  mode = debug_menu(menu, menu_size, phhandle);
     
   if(mode != DEBUG_EXIT) {
   	
     //switch to chosen mode
-    rc = mode_run(mode + 1, emotions, notifications);
+    rc = mode_run(mode + 1, emotions, notifications, phhandle);
         
     //pass errors to calling function
     if(rc) {

@@ -24,7 +24,7 @@ int gs_set_pos(CPhidgetAdvancedServoHandle servo)
     GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_LEFTARM);
     GS_SETPOS (servo, GS_SERVO_RIGHTARM, GS_STARTPOS_RIGHTARM);
     GS_SETPOS (servo, GS_SERVO_TORSO, GS_STARTPOS_TORSO);
-    usleep(GS_MICRO * 1000);
+    usleep(MICRO * 1000);
     GS_SETENG(servo, GS_SERVO_HEAD, 0);
     GS_SETENG(servo, GS_SERVO_TORSO, 0);
     GS_SETENG(servo, GS_SERVO_LEFTARM, 0);
@@ -52,25 +52,25 @@ int gs_dance_basic(CPhidgetAdvancedServoHandle servo)
     for(i = 0; i < 2; i++){
 
     GS_SETPOS (servo, GS_SERVO_LEFTARM, 100);
-    usleep(GS_MICRO * 500);
+    usleep(MICRO * 500);
     GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_LEFTARM);
-    usleep(GS_MICRO * 500);
+    usleep(MICRO * 500);
     GS_SETPOS (servo, GS_SERVO_RIGHTARM, 100);
-    usleep(GS_MICRO * 500);
+    usleep(MICRO * 500);
     GS_SETPOS (servo, GS_SERVO_RIGHTARM, GS_STARTPOS_RIGHTARM);
-    usleep(GS_MICRO * 500);;
+    usleep(MICRO * 500);;
     GS_SETPOS (servo, GS_SERVO_HEAD, 100);
     GS_SETPOS (servo, GS_SERVO_LEFTARM, 100);
-    usleep(GS_MICRO * 500);
+    usleep(MICRO * 500);
     GS_SETPOS (servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
     GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_LEFTARM);
-    usleep(GS_MICRO * 500);
+    usleep(MICRO * 500);
     GS_SETPOS (servo, GS_SERVO_HEAD, 200);
     GS_SETPOS (servo, GS_SERVO_RIGHTARM, 100);
-    usleep(GS_MICRO * 500);
+    usleep(MICRO * 500);
     GS_SETPOS (servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);
     GS_SETPOS (servo, GS_SERVO_LEFTARM, GS_STARTPOS_RIGHTARM);
-    usleep(GS_MICRO * 500);
+    usleep(MICRO * 500);
 	}
 
 
@@ -274,6 +274,7 @@ int gs_rapid_eyeflash(CPhidgetInterfaceKitHandle ifkit)
 
 int gs_wave_right(CPhidgetAdvancedServoHandle servo)
 {
+  int error;
   GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
   GS_SETPOS(servo, GS_SERVO_RIGHTARM, 80);
   usleep(MICRO * 300);
@@ -300,6 +301,7 @@ int gs_wave_right(CPhidgetAdvancedServoHandle servo)
 
 int gs_raise_left(CPhidgetAdvancedServoHandle servo)
 {
+  int error;
   GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
   GS_SETPOS(servo, GS_SERVO_LEFTARM, 120);
   usleep(MICRO * 1500);
@@ -309,6 +311,7 @@ int gs_raise_left(CPhidgetAdvancedServoHandle servo)
 
 int gs_raise_right(CPhidgetAdvancedServoHandle servo)
 {
+  int error;
   GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
   GS_SETPOS(servo, GS_SERVO_LEFTARM, 80);
   usleep(MICRO * 1500);
@@ -318,6 +321,7 @@ int gs_raise_right(CPhidgetAdvancedServoHandle servo)
 
 int gs_wave_left(CPhidgetAdvancedServoHandle servo)
 {
+  int error;
   GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
   GS_SETPOS(servo, GS_SERVO_LEFTARM, 120);
   usleep(MICRO * 300);

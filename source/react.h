@@ -7,6 +7,7 @@
 
 #include "utility.h"
 #include "emotion.h"
+#include "phidget.h"
 #include "gesture_interface.h"
 #include "input.h"
 #include "mode.h"

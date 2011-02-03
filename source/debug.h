@@ -32,7 +32,7 @@ int debug_emotions(em_State *emotions, qu_queue *notifications, ph_handle *phhan
 int debug_events(em_State *emotions, qu_queue *notifications, ph_handle *phhandle);
 
 //manually change modes
-int debug_modes(em_State *emotions, qu_queue *notifications);
+int debug_modes(em_State *emotions, qu_queue *notifications, ph_handle *phhandle);
 
 //display a menu on the lcd screen allowing the user to choose between
 //item's. the function returns the item number or debug_none if the operation
