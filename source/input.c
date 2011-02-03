@@ -4,8 +4,8 @@
 
 int in_input_init(ph_handle *handle)
 {
-    in_RFID_init(*handle->RFIDhandle);
-    in_kit_input_init(*handle->IFKhandle);
+    in_RFID_init(handle->RFIDhandle);
+    in_kit_input_init(handle->IFKhandle);
     return 0;
 }
 

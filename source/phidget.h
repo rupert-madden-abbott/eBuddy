@@ -8,10 +8,10 @@
 
 
 typedef struct ph_handle{
-CPhidgetAdvancedServoHandle *servohandle;
-CPhidgetRFIDHandle          *RFIDhandle;
-CPhidgetInterfaceKitHandle  *IFKhandle;
-CPhidgetTextLCDHandle       *LCDhandle;
+CPhidgetAdvancedServoHandle servohandle;
+CPhidgetRFIDHandle          RFIDhandle;
+CPhidgetInterfaceKitHandle  IFKhandle;
+CPhidgetTextLCDHandle       LCDhandle;
 } ph_handle;
 
 extern int ph_init(const char *config, ph_handle *handle);

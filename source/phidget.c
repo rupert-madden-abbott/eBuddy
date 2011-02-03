@@ -12,10 +12,10 @@ int ph_init(const char *config, ph_handle *handle)
 
 int ph_destruct(ph_handle *handle)
 {
-    ph_servo_close(*handle->servohandle);
-    ph_RFID_close(*handle->RFIDhandle);
-    ph_lcd_close(*handle->LCDhandle);
-    ph_kit_close(*handle->IFKhandle);
+    ph_servo_close(handle->servohandle);
+    ph_RFID_close(handle->RFIDhandle);
+    ph_lcd_close(handle->LCDhandle);
+    ph_kit_close(handle->IFKhandle);
     return 0;
 }
 
@@ -43,7 +43,7 @@ int ph_servo_init(ph_handle *handle)
 
     CPhidgetAdvancedServo_getAccelerationMax(servo, 0, &minAccel);
     CPhidgetAdvancedServo_getVelocityMax(servo, 0, &maxVel);
-    handle->servohandle = &servo;
+    handle->servohandle = servo;
     return 0;
 
 
@@ -173,7 +173,7 @@ int ph_kit_init(ph_handle *handle)
 		//exit(1);
 	}
 
-	handle->IFKhandle = &ifKit;
+	handle->IFKhandle = ifKit;
 	return 0;
 }
 
@@ -248,7 +248,7 @@ int ph_lcd_init(ph_handle *handle)
 		return 0;
 	}
         CPhidgetTextLCD_setContrast (txt_lcd, 100);
-	handle->LCDhandle = &txt_lcd;
+	handle->LCDhandle = txt_lcd;
         return 0;
 }
 

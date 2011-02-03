@@ -3,8 +3,8 @@
 
 int gsi_gesture_init(ph_handle *handle)
 {
-    gs_set_pos(*handle->servohandle);
-    gs_eyeson(*handle->IFKhandle);
+    gs_set_pos(handle->servohandle);
+    gs_eyeson(handle->IFKhandle);
     return 0;
 }
 
@@ -33,12 +33,12 @@ int gsi_react(const gsi_Reaction *resp, ph_handle *handle)
 
 int gsi_happy_level1(ph_handle *handle)
 {
-    return gs_dance_basic(*handle->servohandle);
+    return gs_dance_basic(handle->servohandle);
 }
 
 int gsi_fun_level1(ph_handle *handle)
 {
-    return gs_raise_arms(*handle->servohandle);
+    return gs_raise_arms(handle->servohandle);
     
 }
 
@@ -47,9 +47,9 @@ int gsi_test(ph_handle *handle)
 {
     int status;
     
-	status = gs_move_arms(*handle->servohandle);
-	status = gs_shake_head(*handle->servohandle);
-	status = gs_turn(*handle->servohandle);
+	status = gs_move_arms(handle->servohandle);
+	status = gs_shake_head(handle->servohandle);
+	status = gs_turn(handle->servohandle);
 	
 
 	return status;
@@ -84,7 +84,7 @@ int gsi_raise_left(void)
 int gsi_eyeflash(ph_handle *handle)
 {
     
-    return gs_eyeflash(*handle->IFKhandle);
+    return gs_eyeflash(handle->IFKhandle);
 }
 
 int gsi_rapid_eyeflash(void)
@@ -95,13 +95,13 @@ int gsi_rapid_eyeflash(void)
 
 int gsi_printLCD(const char* str, ph_handle *handle)
 {
-   return gs_printstring(str, *handle->LCDhandle);
+   return gs_printstring(str, handle->LCDhandle);
    
 }
 
 int gsi_turn(ph_handle *handle)
 {
-    return gs_turn(*handle->servohandle);
+    return gs_turn(handle->servohandle);
     
 
 }
@@ -109,7 +109,7 @@ int gsi_turn(ph_handle *handle)
 int gsi_shake_head(ph_handle *handle)
 {
     
-    return gs_shake_head(*handle->servohandle);
+    return gs_shake_head(handle->servohandle);
     
 
 }
@@ -117,14 +117,14 @@ int gsi_shake_head(ph_handle *handle)
 int gsi_move_arms(ph_handle *handle)
 {
     
-    return gs_move_arms(*handle->servohandle);
+    return gs_move_arms(handle->servohandle);
     
 
 }
 
 int gsi_raise_arms(ph_handle *handle)
 {
-    return gs_raise_arms(*handle->servohandle);
+    return gs_raise_arms(handle->servohandle);
 
 }
 
