@@ -13,6 +13,7 @@
 #define GSI_OK 0
 
 int gsi_gesture_init(ph_handle *handle);
+int gsi_gesture_close(ph_handle *handle);
 int gsi_happy_level1(ph_handle *handle);
 int gsi_fun_level1(ph_handle *handle);
 int gsi_test(ph_handle *handle);

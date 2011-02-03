@@ -108,6 +108,7 @@ int main(void) {
   printf("Shutting down\n");
   em_save(emotions, EM_STATE_PATH);
   em_destroy(emotions);
+  gsi_gesture_close(&phhandle);
   //nt_destroy();
   ph_destruct(&phhandle);
   return 0;

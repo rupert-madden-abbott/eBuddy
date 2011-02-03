@@ -3,9 +3,16 @@
 
 int gsi_gesture_init(ph_handle *handle)
 {
-    gs_set_pos(handle->servohandle);
-    gs_eyeson(handle->IFKhandle);
-    return 0;
+  gs_set_pos(handle->servohandle);
+  gs_eyeson(handle->IFKhandle);
+  return 0;
+}
+
+int gsi_gesture_close(ph_handle *handle)
+{
+  gs_set_pos(handle->servohandle);
+  gs_eyesoff(handle->IFKhandle);
+  return 0;
 }
 
 int gsi_sound(const char *sound, int repeat)

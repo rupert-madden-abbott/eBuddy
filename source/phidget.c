@@ -105,7 +105,7 @@ if((result = CPhidget_waitForAttachment((CPhidgetHandle)rfid, 10000)))
 		
 	}
 //CPhidgetRFID_setAntennaOn(rfid, 1);
-handle->RFIDhandle = &rfid;
+handle->RFIDhandle = rfid;
 return 0;
 }
 
@@ -161,9 +161,6 @@ int ph_kit_init(ph_handle *handle)
 	CPhidget_set_OnAttach_Handler((CPhidgetHandle)ifKit, ph_kit_AttachHandler, NULL);
 	CPhidget_set_OnDetach_Handler((CPhidgetHandle)ifKit, ph_kit_DetachHandler, NULL);
 	CPhidget_set_OnError_Handler((CPhidgetHandle)ifKit, ph_kit_ErrorHandler, NULL);
-
-
-	CPhidget_open((CPhidgetHandle)ifKit, -1);
 
 	if((result = CPhidget_waitForAttachment((CPhidgetHandle)ifKit, 10000)))
 	{
