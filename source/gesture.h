@@ -50,6 +50,5 @@ extern int gs_rapid_eyeflash(CPhidgetInterfaceKitHandle ifkit);
 extern int gs_raise_right(CPhidgetAdvancedServoHandle servo);
 extern int gs_raise_left(CPhidgetAdvancedServoHandle servo);
 
-
 int gs_printstring(const char* str,CPhidgetTextLCDHandle txt_lcd);
 #endif

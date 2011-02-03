@@ -249,7 +249,7 @@ int gs_rapid_eyeflash(CPhidgetInterfaceKitHandle ifkit)
 	CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PFALSE);
 	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PFALSE);
 	usleep(MICRO * 80);
-  CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PFALSE);
+        CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PFALSE);
 	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PFALSE);
 	usleep(MICRO * 80);
 	CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PTRUE);
@@ -270,7 +270,7 @@ int gs_rapid_eyeflash(CPhidgetInterfaceKitHandle ifkit)
 	CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PFALSE);
 	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PFALSE);
 	usleep(MICRO * 80);
-  CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PFALSE);
+        CPhidgetInterfaceKit_setOutputState (ifkit, GS_RIGHTEYE, PFALSE);
 	CPhidgetInterfaceKit_setOutputState (ifkit, GS_LEFTEYE, PFALSE);
 	return 0;
 }

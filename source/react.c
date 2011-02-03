@@ -55,7 +55,7 @@ const InputAction rct_in_action[IN_NUM_INPUTS] = {
   
   
   {{EM_ACTION_NONE,		EMO_FUN,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
-  {gsi_shake_head,	""},					{gsi_raise_left,		":D"},				{gsi_raise_left,	":)"},			MODE_NONE},	//left hand
+  {gsi_shake_head,	""},					{gsi_raise_left,		":D"},				{gsi_raise_left,	":)"},			MODE_GUESS},	//left hand
   {{EM_ACTION_NONE,		EMO_FUN,	0},		{EM_ACTION_NONE,	EMO_NONE,	0},
   {gsi_shake_head,	""},					{gsi_raise_right,		":D"},				{gsi_raise_right,	":)"},			MODE_NONE},	//right hand 
   

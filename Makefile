@@ -11,17 +11,17 @@ INCLUDE     := -Isource/
 
 all: linux
 
-demo: checkdir config.o demo.o demo_test.o emotion.o gesture.o gesture_interface.o input.o notify.o phidget.o queue.o react.o utility.o 
-	$(CC) $(CFLAGS) build/demo build/demo_test.o build/config.o build/demo.o build/emotion.o build/gesture.o build/gesture_interface.o build/input.o build/notify.o build/phidget.o build/queue.o build/utility.o $(LIB) $(LIB_LINUX) -o build/demo
+demo: checkdir config.o demo.o demo_test.o emotion.o guess.o gesture.o gesture_interface.o input.o notify.o phidget.o queue.o react.o utility.o 
+	$(CC) $(CFLAGS) build/demo build/demo_test.o build/config.o build/demo.o build/emotion.o build/guess.o build/gesture.o build/gesture_interface.o build/input.o build/notify.o build/phidget.o build/queue.o build/utility.o $(LIB) $(LIB_LINUX) -o build/demo
 
-linux: checkdir config.o debug.o demo.o emotion.o phidget.o gesture.o gesture_interface.o input.o main.o mode.o notify.o  queue.o react.o utility.o 
-	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/gesture.o build/gesture_interface.o build/input.o build/main.o build/mode.o build/notify.o build/phidget.o build/queue.o build/react.o build/utility.o $(LIB) $(LIB_LINUX) -o build/ebuddy
+linux: checkdir config.o debug.o demo.o emotion.o guess.o gesture.o gesture_interface.o input.o main.o mode.o notify.o phidget.o queue.o react.o utility.o 
+	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/guess.o build/gesture.o build/gesture_interface.o build/input.o build/main.o build/mode.o build/notify.o build/phidget.o build/queue.o build/react.o build/utility.o $(LIB) $(LIB_LINUX) -o build/ebuddy
 
-osx: checkdir config.o debug.o demo.o emotion.o phidget.o gesture.o gesture_interface.o input.o mode.o main.o notify.o queue.o react.o utility.o
-	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/gesture.o build/gesture_interface.o build/input.o build/main.o build/mode.o build/notify.o build/phidget.o build/queue.o build/react.o build/utility.o $(LIB) $(LIB_OSX) -o build/ebuddy
+osx: checkdir config.o debug.o demo.o emotion.o guess.o phidget.o gesture.o gesture_interface.o input.o mode.o main.o notify.o queue.o react.o utility.o
+	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/guess.o build/gesture.o build/gesture_interface.o build/input.o build/main.o build/mode.o build/notify.o build/phidget.o build/queue.o build/react.o build/utility.o $(LIB) $(LIB_OSX) -o build/ebuddy
 
-simulation: checkdir config.o debug.o demo.o emotion.o phidget.o gesture.o gesture_interface.o input.o notify.o main.o mode.o queue.o react.o simulation.o sim_wrapper.o utility.o
-	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/main.o build/mode.o build/notify.o build/queue.o build/react.o build/simulation.o build/sim_wrapper.o build/utility.o $(LIB) -o build/simulation
+simulation: checkdir config.o debug.o demo.o emotion.o phidget.o guess.o gesture.o gesture_interface.o input.o notify.o main.o mode.o queue.o react.o simulation.o sim_wrapper.o utility.o
+	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/guess.o build/main.o build/mode.o build/notify.o build/queue.o build/react.o build/simulation.o build/sim_wrapper.o build/utility.o $(LIB) -o build/simulation
 	
 
 # MODULES
@@ -37,6 +37,9 @@ demo.o: source/demo.c source/demo.h
 
 emotion.o: source/emotion.c source/emotion.h
 	$(CC) $(CFLAGS) -c source/emotion.c -o build/emotion.o
+
+guess.o: source/guess.c source/guess.h
+	$(CC) $(CFLAGS) -c source/guess.c -o build/guess.o
 
 gesture.o: source/gesture.c source/gesture.h
 	$(CC) $(CFLAGS) -c source/gesture.c -o build/gesture.o
