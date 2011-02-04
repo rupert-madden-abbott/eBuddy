@@ -345,6 +345,9 @@ int gs_wave_left(CPhidgetAdvancedServoHandle servo)
   
 }
 
+/*LCD funtions*/
+// takes a string as input, along with the LCD handle, and prints the string
+// to the LCD screen.
 int gs_printstring(const char* string,CPhidgetTextLCDHandle txt_lcd)
 {
    int flag=0;
@@ -355,22 +358,28 @@ int gs_printstring(const char* string,CPhidgetTextLCDHandle txt_lcd)
    char str1[10000];
    char blank[1] = "\0";
    
-   CPhidgetTextLCD_setDisplayString (txt_lcd,0,blank);
-   CPhidgetTextLCD_setDisplayString (txt_lcd,1,blank);
-   CPhidgetTextLCD_setBacklight(txt_lcd,1);
+   CPhidgetTextLCD_setDisplayString (txt_lcd,0,blank);  // clear LCD row 0
+   CPhidgetTextLCD_setDisplayString (txt_lcd,1,blank);  // clear LCS row 1
+   CPhidgetTextLCD_setBacklight(txt_lcd,1);   // turn on backlight
    for (j=0;j<length;j++) {
       tmp[j]=string[j];
    }
    tmp[length]=WHITESPACE;
    tmp[length+1]='\0';
+   // loop splits the string into substrings no more than LCDWIDTH characters
+   // 2 lines are printed to the screen at a time
    while (startpoint<length) {
       for (j=startpoint+LCDWIDTH;j>startpoint;j--) {
          if (tmp[j-1]==WHITESPACE&&flag==0) {
             strncpy(str1,tmp+startpoint,j-startpoint-1);
             str1[j-startpoint-1]='\0';
             CPhidgetTextLCD_setDisplayString (txt_lcd,row,str1);
-            if (row==0) {row=1;}
-            else {row=0;}
+            if (row==0) {
+               row=1;
+            }
+            else {
+               row=0;
+            }
             strcpy(str1,"");
             flag=1;
             startpoint=j;
@@ -380,8 +389,12 @@ int gs_printstring(const char* string,CPhidgetTextLCDHandle txt_lcd)
          strncpy(str1,tmp+startpoint,LCDWIDTH);
          str1[LCDWIDTH]='\0';
          CPhidgetTextLCD_setDisplayString (txt_lcd,row,str1);
-         if (row==0) {row=1;}
-         else {row=0;}
+         if (row==0) {
+            row=1;
+         }
+         else {
+            row=0;
+         }
          strcpy(str1,"");
          flag=1;
          startpoint=startpoint+LCDWIDTH;

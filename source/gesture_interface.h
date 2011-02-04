@@ -17,7 +17,6 @@ int gsi_wave_right(void);
 int gsi_wave_left(void);
 int gsi_raise_right(void);
 int gsi_raise_left(void);
-
 extern int gsi_printLCD(const char* str);
 
 /* representation of a gesture [needs to go in gesture] */

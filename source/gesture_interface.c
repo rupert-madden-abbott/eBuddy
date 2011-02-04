@@ -117,12 +117,12 @@ int gsi_rapid_eyeflash(void)
 
 int gsi_printLCD(const char* str)
 {
-    int status;
-    CPhidgetTextLCDHandle txt_lcd = ph_get_lcd_handle();
-    CPhidget_getDeviceStatus((CPhidgetHandle)txt_lcd, &status);
-    if(status == PHIDGET_NOTATTACHED){
-        return GSI_PHER;
-    }
+   int status;
+   CPhidgetTextLCDHandle txt_lcd = ph_get_lcd_handle();
+   CPhidget_getDeviceStatus((CPhidgetHandle)txt_lcd, &status);
+   if(status == PHIDGET_NOTATTACHED){
+      return GSI_PHER;
+   }
    gs_printstring(str,txt_lcd);
    return GSI_OK;
 }
