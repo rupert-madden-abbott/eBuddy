@@ -20,4 +20,4 @@
 // number of fun points added if game is won
 #define GUESS_FUNPOINTS 30 
 
-int guess_main(em_State *emotions, qu_queue *notifications);
+int guess_main(em_State *emotions, qu_queue *notifications, ph_handle *phandle);

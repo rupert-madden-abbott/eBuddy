@@ -8,7 +8,7 @@
 #include "mode.h"
 #include "guess.h"
 
-int guess_main(em_State *emotions, qu_queue *notifications) {
+int guess_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
    int i,j;
    in_input_type input;
    unsigned int iseed = (unsigned int)time(NULL);
@@ -16,7 +16,7 @@ int guess_main(em_State *emotions, qu_queue *notifications) {
 
    gsi_printLCD("Play the memory game... see if you can repeat my gestures. " 
                 "Press my back if I shake my head, or touch whichever hand "
-                "I raised");
+                "I raised", phhandle);
 
    int sequence[GUESS_NUMBERTOGUESS+1];  // array to store sequence of gestures
 
@@ -41,16 +41,16 @@ int guess_main(em_State *emotions, qu_queue *notifications) {
       // display sequence of gestures
       for (j=0;j<i+GUESS_STARTINGNUMTOGUESS;j++) {  
          if (sequence[j]==INPT_LEFT_HAND) {
-            gsi_raise_left();
+            gsi_raise_left(phhandle);
          }
          if (sequence[j]==INPT_RIGHT_HAND) {
-            gsi_raise_right();
+            gsi_raise_right(phhandle);
          }
          if (sequence[j]==INPT_FORCE) {
-            gsi_shake_head();
+            gsi_shake_head(phhandle);
          }
       }
-      gsi_printLCD("Now let's see if you can remember what I did!");
+      gsi_printLCD("Now let's see if you can remember what I did!", phhandle);
       for (j=0;j<i+GUESS_STARTINGNUMTOGUESS;j++) { 
          do {	// wait for an input
             sleep(1);
@@ -61,25 +61,25 @@ int guess_main(em_State *emotions, qu_queue *notifications) {
             if (j==i+GUESS_STARTINGNUMTOGUESS-1) {
                if (j==GUESS_NUMBERTOGUESS-2) {
                   gsi_printLCD("Perfect! Pay attention... It's the last" 
-                               " sequence!");
+                               " sequence!", phhandle);
                }
                if (j<GUESS_NUMBERTOGUESS-2) { 
                   gsi_printLCD("Perfect! Pay attention to"
-                               " the next sequence...");
+                               " the next sequence...", phhandle);
                }
             }
             else {
-               gsi_printLCD("That's right! And the next?");
+               gsi_printLCD("That's right! And the next?", phhandle);
             }   
          }
          else {   // user gets the gesture wrong so print and exit function
-            gsi_printLCD("Sorry :( you got that wrong. End of game :(");
+            gsi_printLCD("Sorry :( you got that wrong. End of game :(", phhandle);
             return 0;
          }
       }
    }
    // user wins so exit
-   gsi_printLCD("You guessed everything! That was fun :)");  
+   gsi_printLCD("You guessed everything! That was fun :)", phhandle);  
    em_update(emotions,EMO_FUN,GUESS_FUNPOINTS);   // add fun points
    return 0;       
 }

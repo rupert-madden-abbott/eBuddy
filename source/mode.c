@@ -17,7 +17,7 @@ int mode_run(run_mode mode, em_State *emotions, qu_queue *notifications, ph_hand
       return debug_main(emotions, notifications, phhandle);
 
     case MODE_GUESS:
-      return guess_main(emotions, notifications);
+      return guess_main(emotions, notifications, phhandle);
 
     case MODE_NONE:
       return ERR_NONE;
