@@ -1,6 +1,16 @@
 #include <unistd.h>
 #include <assert.h>
+#include <string.h>
+#include <curl/curl.h>
+#include <pthread.h>
+#include <unistd.h>
+#include <oauth.h>
+#include <ctype.h>
+#include <string.h>
+#include <jansson.h>
 
+#include "emotion.h"
+#include "notify.h"
 #include "utility.h"
 #include "input.h"
 #include "gesture_interface.h"

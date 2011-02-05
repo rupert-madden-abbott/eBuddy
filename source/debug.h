@@ -1,9 +1,6 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include "emotion.h"
-#include "notify.h"
-
 //size between steps when setting or updating emotions
 #define DEBUG_EM_STEP 10
 

@@ -3,9 +3,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <phidget21.h>
+#include <string.h>
+#include <jansson.h>
 
-#include "config.h"
 #include "utility.h"
+#include "config.h"
 #include "phidget.h"
 #include "gesture.h"
 
