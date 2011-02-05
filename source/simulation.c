@@ -1,13 +1,6 @@
 /* the simulation module is used by the simulation
  * wrapper to allow it to emulate the phidgits. */
  
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-
-#include "utility.h"
-#include "input.h"
 #include "simulation.h"
 
 

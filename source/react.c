@@ -1,27 +1,7 @@
 /* the react loop is the eBuddys main loop. it continually reads
  * and responds to input and emotion events by interpreting a
  * set of reaction tables stored below */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <assert.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <phidget21.h>
-#include <jansson.h>
 
-#include "utility.h"
-#include "phidget.h"
-#include "input.h"
-#include "emotion.h"
-#include "gesture.h"
-#include "gesture_interface.h"
-#include "config.h"
-#include "queue.h"
-#include "notify.h"
-#include "mode.h"
-#include "main.h"
 #include "react.h"
 
 

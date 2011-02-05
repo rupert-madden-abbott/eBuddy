@@ -1,22 +1,6 @@
 /* eBuddy demo mode */
-#include <stdio.h>
-#include <string.h>
-#include <curl/curl.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <oauth.h>
-#include <ctype.h>
-#include <string.h>
-#include <jansson.h>
 
-#include "notify.h"
-#include "input.h"
-#include "gesture_interface.h"
-#include "emotion.h"
-#include "config.h"
-#include "queue.h"
 #include "demo.h"
-
 
 //Demo mode
 int demo_main(em_State *emotions, qu_queue *notifications) {

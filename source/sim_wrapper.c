@@ -3,16 +3,7 @@
  * Does not have a header file as it uses those from the modules
  * it simulates. */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-
-#include "utility.h"
-#include "phidget.h"
-#include "input.h"
-#include "gesture.h"
-#include "gesture_interface.h"
-#include "simulation.h"
+#include "sim_wrapper.h"
 
 //virtual input reader
 sim_Reader sim_input_reader;
@@ -39,7 +30,7 @@ int ph_destruct(void) {
 }
 
 //read input from the input reader
-int in_get_input() {
+int in_get_input(void) {
   int last_input;
   
   //get input from the reader

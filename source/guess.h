@@ -1,3 +1,13 @@
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
+#include "emotion.h"
+#include "input.h"
+#include "gesture_interface.h"
+#include "main.h"
+#include "queue.h"
+
 // number user needs to guess in sequence to win
 #define GUESS_NUMBERTOGUESS 5 
 

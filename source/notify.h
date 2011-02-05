@@ -1,8 +1,18 @@
 #ifndef NOTIFY_H
 #define NOTIFY_H
 
-#include "config.h"
+#include <stddef.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <pthread.h>
+
+#include <curl/curl.h>
+#include <oauth.h>
+
+#include "utility.h"
 #include "queue.h"
+#include "config.h"
 
 #define NT_CONF_FILE "notify.conf"
 

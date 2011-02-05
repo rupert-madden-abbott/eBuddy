@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <time.h>
-#include <phidget21.h>
-
 #include "input.h"
 
 int in_last_input;

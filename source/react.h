@@ -1,10 +1,18 @@
 #ifndef REACT_H
 #define REACT_H
 
-#include "main.h"
-#include "input.h"
+#include <stddef.h>
+#include <unistd.h>
+#include <assert.h>
+
+#include "utility.h"
 #include "emotion.h"
 #include "gesture_interface.h"
+#include "input.h"
+#include "mode.h"
+#include "notify.h"
+#include "queue.h"
+#include "main.h"
 
 //represents the action to take when an input is recieved
 typedef struct input_action {

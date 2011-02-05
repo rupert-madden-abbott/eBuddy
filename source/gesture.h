@@ -1,7 +1,15 @@
 #ifndef GESTURES_H
 #define GESTURES_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
 #include <phidget21.h>
+
+#include "utility.h"
+#include "config.h"
 
 // LCD
 #define LCDWIDTH 20

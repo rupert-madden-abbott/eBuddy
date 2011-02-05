@@ -1,7 +1,12 @@
 #ifndef PHIDGET2_H
 #define PHIDGET2_H
 
+#include <stdio.h>
+
 #include <phidget21.h>
+
+#include "input.h"
+#include "gesture.h"
 
 extern int ph_init(const char *config);
 

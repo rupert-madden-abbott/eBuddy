@@ -1,6 +1,9 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <stdio.h>
+#include <time.h>
+
 #include <phidget21.h>
 
 #define IN_PRESS 400

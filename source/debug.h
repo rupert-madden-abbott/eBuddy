@@ -1,6 +1,18 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
+#include <stdio.h>
+#include <assert.h>
+#include <unistd.h>
+
+#include "utility.h"
+#include "input.h"
+#include "emotion.h"
+#include "gesture_interface.h"
+#include "mode.h"
+#include "notify.h"
+#include "queue.h"
+
 //size between steps when setting or updating emotions
 #define DEBUG_EM_STEP 10
 

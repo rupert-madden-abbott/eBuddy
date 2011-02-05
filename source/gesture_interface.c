@@ -1,12 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <phidget21.h>
-
-#include "utility.h"
-#include "phidget.h"
-#include "gesture.h"
 #include "gesture_interface.h"
 
 int gsi_react(const gsi_Reaction *resp)

@@ -1,11 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <string.h>
-#include <assert.h>
-#include <math.h>
-
-#include "utility.h"
 #include "emotion.h"
 
 /* allocate and return a pointer to a new emotional state */

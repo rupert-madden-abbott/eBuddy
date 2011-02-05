@@ -1,7 +1,22 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+/*
+  number of emotions in the emotion table
+  
+  There is a circular dependency between react, main and mode. Therefore, this 
+  must be defined before 
+*/
+#define NUM_EMOTIONS 5
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "utility.h"
+#include "emotion.h"
 #include "mode.h"
+#include "phidget.h"
+#include "queue.h"
 
 //path to the configuration directory
 #define CONFIG_PATH "conf/"
@@ -14,9 +29,6 @@
 
 //the mode to run on startup
 #define STARTUP_MODE MODE_REACT
-
-//number of emotions in the emotion table
-#define NUM_EMOTIONS 5
 
 //list of emotions and their tabe row numbers
 typedef enum emotion_type {

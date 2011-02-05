@@ -1,7 +1,14 @@
 #ifndef EM_H
 #define EM_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <time.h>
+#include <math.h>
+#include <assert.h>
+
+#include "utility.h"
 
 //number of items on one line of the state file
 #define EM_LINE_ITEMS 8

@@ -10,6 +10,13 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <string.h>
+
+#include <jansson.h>
+
+#include "utility.h"
+
+
 /**
  * @struct cf_json
  * Represents a JSON structure (Renamed to maintain a consistent public API)

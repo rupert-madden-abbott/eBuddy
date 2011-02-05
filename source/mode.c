@@ -1,9 +1,4 @@
-#include "utility.h"
-#include "react.h"
-#include "demo.h"
-#include "debug.h"
 #include "mode.h"
-#include "guess.h"
 
 //takes a run_mode and calls the appropriate function
 int mode_run(run_mode mode, em_State *emotions, qu_queue *notifications) {

@@ -1,6 +1,13 @@
 #ifndef GESTURE_INTERFACE_H
 #define GESTURE_INTERFACE_H
 
+#include <stddef.h>
+
+#include <phidget21.h>
+
+#include "gesture.h"
+#include "phidget.h"
+
 #define GSI_NULL 2
 #define GSI_PHER 1
 #define GSI_OK 0

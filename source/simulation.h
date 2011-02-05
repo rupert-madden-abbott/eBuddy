@@ -1,6 +1,14 @@
 #ifndef SIM_H
 #define SIM_H
 
+#include <stdio.h>
+#include <unistd.h>
+
+#include <pthread.h>
+
+#include "utility.h"
+#include "input.h"
+
 //pause time between commands
 #define SIM_IN_PAUSE 2
 

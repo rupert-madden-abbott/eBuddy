@@ -1,6 +1,8 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
+#include <stdio.h>
+
 #ifdef __linux__
 #define OS LINUX
 #endif

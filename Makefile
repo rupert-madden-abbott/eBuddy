@@ -71,7 +71,7 @@ react.o: source/react.c source/react.h
 simulation.o : source/simulation.c source/simulation.h
 	$(CC) $(CFLAGS) -c source/simulation.c -o build/simulation.o
 
-sim_wrapper.o : source/sim_wrapper.c
+sim_wrapper.o : source/sim_wrapper.c source/sim_wrapper.h
 	$(CC) $(CFLAGS) -c source/sim_wrapper.c -o build/sim_wrapper.o
 	
 utility.o: source/utility.c source/utility.h

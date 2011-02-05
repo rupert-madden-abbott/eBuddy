@@ -1,12 +1,4 @@
-#include <unistd.h>
-#include <stdlib.h>
-#include <time.h>
-#include "input.h"
-#include "main.h"
-#include "utility.h"
-#include "debug.h"
-#include "gesture_interface.h"
-#include "mode.h"
+
 #include "guess.h"
 
 int guess_main(em_State *emotions, qu_queue *notifications) {

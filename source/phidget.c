@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <phidget21.h>
-#include "gesture.h"
-#include "input.h"
 #include "phidget.h"
 
 extern int ph_init(const char *config)

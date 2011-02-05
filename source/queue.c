@@ -3,9 +3,6 @@
  * @author Rupert Madden-Abbott
 */
 
-#include <stdlib.h>
-#include <pthread.h>
-#include "utility.h"
 #include "queue.h"
 
 qu_queue *qu_init(void) {
