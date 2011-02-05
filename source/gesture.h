@@ -3,9 +3,10 @@
 
 #include <phidget21.h>
 
+// LCD
 #define LCDWIDTH 20
 #define SCROLLSPEED 1500000
-#define WHITESPACE 32
+#define WHITESPACE 32  // ascii code for whitespace
 
 //servo mappings
 #define GS_SERVO_HEAD 0
@@ -49,6 +50,5 @@ extern int gs_wave_right(CPhidgetAdvancedServoHandle servo);
 extern int gs_rapid_eyeflash(CPhidgetInterfaceKitHandle ifkit);
 extern int gs_raise_right(CPhidgetAdvancedServoHandle servo);
 extern int gs_raise_left(CPhidgetAdvancedServoHandle servo);
-
 int gs_printstring(const char* str,CPhidgetTextLCDHandle txt_lcd);
 #endif
