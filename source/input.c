@@ -13,7 +13,6 @@ int in_RFID_init(CPhidgetRFIDHandle RFID)
 {
     CPhidgetRFID_set_OnTag_Handler(RFID, in_RFID_TagHandler, NULL);
     CPhidgetRFID_set_OnTagLost_Handler(RFID, in_RFID_TagLostHandler, NULL);
-    CPhidget_open((CPhidgetHandle)RFID, -1);
     CPhidgetRFID_setAntennaOn(RFID, 1);
     return 0;
 
@@ -23,7 +22,6 @@ int in_kit_input_init(CPhidgetInterfaceKitHandle ifKit)
 {
     CPhidgetInterfaceKit_set_OnInputChange_Handler (ifKit, in_kit_InputChangeHandler, NULL);
     CPhidgetInterfaceKit_set_OnSensorChange_Handler (ifKit, in_kit_SensorChangeHandler, NULL);
-    CPhidget_open((CPhidgetHandle)ifKit, -1);
     return 0;
 }
 

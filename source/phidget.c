@@ -27,23 +27,22 @@ int ph_servo_init(ph_handle *handle)
     double minAccel, maxVel;
     int servo_wait_result;
     const char *servo_attach_error;
-    CPhidgetAdvancedServoHandle servo = 0;
-    CPhidgetAdvancedServo_create(&servo);
-    CPhidget_set_OnAttach_Handler((CPhidgetHandle)servo, ph_servo_AttachHandler, NULL);
-    CPhidget_set_OnDetach_Handler((CPhidgetHandle)servo, ph_servo_DetachHandler, NULL);
-    CPhidget_set_OnError_Handler((CPhidgetHandle)servo, ph_servo_ErrorHandler, NULL);
+    handle->servohandle = 0;
+    CPhidgetAdvancedServo_create(&handle->servohandle);
+    CPhidget_set_OnAttach_Handler((CPhidgetHandle)handle->servohandle, ph_servo_AttachHandler, NULL);
+    CPhidget_set_OnDetach_Handler((CPhidgetHandle)handle->servohandle, ph_servo_DetachHandler, NULL);
+    CPhidget_set_OnError_Handler((CPhidgetHandle)handle->servohandle, ph_servo_ErrorHandler, NULL);
 
-    CPhidget_open((CPhidgetHandle)servo, -1);
+    CPhidget_open((CPhidgetHandle)handle->servohandle, -1);
 
-    if((servo_wait_result = CPhidget_waitForAttachment((CPhidgetHandle)servo, 10000)))
+    if((servo_wait_result = CPhidget_waitForAttachment((CPhidgetHandle)handle->servohandle, 10000)))
     {
         CPhidget_getErrorDescription(servo_wait_result, &servo_attach_error);
         printf("Error eBuddy servo not connected: %s\n", servo_attach_error);
     }
 
-    CPhidgetAdvancedServo_getAccelerationMax(servo, 0, &minAccel);
-    CPhidgetAdvancedServo_getVelocityMax(servo, 0, &maxVel);
-    handle->servohandle = servo;
+    CPhidgetAdvancedServo_getAccelerationMax(handle->servohandle, 0, &minAccel);
+    CPhidgetAdvancedServo_getVelocityMax(handle->servohandle, 0, &maxVel);
     return 0;
 
 
@@ -87,25 +86,26 @@ int ph_RFID_rfid_init(ph_handle *handle)
 {
 int static result;
 const char *err;
-CPhidgetRFIDHandle rfid =0;
-CPhidgetRFID_create(&rfid);
+handle->RFIDhandle =0;
+CPhidgetRFID_create(&handle->RFIDhandle);
 
-CPhidget_set_OnAttach_Handler((CPhidgetHandle)rfid, ph_RFID_AttachHandler, NULL);
-CPhidget_set_OnDetach_Handler((CPhidgetHandle)rfid, ph_RFID_DetachHandler, NULL);
-CPhidget_set_OnError_Handler((CPhidgetHandle)rfid, ph_RFID_ErrorHandler, NULL);
+CPhidget_set_OnAttach_Handler((CPhidgetHandle)handle->RFIDhandle, ph_RFID_AttachHandler, NULL);
+CPhidget_set_OnDetach_Handler((CPhidgetHandle)handle->RFIDhandle, ph_RFID_DetachHandler, NULL);
+CPhidget_set_OnError_Handler((CPhidgetHandle)handle->RFIDhandle, ph_RFID_ErrorHandler, NULL);
+
+CPhidget_open((CPhidgetHandle)handle->RFIDhandle, -1);
 
 //CPhidget_open((CPhidgetHandle)rfid, -1);
 
 //get the program to wait for an RFID device to be attached
-if((result = CPhidget_waitForAttachment((CPhidgetHandle)rfid, 10000)))
+if((result = CPhidget_waitForAttachment((CPhidgetHandle)handle->RFIDhandle, 10000)))
 	{
 		CPhidget_getErrorDescription(result, &err);
 		printf("Error ebuddy RFID not connected: %s\n", err);
-		ph_RFID_close(rfid);
+		ph_RFID_close(handle->RFIDhandle);
 		
 	}
 //CPhidgetRFID_setAntennaOn(rfid, 1);
-handle->RFIDhandle = rfid;
 return 0;
 }
 
@@ -155,22 +155,22 @@ int ph_kit_init(ph_handle *handle)
 {
 	int result;
 	const char *err;
-	CPhidgetInterfaceKitHandle ifKit = 0;
-	CPhidgetInterfaceKit_create(&ifKit);
+	handle->IFKhandle = 0;
+	CPhidgetInterfaceKit_create(&handle->IFKhandle);
 
-	CPhidget_set_OnAttach_Handler((CPhidgetHandle)ifKit, ph_kit_AttachHandler, NULL);
-	CPhidget_set_OnDetach_Handler((CPhidgetHandle)ifKit, ph_kit_DetachHandler, NULL);
-	CPhidget_set_OnError_Handler((CPhidgetHandle)ifKit, ph_kit_ErrorHandler, NULL);
+	CPhidget_set_OnAttach_Handler((CPhidgetHandle)handle->IFKhandle, ph_kit_AttachHandler, NULL);
+	CPhidget_set_OnDetach_Handler((CPhidgetHandle)handle->IFKhandle, ph_kit_DetachHandler, NULL);
+	CPhidget_set_OnError_Handler((CPhidgetHandle)handle->IFKhandle, ph_kit_ErrorHandler, NULL);
+	CPhidget_open((CPhidgetHandle)handle->IFKhandle, -1);
 
-	if((result = CPhidget_waitForAttachment((CPhidgetHandle)ifKit, 10000)))
+	if((result = CPhidget_waitForAttachment((CPhidgetHandle)handle->IFKhandle, 10000)))
 	{
 		CPhidget_getErrorDescription(result, &err);
 		printf("eBuddy interface kit not connected: %s\n", err);
-		ph_kit_close(ifKit);
+		ph_kit_close(handle->IFKhandle);
 		//exit(1);
 	}
 
-	handle->IFKhandle = ifKit;
 	return 0;
 }
 
@@ -224,28 +224,27 @@ int ph_lcd_init(ph_handle *handle)
         int result;
 	const char *err;
         //Declare an TextLCD handle
-        CPhidgetTextLCDHandle txt_lcd = 0;
+        handle->LCDhandle = 0;
 
 	//create the TextLCD object
-	CPhidgetTextLCD_create(&txt_lcd);
+	CPhidgetTextLCD_create(&handle->LCDhandle);
 
 	//Set the handlers to be run when the device is plugged in or opened from software, unplugged or closed from software, or generates an error.
-	CPhidget_set_OnAttach_Handler((CPhidgetHandle)txt_lcd, ph_lcd_AttachHandler, NULL);
-	CPhidget_set_OnDetach_Handler((CPhidgetHandle)txt_lcd, ph_lcd_DetachHandler, NULL);
-	CPhidget_set_OnError_Handler((CPhidgetHandle)txt_lcd, ph_lcd_ErrorHandler, NULL);
+	CPhidget_set_OnAttach_Handler((CPhidgetHandle)handle->LCDhandle, ph_lcd_AttachHandler, NULL);
+	CPhidget_set_OnDetach_Handler((CPhidgetHandle)handle->LCDhandle, ph_lcd_DetachHandler, NULL);
+	CPhidget_set_OnError_Handler((CPhidgetHandle)handle->LCDhandle, ph_lcd_ErrorHandler, NULL);
 
 	//open the TextLCD for device connections
-	CPhidget_open((CPhidgetHandle)txt_lcd, -1);
+	CPhidget_open((CPhidgetHandle)handle->LCDhandle, -1);
 
 	//get the program to wait for an TextLCD device to be attached
-	if((result = CPhidget_waitForAttachment((CPhidgetHandle)txt_lcd, 5000)))
+	if((result = CPhidget_waitForAttachment((CPhidgetHandle)handle->LCDhandle, 5000)))
 	{
 		CPhidget_getErrorDescription(result, &err);
 		printf("Problem waiting for attachment: %s\n", err);
 		return 0;
 	}
-        CPhidgetTextLCD_setContrast (txt_lcd, 100);
-	handle->LCDhandle = txt_lcd;
+        
         return 0;
 }
 

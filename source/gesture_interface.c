@@ -5,6 +5,7 @@ int gsi_gesture_init(ph_handle *handle)
 {
   gs_set_pos(handle->servohandle);
   gs_eyeson(handle->IFKhandle);
+  CPhidgetTextLCD_setContrast (handle->LCDhandle, 100);
   return 0;
 }
 
