@@ -35,7 +35,7 @@ typedef enum error_code {
   ERR_BAD_ARG,		//invalid argument to a function
   ERR_BAD_MODE,		//invalid run mode selected
   ERR_BAD_ACTION,	//an invalid action was requested
-  ERR_EMPTY,			//no data to read
+  ERR_EMPTY			//no data to read
   ERR_JSON_ENCODE,  //failed to encode data into JSON
   ERR_JSON_DECODE,  //failed to decode JSON data
 } error_code;

@@ -1,3 +1,10 @@
+#include <unistd.h>
+#include <assert.h>
+
+#include "utility.h"
+#include "input.h"
+#include "gesture_interface.h"
+#include "mode.h"
 #include "debug.h"
 
 //debug mode main menu

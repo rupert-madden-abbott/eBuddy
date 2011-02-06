@@ -1,3 +1,14 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "utility.h"
+#include "phidget.h"
+#include "input.h"
+#include "emotion.h"
+#include "queue.h"
+#include "notify.h"
+#include "mode.h"
 #include "main.h"
 
 //list of emotions and their decay times etc

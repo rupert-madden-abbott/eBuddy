@@ -1,5 +1,13 @@
 /* eBuddy demo mode */
+#include <stdio.h>
+#include <unistd.h>
 
+#include "notify.h"
+#include "input.h"
+#include "gesture_interface.h"
+#include "emotion.h"
+#include "config.h"
+#include "queue.h"
 #include "demo.h"
 
 //Demo mode
