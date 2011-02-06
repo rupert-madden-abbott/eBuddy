@@ -5,6 +5,9 @@ em_State *em_create(const em_Emotion *emotions, int num_emotions) {
   em_State *state;
   time_t now;
   
+  assert(emotions);
+  assert(num_emotions);
+  
   /* get current time */
   now = time(NULL);
 	
@@ -36,6 +39,8 @@ em_State *em_create(const em_Emotion *emotions, int num_emotions) {
 
 /* free up a state */
 void em_destroy(em_State *state) {
+  assert(state);
+  
   free(state->levels);	
   free(state);
 }
@@ -44,6 +49,8 @@ void em_destroy(em_State *state) {
 void em_reset(em_State *state) {
   time_t now;
   int i;
+  
+  assert(state);
 	
   now = time(NULL);
 	
@@ -55,7 +62,10 @@ void em_reset(em_State *state) {
   }
 }
 
-/* load an emotional state from a file */
+/* Load a state from a file specified by path. The the number of emtions and
+ * their names inside the file must match those in the array passed to init.
+ * Returns ERR_NONE on success, ERR_BAD_PATH if the file cannot be read or,
+ * ERR_BAD_FILE if the file is not in the correct format.  */
 int em_load(em_State *state, const char *path) {
   char name[EM_NAME_LEN];
   FILE *file;
@@ -63,6 +73,8 @@ int em_load(em_State *state, const char *path) {
   time_t now;
   double value;
   int id, rc;
+  
+  assert(state);
 
   /* get current time */
   now = time(NULL);
@@ -109,7 +121,8 @@ int em_load(em_State *state, const char *path) {
   return ERR_NONE;
 } 
 
-/* save state to a file */
+/* Saves a state to a file specified by path. Returns ERR_NONE on
+ * success or ERR_BAD_PATH if the file cannot be written. */
 int em_save(em_State *state, const char *path) {
   struct tm *time;
   FILE *file;
@@ -139,7 +152,7 @@ int em_save(em_State *state, const char *path) {
   return 0;
 }
 
-/* returns the level of an emotion */
+/* Returns the level of an emotion */
 double em_get(em_State *state, int emotion) {
   double difference, num_decays, value;
   
@@ -160,7 +173,7 @@ double em_get(em_State *state, int emotion) {
   return value;
 }
 
-/* return the condition of an emotion */
+/* Return the condition of an emotion */
 em_condition em_get_condition(em_State *state, int emotion) {
 int level;
 
@@ -184,7 +197,7 @@ else {
 }
 
 
-/* returns the average value of all the levels in a state */
+/* Returns the average value of all the levels in a state */
 double em_overall(em_State *state) {
   double total;
   int i;
@@ -198,9 +211,8 @@ double em_overall(em_State *state) {
   return total / (double) state->num_emotions;
 }
 
-/* sets the level of an emotion to the value given. will not allow the
- * level to go above EM_MAX_LEVEL or below 0. returns the condition of
- * the emotion after the update */
+/* Sets the level of an emotion to the value given. Returns ERR_NONE on success
+ * or ERR_BAD_ARG if the value is not between zero and the maximum value  */
 int em_set(em_State *state, int emotion, double value) {
 
   /* check bounds */
@@ -211,10 +223,10 @@ int em_set(em_State *state, int emotion, double value) {
   state->levels[emotion].last_value = value;
   state->levels[emotion].last_update = time(NULL);
   
-  return 0;
+  return ERR_NONE;
 }
 
-/* adds the value given to the level of an emotion. will not allow the
+/* Adds the value given to the level of an emotion but does not allow the
  * level to go above EM_MAX_LEVEL or below 0. */
 int em_update(em_State *state, int emotion, double value) {
   double total;
@@ -240,8 +252,8 @@ int em_update(em_State *state, int emotion, double value) {
   return 0;
 }
 
-/* checks for emotional events and stores the first one found in event.
- * returns ERR_NONE if an event was found or ERR_EMPTY otherwise */
+/* Checks for emotional events and stores the first one found in event.
+ * Returns ERR_NONE if an event was found or ERR_EMPTY otherwise */
 int em_check(em_State *state, em_Event *event) {
   em_condition condition;
   time_t now;
@@ -277,7 +289,7 @@ int em_check(em_State *state, em_Event *event) {
   return ERR_EMPTY;
 }
 
-/* updates a state according to the a reaction struct. */
+/* Updates a state according to a reaction struct. */
 int em_react(em_State *state, const em_Reaction *reaction) {
   
   /* set the emotion to the value if action is set */
