@@ -102,7 +102,7 @@ int main(void) {
   }
   
   //initialise notification system
-  //rc = nt_init(notifications, NT_CONFIG);
+  rc = nt_init(notifications, NT_CONFIG);
   
   if(rc) {
     printf("Error initialising notification system\n");

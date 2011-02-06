@@ -13,3 +13,24 @@ int ut_test_path(const char *path) {
   fclose(file);
   return 1;
 }
+
+int ut_isint(char *line) {
+  unsigned int i;
+  int rc;
+  
+  //reject empty strings
+  rc = strlen(line);
+  if(rc == 0) {
+    return ERR_UNKNOWN;
+  }
+  
+  for(i = 0; i < strlen(line); i++) {
+    //reject characters that aren't digits
+    rc = isdigit(line[i]);
+    if(!rc) {
+      return ERR_UNKNOWN;
+    }
+  }
+  
+  return ERR_NONE;  
+}

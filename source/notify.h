@@ -14,28 +14,32 @@
 #include "queue.h"
 #include "config.h"
 
-#define NT_CONF_FILE "notify.conf"
-
+#define NT_APP_KEY "pFQbE7wR2YXfGbp8muYKA"
+#define NT_APP_SECRET "iam3544JfaQLjS13pO6LjsGWtDtpanZIXrB93vnk4"
 #define NT_TWITTER_REQUEST "https://api.twitter.com/oauth/request_token"
 #define NT_TWITTER_ACCESS "https://api.twitter.com/oauth/access_token"
 #define NT_TWITTER_AUTHORIZE "https://api.twitter.com/oauth/authorize"
+#define NT_TWITTER_POLL "http://api.twitter.com/1/statuses/friends_timeline" \
+                        ".json?count=1"
+
+#define NT_CONFIG_DEFAULT "{'authenticated': 0}"
 
 #define NT_KEY_MAX 200
 #define NT_TEXT_MAX 141
 #define NT_USER_MAX 16
 #define NT_ID_MAX 21
 #define NT_APP_MAX 50
-
+#define NT_URL_MAX 265
 
 typedef struct nt_token {
 	char key[NT_KEY_MAX];
 	char secret[NT_KEY_MAX];
 } nt_token;
 
-struct MemoryStruct {
+typedef struct nt_response {
   char *data;
-  size_t size; //< bytes remaining (r), bytes accumulated (w)
-};
+  size_t size;
+} nt_response;
 
 typedef struct nt_message {
   char app[NT_APP_MAX];
@@ -46,22 +50,15 @@ typedef struct nt_message {
 
 int nt_init(qu_queue *queue, const char *config);
 int nt_destroy(void);
-int nt_authenticate(nt_token app, nt_token *user, const char *config);
+int nt_authenticate(const nt_token app, nt_token *user, const char *config, 
+                    cf_json *root);
 int nt_request_token(const char *uri, nt_token app, nt_token *user);
 int nt_parse_response(char *response, nt_token *token);
-int nt_parse_arg(char *arg, const char *type, char *value);
+char *nt_parse_arg(char *arg, const char *name);
 nt_message *nt_get_tweet(const char *uri, nt_token app, nt_token user);
 char *nt_curl_get (const char *uri, const char *query);
-size_t WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data);
+size_t nt_write_response(void *ptr, size_t size, size_t nmemb, void *data);
 void *nt_poll(void *data);
-
-
-int nt_isyes(char input);
-int nt_isno(char input);
-int nt_isans(char input);
-int nt_ask(const char *question, char *input);
-int nt_flush(void);
-int nt_validate_int(char *line);
 
 #endif
 

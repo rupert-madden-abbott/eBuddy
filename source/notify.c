@@ -12,58 +12,59 @@
 #include "notify.h"
 
 int nt_init(qu_queue *queue, const char *config) {
-  char input = '\0';
-  nt_token user = { "", "" }, app = { "", "" };
-  cf_json *root = NULL;
-  int authenticated, disabled;
-  pthread_t thread;
-  
-  curl_global_init(CURL_GLOBAL_ALL);
-  
+  int         authenticated, 
+              rc;
+  nt_token    user = { "", "" }, 
+              app = { "", "" };
+  cf_json     *root = NULL;
+  pthread_t   thread;
+
+  //Initialize curl  
+  rc = curl_global_init(CURL_GLOBAL_ALL);
+  if(rc) {
+    return UT_ERR_CURL_SETUP;
+  }
+
+  //Attempt to load the config file or create a default if it cannot be found
   root = cf_read(config);
-  if(!root) return UT_ERR_UNKNOWN;
+  if(!root) {
+    root = cf_create(NT_CONFIG_DEFAULT, config);    
+    if(!root) {
+      return UT_ERR_JSON_ENCODE;
+    }
+  }
   
-  disabled = cf_get_integer(root, "disabled");
-  if(disabled) return UT_ERR_NONE;
+  //Initialize app key
+  rc = strlen(NT_APP_KEY);
+  if(rc > NT_KEY_MAX) {
+    cf_free(root);
+    return UT_ERR_UNKNOWN;
+  }
+  strcpy(app.key, NT_APP_KEY);
 
+  //Initialize app secret
+  rc = strlen(NT_APP_SECRET);
+  if(rc > NT_KEY_MAX) {
+    cf_free(root);
+    return UT_ERR_UNKNOWN;
+  }
+  strcpy(app.secret, NT_APP_SECRET);
+  
+  //Check if authentication has already occurred
   authenticated = cf_get_integer(root, "authenticated");
-  strncpy(app.key, cf_get_string(root, "app_key"), NT_KEY_MAX);
-  if(!app.key) return UT_ERR_UNKNOWN;
-  strncpy(app.secret, cf_get_string(root, "app_secret"), NT_KEY_MAX);
-  if(!app.secret) return UT_ERR_UNKNOWN;
+  if(authenticated == 0) {
+    //authenticate the user
+    rc = nt_authenticate(app, &user, config, root);
+    if(rc) {
+      cf_free(root);
+      return rc;
+    }
+  }
   
-  if(authenticated) {
-    strncpy(user.key, cf_get_string(root, "user_key"), NT_KEY_MAX);
-    if(!user.key) return UT_ERR_UNKNOWN;
-    strncpy(user.secret, cf_get_string(root, "user_secret"), NT_KEY_MAX);
-    if(!user.secret) return UT_ERR_NONE;
-  }
-  else { 
-    if(nt_ask("Would you like to setup Twitter now?", &input)) return UT_ERR_UNKNOWN;
-    if(nt_isno(input)) {
-      input = '\0';
-      if(nt_ask("Would you like to disable the Twitter feature?", &input)) return UT_ERR_UNKNOWN;
-      if(nt_isyes(input)) {
-        if(cf_set_integer(root, "disabled", 1)) return UT_ERR_UNKNOWN;
-        if(cf_write(root, config)) return UT_ERR_UNKNOWN;
-        printf("Twitter has been disabled\n");
-        return UT_ERR_NONE;
-      }
-      else if(nt_isno(input)) {
-        printf("You will have the opportunity to setup Twitter when you next "
-               "start your eBuddy\n");
-        return UT_ERR_NONE;
-      }
-      else return UT_ERR_UNKNOWN;
-    }
-    else if(nt_isyes(input)) {
-      printf("Setting up Twitter...\n");
-      if(nt_authenticate(app, &user, config)) return UT_ERR_UNKNOWN;
-    }
-    else return UT_ERR_UNKNOWN;
-  }
+  cf_free(root);
 
-  pthread_create(&thread, NULL, nt_poll, queue);  
+  //Create a new thread to start polling twitter
+  pthread_create(&thread, NULL, nt_poll, queue);
 
   return UT_ERR_NONE;
 }
@@ -73,25 +74,248 @@ int nt_destroy() {
   return UT_ERR_NONE;
 }
 
+int nt_authenticate(const nt_token app, nt_token *user, const char *config, 
+                    cf_json *root) {
+  int i, j, rc;
+  char url[NT_URL_MAX], pin[NT_KEY_MAX];
+  const char *command;
+  
+  //Get a request token
+  rc = nt_request_token(NT_TWITTER_REQUEST, app, user);
+  if(rc) {
+    return rc;
+  }
+
+  //Determine the command to open a browser window, according to the OS  
+  if(OS == LINUX) {
+    command = "xdg-open";
+  }
+  else if(OS == OSX) {
+    command = "open";
+  }
+  else {
+    return UT_ERR_UNKNOWN;
+  }
+  
+  //Format the url to be opened in a browser
+  rc = snprintf(url, NT_URL_MAX, "%s %s?oauth_token=%s", command, 
+                NT_TWITTER_AUTHORIZE, user->key);
+  if(rc < 0) {
+    return UT_ERR_UNKNOWN;
+  }
+  
+  //Tell the user what to do when the browser opens
+  printf("In a moment, your browser will open. Please grant access to this "
+         "application. You may need to login to your account. Once you have "
+         "done so, enter the PIN below\nPIN: ");
+  if(rc < 0) {
+    return UT_ERR_UNKNOWN;
+  }       
+  
+  //Open a browser with the specified url
+  if(system(url)) return UT_ERR_UNKNOWN;
+  
+  //Keep requesting an access token until one is returned
+  j = 0;
+  do {
+    if(j) {
+      //If the user has entered an incorrect value, print an error message
+      rc = printf("The PIN you entered was rejected. Please try again: ");
+      if(rc) {
+        return UT_ERR_UNKNOWN;
+      }
+    }
+    
+    //Keep asking the user for input until they enter a whole number
+    i = 0;
+    do {
+      //If the user has entered an incorrect value, print an error message
+      if(i) {
+        rc = printf("You must enter a whole number. Please try again: ");
+        if(rc) {
+          return UT_ERR_UNKNOWN;
+        }
+      }
+      
+      //Get the user's pin
+      fgets(pin, NT_KEY_MAX, stdin);
+      rc = ferror(stdin);
+      if(rc) {
+        return UT_ERR_UNKNOWN;
+      }
+
+      //Ensure string is null terminated
+      pin[strlen(pin) - 1] = '\0';
+      
+      i = 1;
+    } while(ut_isint(pin));
+    
+    rc = snprintf(url, NT_URL_MAX, "%s?oauth_verifier=%s", NT_TWITTER_ACCESS, 
+                  pin);
+    if(rc) {
+      return UT_ERR_UNKNOWN;
+    }
+    
+    j = 1;
+  } while(nt_request_token(url, app, user));
+  
+  //Set the user's access token and authentication to true
+  rc = cf_set_string(root, "user_key", user->key);
+  if(rc) {
+    return rc;
+  }
+  
+  rc = cf_set_string(root, "user_secret", user->secret);
+  if(rc) {
+    return rc;
+  }
+  
+  rc = cf_set_integer(root, "authenticated", 1);
+  if(rc) {
+    return rc;
+  }
+  
+  //Save the config file
+  rc = cf_write(root, config);
+  if(rc) {
+    return rc;
+  }
+  
+  return UT_ERR_NONE;
+}
+
+int nt_request_token(const char *uri, nt_token app, nt_token *user) {
+  int rc;
+  char *url = NULL, *response = NULL, *postargs;
+  
+  //Prepare the request with an oauth signature
+  url = oauth_sign_url2(uri, &postargs, OA_HMAC, "POST", app.key, 
+                        app.secret, user->key, user->secret);
+  if(!url) {
+    return UT_ERR_OAUTH_SIGN;
+  }
+  
+  //Send request
+  response = oauth_http_post2(url, postargs, NULL);
+  
+  free(postargs);
+  free(url);
+  
+  //Retrieve the token from the response
+  rc = nt_parse_response(response, user);
+  if(rc) {
+    return rc;
+  }
+
+  return UT_ERR_NONE;
+}
+
+int nt_parse_response(char *response, nt_token *token) {
+  int rc;
+  char **rv = NULL, *check;
+  
+  //Get the parameters from the response and ensure there are at least 2
+  rc = oauth_split_url_parameters(response, &rv);
+  if(rc < 2) {
+    return UT_ERR_INVALID_RESPONSE;
+  }
+  
+  //Get the key
+  check = nt_parse_arg(rv[0], "oauth_token");
+  rc = strlen(check);
+  if(rc > NT_KEY_MAX) {
+    free(rv);
+    return UT_ERR_INVALID_RESPONSE;
+  }
+  strcpy(token->key, check);
+  
+  //Get the secret
+  check = nt_parse_arg(rv[1], "oauth_token_secret");
+  rc = strlen(check);
+  free(rv);
+  if(rc > NT_KEY_MAX) {
+    return UT_ERR_INVALID_RESPONSE;
+  }
+  strcpy(token->secret, check);
+
+  return UT_ERR_NONE;
+}
+
+char *nt_parse_arg(char *arg, const char *name) {
+  int rc;
+  char *piece;
+  
+  //Get the parameter name
+  piece = strtok(arg, "=");
+  if(!piece) {
+    return NULL;
+  }
+  
+  //Ensure the name matches the expected name
+  rc = strcmp(piece, name);
+  if(rc) {
+    return NULL;
+  }
+  
+  //Return the value
+  return strtok(NULL, "=");
+}
+
 void *nt_poll(void *queue) {
   cf_json *root;
   nt_message *tweet; 
   const char *config = "conf/notify.json";
-  char last_tweet[NT_ID_MAX];
+  char last_tweet[NT_ID_MAX], *check;
   nt_token user = { "", "" }, app = { "", "" };
   
+  //Attempt to load the config file
   root = cf_read(config);
+  if(!root) {
+    return NULL;
+  }
   
-  strncpy(app.key, cf_get_string(root, "app_key"), NT_KEY_MAX);
-  strncpy(app.secret, cf_get_string(root, "app_secret"), NT_KEY_MAX);
-  strncpy(user.key, cf_get_string(root, "user_key"), NT_KEY_MAX);
-  strncpy(user.secret, cf_get_string(root, "user_secret"), NT_KEY_MAX);
+  //Extract data from config file
+  check = cf_get_nstring(root, "app_key", NT_KEY_MAX);
+  if(!check) {
+    cf_free(root);
+    return NULL;
+  }
+  strcpy(app.key, check);
+  
+  check = cf_get_nstring(root, "app_secret", NT_KEY_MAX);
+  if(!check) {
+    cf_free(root);
+    return NULL;
+  }
+  strcpy(app.secret, check);
+  
+  check = cf_get_nstring(root, "user_key", NT_KEY_MAX);
+  if(!check) {
+    cf_free(root);
+    return NULL;
+  }
+  strcpy(user.key, check);
+  
+  check = cf_get_nstring(root, "user_secret", NT_KEY_MAX);
+  if(!check) {
+    cf_free(root);
+    return NULL;
+  }
+  strcpy(user.secret, check);
+  
+  check = cf_get_nstring(root, "last_tweet", NT_KEY_MAX);
+  if(!check) {
+    cf_free(root);
+    return NULL;
+  }
+  strcpy(last_tweet, check);
 
-  strncpy(last_tweet, cf_get_string(root, "last_tweet"), NT_ID_MAX);
-
+  //Poll for tweets every 20 seconds
   while(1) {
-    sleep(20);
-    tweet = nt_get_tweet("http://api.twitter.com/1/statuses/friends_timeline.json?count=1", app, user);
+    tweet = nt_get_tweet(NT_TWITTER_POLL, app, user);
+    if(!tweet) {
+      return NULL;
+    }
     
     printf("Outside: Last Tweet: %s This Tweet: %s\n\n", last_tweet, tweet->id);
     fflush(stdout);
@@ -102,217 +326,164 @@ void *nt_poll(void *queue) {
       cf_write(root, config);
       qu_push(queue, tweet);
     }
+    sleep(20);
   }
   pthread_exit(NULL);
-}
-
-int nt_authenticate(nt_token app, nt_token *user, const char *config) {
-  int i, j;
-  char url[1000], pin[NT_KEY_MAX];
-  cf_json *root;
-  
-  //Get request token
-  if(nt_request_token(NT_TWITTER_REQUEST, app, user)) return UT_ERR_UNKNOWN;
-
-  //Get authorization pin
-  if(UT_OS == UT_OS_LINUX) {
-    sprintf(url, "xdg-open %s?oauth_token=%s", NT_TWITTER_AUTHORIZE, 
-            user->key);
-  }
-  else if(UT_OS == UT_OS_OSX) {
-    sprintf(url, "open %s?oauth_token=%s", NT_TWITTER_AUTHORIZE, user->key);
-  }
-  else return UT_ERR_UNKNOWN;
-  
-  printf("In a moment, your browser will open. Please grant access to this "
-         "application. You may need to login to your account. Once you have "
-         "done so, enter the PIN below\nPIN: ");
-  if(system(url)) return UT_ERR_UNKNOWN;
-  
-  j = 0;
-  do {
-    if(j) {
-      printf("The PIN you entered was rejected. Please try again: ");
-    }
-    i = 0;
-    do {
-      if(i) {
-        printf("You must enter a whole number. Please try again: ");
-      }
-      fgets(pin, NT_KEY_MAX, stdin);
-      pin[strlen(pin) - 1] = '\0';
-      i = 1;
-    } while(nt_validate_int(pin));
-    
-    sprintf(url, "%s?oauth_verifier=%s", NT_TWITTER_ACCESS, pin);
-    j = 1;
-  } while(nt_request_token(url, app, user));
-  
-  root = cf_read(config);
-
-  if(cf_set_string(root, "user_key", user->key)) return UT_ERR_UNKNOWN;
-  if(cf_set_string(root, "user_secret", user->secret)) return UT_ERR_UNKNOWN;
-  if(cf_set_integer(root, "authenticated", 1)) return UT_ERR_UNKNOWN;
-
-  if(cf_write(root, config)) return UT_ERR_UNKNOWN;
-  
-  cf_free(root);
-  
-  return UT_ERR_NONE;
-}
-
-int nt_request_token(const char *uri, nt_token app, nt_token *user) {
-  char *url = NULL, *response = NULL, *postargs;
-  
-  url = oauth_sign_url2(uri, &postargs, OA_HMAC, "POST", app.key, 
-                        app.secret, user->key, user->secret);
-  response = oauth_http_post(url, postargs);
-  if(postargs) free(postargs);
-  if(url) free(url);
-  if(nt_parse_response(response, user)) return UT_ERR_UNKNOWN;
-  return UT_ERR_NONE;
-}
-
-int nt_parse_response(char *response, nt_token *token) {
-  char **rv = NULL, key[70], secret[70];
-  
-  if(oauth_split_url_parameters(response, &rv) < 2) return UT_ERR_UNKNOWN;
-  strcpy(key, rv[0]);
-  strcpy(secret, rv[1]);
-  free(rv);
-  
-  if(nt_parse_arg(key, "oauth_token", token->key)) return UT_ERR_UNKNOWN;
-  if(nt_parse_arg(secret, "oauth_token_secret", token->secret)) return UT_ERR_UNKNOWN;
-  
-  return UT_ERR_NONE;
-}
-
-int nt_parse_arg(char *arg, const char *type, char *value) {
-  char *piece;
-  
-  piece = strtok(arg, "=");
-  if(!piece) return UT_ERR_UNKNOWN;
-  if(strcmp(piece, type)) return UT_ERR_UNKNOWN;
-  piece = strtok(NULL, "=");
-  if(!piece) return UT_ERR_UNKNOWN;
-  memcpy(value, piece, 50 * sizeof(char));
-  
-  return UT_ERR_NONE;
+>>>>>>> Cleaned up notifications
 }
 
 nt_message *nt_get_tweet(const char *uri, nt_token app, nt_token user) {
-  nt_message *tweet = malloc(sizeof(nt_message));
-  cf_json *root, *object;
-  char *url = NULL, *postargs = NULL, *response = NULL;
+  nt_message *tweet;
+  cf_json *root, *object, *user_object;
+  char *url = NULL, *postargs = NULL, *response = NULL, *check;
+ 
+  //Prepare the request with an oauth signature
   url = oauth_sign_url2(uri, &(postargs), OA_HMAC, "GET", app.key, app.secret, 
                         user.key, user.secret);
+  if(!url) {
+    return NULL;
+  }
   
+  //Send the request
   response = nt_curl_get(url, postargs);
+  free(postargs);
+  free(url);
+  if(!response) {
+    return NULL;  
+  }
 
-  if(postargs) free(postargs);
-  if(url) free(url);
-  
+  //Parse the JSON response
   root = cf_read(response);
+  free(response);
+  if(!root) {
+    return NULL;
+  }
+  
+  //Get the array of tweets
+  object = cf_get_array(root, 0);
+  if(!object) {
+    cf_free(root);
+    return NULL;
+  }
 
-  if(response) free(response);
+  //Make space for the tweet
+  tweet = (nt_message *)malloc(sizeof(nt_message));
+  if(!tweet) {
+    cf_free(root);
+    return NULL;
+  } 
   
-  object = (cf_json *)json_array_get((const json_t *)root, 0);
-  
+  //Set the application to twitter
   strncpy(tweet->app, "twitter", NT_APP_MAX);
-  strncpy(tweet->text, cf_get_string(object, "text"), NT_TEXT_MAX);
-  strncpy(tweet->user, cf_get_string(cf_get_object(object, "user"), "screen_name"), NT_USER_MAX);
-  strncpy(tweet->id, cf_get_string(object, "id_str"), NT_ID_MAX);  
+  
+  //Get the text of the tweet
+  check = cf_get_nstring(object, "text", NT_TEXT_MAX);
+  if(!check) {
+    cf_free(root);
+    free(tweet);
+    return NULL;
+  }
+  strcpy(tweet->text, check);
+  
+  //Get the users screen name
+  user_object = cf_get_object(object, "user");
+  if(!user_object) {
+    cf_free(root);
+    free(tweet);
+    return NULL;
+  }
+  
+  check = cf_get_nstring(user_object, "screen_name", NT_USER_MAX);
+  if(!check) {
+    cf_free(root);
+    free(tweet);
+    return NULL;
+  }
+  strcpy(tweet->user, check);
+  
+  //Get the tweets ID
+  check = cf_get_nstring(object, "id_str", NT_ID_MAX);
+  if(!check) {
+    cf_free(root);
+    free(tweet);
+    return NULL;
+  }
     
   return tweet;
 }
 
 char *nt_curl_get (const char *uri, const char *query) {
+  int rc;
   CURL *curl;
   char *url = NULL;
-  struct MemoryStruct chunk;
-  
-  if(!query) return NULL;
-  
+  nt_response chunk = { NULL, 0 };
+
+  //Create space for the url  
   url = (char *)malloc(sizeof(char) * (strlen(uri) + strlen(query) + 2));
-  sprintf(url, "%s?%s", uri, query);
+  if(!url) {
+    return NULL;
+  }
   
-  chunk.data = NULL;
-  chunk.size = 0;
+  //Create the url from the uri and the query string
+  rc = sprintf(url, "%s?%s", uri, query);
+  if(rc) {
+    free(url);
+    return NULL;
+  }
   
+  //Initialise curl
   curl = curl_easy_init();
-  if(!curl) return NULL;
+  if(!curl) {
+    free(url);
+    return NULL;
+  }
   
-  curl_easy_setopt(curl, CURLOPT_URL, url);
-  curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
-  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-  curl_easy_perform(curl);
+  //Set the url
+  rc = curl_easy_setopt(curl, CURLOPT_URL, url);
+  free(url);
+  if(rc) {
+
+    curl_easy_cleanup(curl);
+    return NULL;
+  }
+  
+  //Set the location for the response to be written to
+  rc = curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+  if(rc) {
+    curl_easy_cleanup(curl);
+    return NULL;
+  }
+
+  //Set the callback function for writing the response
+  rc = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, nt_write_response);
+  if(rc) {
+    curl_easy_cleanup(curl);
+    return NULL;
+  }
+  
+  //Send the request
+  rc = curl_easy_perform(curl);
+  if(rc) {
+    curl_easy_cleanup(curl);
+    return NULL;
+  }
   
   curl_easy_cleanup(curl);
-  
-  if(url) free(url);
   
   return chunk.data;
 }
 
-size_t WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data) {
-  size_t realsize = size * nmemb;
-  struct MemoryStruct *mem = (struct MemoryStruct *)data;
+size_t nt_write_response(void *ptr, size_t size, size_t nmemb, void *data) {
+  size_t real_size = size * nmemb;
+  nt_response *mem = (nt_response *)data;
 
-  mem->data = (char *)realloc(mem->data, mem->size + realsize + 1);
-  if (mem->data) {
-    memcpy(&(mem->data[mem->size]), ptr, realsize);
-    mem->size += realsize;
+  //Reallocate the space if the response is too large
+  mem->data = (char *)realloc(mem->data, mem->size + real_size + 1);
+  if(mem->data) {
+    //Reinitialize nt_response
+    memcpy(&(mem->data[mem->size]), ptr, real_size);
+    mem->size += real_size;
     mem->data[mem->size] = 0;
   }
-  return realsize;
+  return real_size;
 }
-
-int nt_validate_int(char *line) {
-  unsigned int i;
-  if(strlen(line) == 0) return UT_ERR_UNKNOWN;
-
-  for(i = 0; i < strlen(line); i++) {
-    if(!isdigit((int) line[i])) return UT_ERR_UNKNOWN;
-  }
-  return UT_ERR_NONE;  
-}
-
-int nt_flush(void) {
-  int c;
-  
-  while ((c = getchar()) != '\n' && c != EOF);
-  
-  return UT_ERR_NONE;
-}
-
-int nt_isyes(char input) {
-  if(input == 'y' || input == 'Y') return UT_ERR_UNKNOWN;
-  else return UT_ERR_NONE;
-}
-
-int nt_isno(char input) {
-  if(input == 'n' || input == 'N') return UT_ERR_UNKNOWN;
-  else return UT_ERR_NONE;
-}
-
-int nt_isans(char input) {
-  if(nt_isyes(input) || nt_isno(input)) return UT_ERR_UNKNOWN;
-  else return UT_ERR_NONE;
-}
-
-int nt_ask(const char *question, char *input) {
-  int i = 0;
-  
-  printf("%s (y/n)\n", question);
-  do {
-    if(i) {
-      printf("Please enter y or n: ");
-    }
-    *input = getchar();
-    if(nt_flush()) return UT_ERR_UNKNOWN;
-    i = 1;
-  } while(!nt_isans(*input));
-  
-  return UT_ERR_NONE;
-}
-

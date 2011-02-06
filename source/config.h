@@ -50,6 +50,11 @@ cf_json *cf_read(const char *input);
 int cf_write(const cf_json *root, const char *path);
 
 /**
+ * Creates a JSON object from a JSON formatted string and writes it to a file
+ */
+cf_json *cf_create(const char *str, const char *path);
+
+/**
  * Performs cleanup when a JSON object is finished with.
  * 
  * @param  root The JSON object to be destroyed
@@ -77,6 +82,8 @@ const char *cf_get_string(const cf_json *root, const char *key);
 int cf_get_integer(const cf_json *root, const char *key);
 double cf_get_double(const cf_json *root, const char *key);
 ///@}
+
+char *cf_get_nstring(const cf_json *root, const char *key, int buffer);
 
 ///@{
 /**

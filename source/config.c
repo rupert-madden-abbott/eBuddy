@@ -20,13 +20,32 @@ cf_json *cf_read(const char *input) {
   return root;
 }
 
-int cf_write(const cf_json *root, const char *input) {
+int cf_write(const cf_json *root, const char *path) {
   //Input is automatically formatted to provide consistent config files
   if(json_dump_file(root, input, JSON_INDENT(2) || JSON_SORT_KEYS)) {
     return UT_ERR_JSON_ENCODE;
   }
   
   return UT_ERR_NONE;
+}
+
+cf_json *cf_create(const char *str, const char *path) {
+  int rc;
+  json_t *root;
+  
+  //Ensure str and path are set
+  if(!str || !path) return NULL;
+
+  root = json_loads(str, 0, NULL);
+  if(!root) return NULL;
+  
+  rc = cf_write(root, path);
+  if(rc) {
+    cf_free(root);
+    return NULL;
+  }
+  
+  return root;
 }
 
 void cf_free(cf_json *root) {
@@ -72,6 +91,19 @@ double cf_get_double(const cf_json *root, const char *key) {
   if(!object) return 0.0;
   
   return json_real_value(object);
+}
+
+const char *cf_get_nstring(const cf_json *root, const char *key, int buffer) {
+  int rc;
+  const char *check;
+  
+  check = cf_get_string(root, key);
+  rc = strlen(check);
+  if(rc > buffer || !check) {
+    return NULL;
+  }
+  
+  return check;  
 }
 
 int cf_set_object(cf_json *root, const char *key, cf_json *value) {

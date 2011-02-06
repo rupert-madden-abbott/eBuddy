@@ -38,9 +38,14 @@ typedef enum ut_error_code {
   UT_ERR_EMPTY,			//no data to read
   UT_ERR_JSON_ENCODE,  //failed to encode data into JSON
   UT_ERR_JSON_DECODE,  //failed to decode JSON data
-} ut_ErrorCode;
+  UT_ERR_CURL_SETUP, //failed to setup CURL
+  UT_ERR_OAUTH_SIGN, //failed to sign an oauth url
+  UT_ERR_INVALID_RESPONSE, //response is corrupt
+} ut_error_code;
 
 /* test to see if a path is valid and writable */
 int ut_test_path(const char *path);
+
+int ut_isint(char *line);
 
 #endif
