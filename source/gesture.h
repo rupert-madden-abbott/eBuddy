@@ -57,5 +57,11 @@ extern int gs_wave_right(CPhidgetAdvancedServoHandle servo);
 extern int gs_rapid_eyeflash(CPhidgetInterfaceKitHandle ifkit);
 extern int gs_raise_right(CPhidgetAdvancedServoHandle servo);
 extern int gs_raise_left(CPhidgetAdvancedServoHandle servo);
+
+/*
+ * Takes a string as input, along with the LCD handle, and prints the string
+ * to the LCD screen. Prints two lines at a time. Exits when the string has 
+ * been printed.
+ */
 int gs_printstring(const char* str,CPhidgetTextLCDHandle txt_lcd);
 #endif
