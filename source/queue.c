@@ -34,13 +34,13 @@ int qu_push(qu_queue *queue, void *data) {
   int rc;
   
   rc = pthread_mutex_trylock(&(queue->mutex));
-  if(rc) return ERR_UNKNOWN;
+  if(rc) return UT_ERR_UNKNOWN;
   
   if(!queue->head) {
     queue->head = (qu_node *)malloc(sizeof(qu_node));
     if(!queue->head) {
       pthread_mutex_unlock(&(queue->mutex));
-      return ERR_UNKNOWN;
+      return UT_ERR_UNKNOWN;
     }
     
     queue->head->data = data;
@@ -50,7 +50,7 @@ int qu_push(qu_queue *queue, void *data) {
     queue->tail->link = (qu_node *)malloc(sizeof(qu_node));
     if(!queue->tail->link) {
       pthread_mutex_unlock(&(queue->mutex));
-      return ERR_UNKNOWN;
+      return UT_ERR_UNKNOWN;
     }
     
     queue->tail = queue->tail->link;
@@ -62,7 +62,7 @@ int qu_push(qu_queue *queue, void *data) {
   
   pthread_mutex_unlock(&(queue->mutex));
   
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }
 
 void *qu_pop(qu_queue *queue) {
@@ -97,7 +97,7 @@ int qu_size(qu_queue *queue) {
     int size, rc;
     
     rc = pthread_mutex_trylock(&(queue->mutex));
-    if(rc) return ERR_UNKNOWN;
+    if(rc) return UT_ERR_UNKNOWN;
     
     size = queue->size;
     pthread_mutex_unlock(&(queue->mutex));

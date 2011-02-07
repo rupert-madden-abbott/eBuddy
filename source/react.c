@@ -7,7 +7,7 @@
 
 //list of alerts for each emotion
 //each reaction is a gesture function and a text string for the lcd
-const EmotionAction rct_em_action[NUM_EMOTIONS] = {
+const EmotionAction rc_em_action[NUM_EMOTIONS] = {
 	
 //full alert	 					low	alert					critical alert					critical mode
   {{gsi_eyeflash,	"*burp*"},		{gsi_eyeflash,	"hungry"},	{gsi_raise_arms,	"feed me"},		MODE_NONE},	//hunger
@@ -18,7 +18,7 @@ const EmotionAction rct_em_action[NUM_EMOTIONS] = {
 };
 
 //list of alerts and updates for each input
-const InputAction rct_in_action[IN_NUM_INPUTS] = {
+const InputAction rc_in_action[IN_NUM_INPUTS] = {
 
   {{EM_ACTION_UPDATE,	EMO_HUNGER,	50},	{EM_ACTION_NONE,	EMO_NONE,	0},
   {gsi_shake_head,	"*burp*"},				{gsi_eyeflash,	"munch munch"},		{gsi_shake_head,	"yummm!!!"},	MODE_NONE}, //nuts and bolts
@@ -53,16 +53,16 @@ const InputAction rct_in_action[IN_NUM_INPUTS] = {
 };
 
 //Reaction to notifications
-const gsi_Reaction rct_msg_action = {gsi_shake_head, "beep beep"};
+const gsi_Reaction rc_msg_action = {gsi_shake_head, "beep beep"};
 
 //Sleeping loop actions
-const InputAction rct_sleep_action = {{EM_ACTION_UPDATE,	EMO_ENERGY,	1},	{EM_ACTION_NONE,	EMO_NONE,	20},
+const InputAction rc_sleep_action = {{EM_ACTION_UPDATE,	EMO_ENERGY,	1},	{EM_ACTION_NONE,	EMO_NONE,	20},
   {gsi_shake_head,	"..."},		{gsi_eyeflash,	"zzzzz"},		{gsi_eyeflash, "zzZZZzZz"},		MODE_END};
 
 
 
 //Main loop
-int rct_main(em_State *emotions, qu_queue *notifications) {
+int rc_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
   const EmotionAction *em_action;
   const InputAction *in_action;
   nt_message *message;
@@ -83,7 +83,7 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
     if(input_event) {
   	
       //get action from table
-      in_action = &rct_in_action[input_event - 1];
+      in_action = &rc_in_action[input_event - 1];
   	
       //get condition of primary emotion before update
       if(in_action->primary_emotion.emotion != EMO_NONE) {
@@ -109,17 +109,17 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
     
       //if emotion was full do full gesture
       if(condition == EM_COND_FULL) {
-        gsi_react(&in_action->full_gesture);
+        gsi_react(&in_action->full_gesture, phhandle);
       }
     
       //if it was normal do normal gesture
       else if(condition == EM_COND_NORMAL) {
-        gsi_react(&in_action->normal_gesture);
+        gsi_react(&in_action->normal_gesture, phhandle);
       }
     
       //otherwise do low gesture
       else {
-        gsi_react(&in_action->low_gesture);
+        gsi_react(&in_action->low_gesture, phhandle);
       }
       
       //check for shutdown signal
@@ -129,7 +129,7 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
     
       //if the input triggers a mode change and emotion level isnt full switch mode
       else if(in_action->mode && condition != EM_COND_FULL) {
-        rc = mode_run(in_action->mode, emotions, notifications);
+        rc = md_run(in_action->mode, emotions, notifications, phhandle);
       
         //return errors to parent mode
         if(rc) {
@@ -145,21 +145,21 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
     if(!rc) {
   	
   	  //get the correct set of reations
-  	  em_action = &rct_em_action[emotion_event.emotion];
+  	  em_action = &rc_em_action[emotion_event.emotion];
   	
   	  //do full gesture if condition is full
       if(emotion_event.type == EM_COND_FULL) {
-        gsi_react(&em_action->full_gesture);
+        gsi_react(&em_action->full_gesture, phhandle);
       }
     
     //do low gesture if condition is low
       else if(emotion_event.type == EM_COND_LOW) {
-        gsi_react(&em_action->low_gesture);
+        gsi_react(&em_action->low_gesture, phhandle);
       }
     
       //do critical gesture if condition is critical
       else {
-        gsi_react(&em_action->critical_gesture);
+        gsi_react(&em_action->critical_gesture, phhandle);
         
         //if critical mode is kill end main loop
         if(em_action->critical_mode == MODE_END) {
@@ -168,7 +168,7 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
         
         //check for other mode changes
         else if(em_action->critical_mode) {
-          mode_run(em_action->critical_mode, emotions, notifications);
+          md_run(em_action->critical_mode, emotions, notifications, phhandle);
         }
       }
     }
@@ -178,19 +178,19 @@ int rct_main(em_State *emotions, qu_queue *notifications) {
   
     //do a gesture and print the text on the screen
     if(message) {
-      gsi_react(&rct_msg_action);
-      gsi_printLCD(message->text);
+      gsi_react(&rc_msg_action, phhandle);
+      gsi_printLCD(message->text, phhandle);
     }
   
     sleep(1);
   }
   
-  return ERR_CLOSE;
+  return UT_ERR_CLOSE;
 }
 
 
 //Sleeping loop
-int rct_sleep(em_State *emotions, qu_queue *notifications) {
+int rc_sleep(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
   nt_message *message;
   em_Event emotion_event; 
   em_condition condition;
@@ -212,7 +212,7 @@ int rct_sleep(em_State *emotions, qu_queue *notifications) {
     
     //shutdown on power button
     if(input_event == INPT_POWER_OFF) {
-  	  return ERR_CLOSE;
+  	  return UT_ERR_CLOSE;
     }
  
     //look for emotion events but don't respond to them
@@ -223,12 +223,12 @@ int rct_sleep(em_State *emotions, qu_queue *notifications) {
   
     //print the text on the screen
     if(message) {
-      gsi_printLCD(message->text);
+      gsi_printLCD(message->text, phhandle);
     }
   	
     //get condition of primary sleep emotion
-    if(rct_sleep_action.primary_emotion.emotion != EMO_NONE) {
-      condition = em_get_condition(emotions, rct_sleep_action.primary_emotion.emotion);
+    if(rc_sleep_action.primary_emotion.emotion != EMO_NONE) {
+      condition = em_get_condition(emotions, rc_sleep_action.primary_emotion.emotion);
     }
   	
     //if emotion is none use full gesture
@@ -237,29 +237,29 @@ int rct_sleep(em_State *emotions, qu_queue *notifications) {
     }
   	
     //update primary emotion
-  	rc = em_react(emotions, &rct_sleep_action.primary_emotion);
+  	rc = em_react(emotions, &rc_sleep_action.primary_emotion);
   	
   	//check for errors in reaction table
     assert(rc ==0);
   	
   	//update secondary emotion
-    rc = em_react(emotions, &rct_sleep_action.secondary_emotion);
+    rc = em_react(emotions, &rc_sleep_action.secondary_emotion);
     
     //check for errors in reaction table
     assert(rc ==0);
     
     //if emotion was full do full gesture
     if(condition == EM_COND_FULL) {
-      gsi_react(&rct_sleep_action.full_gesture);
+      gsi_react(&rc_sleep_action.full_gesture, phhandle);
       
       //check for wake up signal
-      if(rct_sleep_action.mode == MODE_END) {
+      if(rc_sleep_action.mode == MODE_END) {
         asleep = 0;
       }
     
       //if the input triggers a mode change switch to that mode
-      else if(rct_sleep_action.mode) {
-        rc = mode_run(rct_sleep_action.mode, emotions, notifications);
+      else if(rc_sleep_action.mode) {
+        rc = md_run(rc_sleep_action.mode, emotions, notifications, phhandle);
       
         //return errors to parent mode
         if(rc) {
@@ -270,19 +270,19 @@ int rct_sleep(em_State *emotions, qu_queue *notifications) {
     
     //if it was normal do normal gesture
     else if(condition == EM_COND_NORMAL) {
-      gsi_react(&rct_sleep_action.normal_gesture);
+      gsi_react(&rc_sleep_action.normal_gesture, phhandle);
     }
     
     //otherwise do low gesture
     else {
-      gsi_react(&rct_sleep_action.low_gesture);
+      gsi_react(&rc_sleep_action.low_gesture, phhandle);
     }
   
     sleep(5);
   }
   
   //wake up animation
-  gsi_raise_arms();
+  gsi_raise_arms(phhandle);
   
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }

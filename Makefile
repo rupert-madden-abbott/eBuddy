@@ -20,8 +20,8 @@ linux: checkdir config.o debug.o demo.o emotion.o guess.o gesture.o gesture_inte
 osx: checkdir config.o debug.o demo.o emotion.o guess.o phidget.o gesture.o gesture_interface.o input.o mode.o main.o notify.o queue.o react.o utility.o
 	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/guess.o build/gesture.o build/gesture_interface.o build/input.o build/main.o build/mode.o build/notify.o build/phidget.o build/queue.o build/react.o build/utility.o $(LIB) $(LIB_OSX) -o build/ebuddy
 
-simulation: checkdir config.o debug.o demo.o emotion.o phidget.o guess.o gesture.o gesture_interface.o input.o notify.o main.o mode.o queue.o react.o simulation.o sim_wrapper.o utility.o
-	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/guess.o build/main.o build/mode.o build/notify.o build/queue.o build/react.o build/simulation.o build/sim_wrapper.o build/utility.o $(LIB) -o build/simulation
+simulation: checkdir config.o debug.o demo.o emotion.o phidget.o guess.o gesture.o gesture_interface.o input.o notify.o main.o mode.o queue.o react.o simulation.o simulation_input.o utility.o
+	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/guess.o build/main.o build/mode.o build/notify.o build/queue.o build/react.o build/simulation.o build/simulation_input.o build/utility.o $(LIB) -o build/simulation
 	
 
 # MODULES
@@ -68,11 +68,11 @@ queue.o: source/queue.c source/queue.h
 react.o: source/react.c source/react.h
 	$(CC) $(CFLAGS) -c source/react.c -o build/react.o
 	
-simulation.o : source/simulation.c source/simulation.h
+simulation.o : source/simulation.c
 	$(CC) $(CFLAGS) -c source/simulation.c -o build/simulation.o
 
-sim_wrapper.o : source/sim_wrapper.c source/sim_wrapper.h
-	$(CC) $(CFLAGS) -c source/sim_wrapper.c -o build/sim_wrapper.o
+simulation_input.o : source/simulation_input.c source/simulation_input.h
+	$(CC) $(CFLAGS) -c source/simulation_input.c -o build/simulation_input.o
 	
 utility.o: source/utility.c source/utility.h
 	$(CC) $(CFLAGS) -c source/utility.c -o build/utility.o

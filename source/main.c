@@ -1,3 +1,15 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "utility.h"
+#include "phidget.h"
+#include "input.h"
+#include "emotion.h"
+#include "queue.h"
+#include "notify.h"
+#include "mode.h"
+#include "gesture_interface.h"
 #include "main.h"
 
 //list of emotions and their decay times etc
@@ -19,10 +31,11 @@ const em_Emotion main_emotions[] = {
 int main(void) {
   em_State *emotions;
   qu_queue *notifications;
-  error_code rc;
+  ph_handle phhandle;
+  ut_ErrorCode rc;
 
   //create a new emotion state using the emotion table
-  emotions = em_create(main_emotions, NUM_EMOTIONS);
+  emotions = em_init(main_emotions, NUM_EMOTIONS);
 
   if(!emotions) {
     printf("Error initialising emotions\n");
@@ -34,13 +47,13 @@ int main(void) {
   rc = em_load(emotions, EM_STATE_PATH);
   
   //if file is corrupt keep running using defaults
-  if(rc == ERR_BAD_FILE) {
+  if(rc == UT_ERR_BAD_FILE) {
     printf("Error: state file is corrupt\n");
     printf("Reseting to defaults\n");
   }
   
   //if file doesn't exist but path is valid keep running
-  else if(rc == ERR_BAD_PATH && test_path(EM_STATE_PATH)) {
+  else if(rc == UT_ERR_BAD_PATH && ut_test_path(EM_STATE_PATH)) {
     printf("Could not find state file\n");
     printf("Reseting to defaults\n");
   }
@@ -52,10 +65,27 @@ int main(void) {
   }
   
   //initialise the phidgets
-  rc = ph_init(CONFIG_PATH);
+  rc = ph_init(CONFIG_PATH, &phhandle);
+  
   if(rc) {
   	printf("Error initialising phidgits\n");
   	exit(1);
+  }
+
+  //initialise gestures
+  rc = gsi_gesture_init(&phhandle);
+  
+  if(rc) {
+    printf("Error initialising gestures\n");
+    exit(1);
+  }
+
+  //initialise input 
+  rc = in_input_init(&phhandle);
+  
+  if(rc) {
+    printf("Error initialising input\n");
+    exit(1);
   }
   
   //create the notification queue
@@ -76,13 +106,14 @@ int main(void) {
   }
   
   //enter main interactive mode
-  rc = mode_run(STARTUP_MODE, emotions, notifications);
+  rc = md_run(STARTUP_MODE, emotions, notifications, &phhandle);
   
   //finalise and unload all modules
   printf("Shutting down\n");
   em_save(emotions, EM_STATE_PATH);
   em_destroy(emotions);
+  gsi_gesture_close(&phhandle);
   //nt_destroy();
-  ph_destruct();
+  ph_destruct(&phhandle);
   return 0;
 }

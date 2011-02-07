@@ -1,8 +1,15 @@
+#include <unistd.h>
+#include <assert.h>
+
+#include "utility.h"
+#include "input.h"
+#include "gesture_interface.h"
+#include "mode.h"
 #include "debug.h"
 
 //debug mode main menu
 //allows access to all debugging tools
-int debug_main(em_State *emotions, qu_queue *notifications) {
+int db_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
   const char *menu[] = {"emotions", "events", "modes"};
   const int menu_size = 3;
   int item, rc;
@@ -11,10 +18,10 @@ int debug_main(em_State *emotions, qu_queue *notifications) {
   
   //move between different tools until user quits
   do {
-  	gsi_printLCD("main menu");
+  	gsi_printLCD("main menu", phhandle);
 
     //display the menu
-    item = debug_menu(menu, menu_size);
+    item = db_menu(menu, menu_size, phhandle);
     rc = 0;
     
     //run the correct command
@@ -22,16 +29,16 @@ int debug_main(em_State *emotions, qu_queue *notifications) {
     	
       //emotion editor
       case 0:
-        rc = debug_emotions(emotions, notifications);
+        rc = db_emotions(emotions, notifications, phhandle);
         break;
       
       //events viewer  
       case 1:
-        rc = debug_events(emotions, notifications);
+        rc = db_events(emotions, notifications, phhandle);
         break;
         
       case 2:
-        rc = debug_modes(emotions, notifications);
+        rc = db_modes(emotions, notifications, phhandle);
         
     }
     
@@ -40,20 +47,20 @@ int debug_main(em_State *emotions, qu_queue *notifications) {
       return rc;
     }
     
-  } while(item != DEBUG_EXIT);
+  } while(item != DB_EXIT);
   
-  gsi_printLCD("exit debug");
-  gsi_eyeflash();
+  gsi_printLCD("exit debug", phhandle);
+  gsi_eyeflash(phhandle);
   
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }
 
 //emotion menu allows user to get and set emotion levels
-int debug_emotions(em_State *emotions, qu_queue *notifications) {
+int db_emotions(em_State *emotions, qu_queue *notifications,ph_handle *phhandle) {
   const char *action_menu[] = {"get", "set", "update"};
   const int action_menu_size = 3;
   const char *emotion_names[emotions->num_emotions];
-  char num_string[DEBUG_BUFF_SIZE];
+  char num_string[DB_BUFF_SIZE];
   int emotion, action;
   float value;
   
@@ -61,21 +68,21 @@ int debug_emotions(em_State *emotions, qu_queue *notifications) {
   em_get_names(emotions, emotion_names);
   
   //get emotion to perform an action on
-  gsi_printLCD("select emotion");
-  emotion = debug_menu(emotion_names, emotions->num_emotions);
+  gsi_printLCD("select emotion", phhandle);
+  emotion = db_menu(emotion_names, emotions->num_emotions, phhandle);
   
   //check for exit
-  if(emotion == DEBUG_EXIT) {
-    return ERR_NONE;
+  if(emotion == DB_EXIT) {
+    return UT_ERR_NONE;
   }
   
   //get action to perform
-  gsi_printLCD("select action");  
-  action = debug_menu(action_menu, action_menu_size);
+  gsi_printLCD("select action", phhandle);  
+  action = db_menu(action_menu, action_menu_size, phhandle);
   
   //check for exit
-  if(emotion == DEBUG_EXIT) {
-    return ERR_NONE;
+  if(emotion == DB_EXIT) {
+    return UT_ERR_NONE;
   }
   
   //if user selected get print value on the screen
@@ -86,44 +93,44 @@ int debug_emotions(em_State *emotions, qu_queue *notifications) {
   	
   	//convert value to string and display it to the user
     sprintf(num_string, "%6lf", value);
-    gsi_printLCD(num_string);
+    gsi_printLCD(num_string, phhandle);
   }
   
   //if user selected set change the value
   else if(action == 1) {
   	
   	//get value from user
-    gsi_printLCD("select value");
-    value = debug_input(0, emotions->emotions[emotion].max, DEBUG_EM_STEP);
+    gsi_printLCD("select value", phhandle);
+    value = db_input(0, emotions->emotions[emotion].max, DB_EM_STEP, phhandle);
     
     em_set(emotions, emotion, value);
-    gsi_printLCD("set");
+    gsi_printLCD("set", phhandle);
   }
     
     //if user selected update update the value
   else if(action == 2){
     	
     //get value from user
-    gsi_printLCD("select value");
-    value = debug_input(-emotions->emotions[emotion].max, emotions->emotions[emotion].max, DEBUG_EM_STEP);
+    gsi_printLCD("select value", phhandle);
+    value = db_input(-emotions->emotions[emotion].max, emotions->emotions[emotion].max, DB_EM_STEP, phhandle);
       
     em_update(emotions, emotion, value);
-    gsi_printLCD("updated");	
+    gsi_printLCD("updated", phhandle);	
   }
 
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }
 
 
 //print event stream to lcd screen
-int debug_events(em_State *emotions, qu_queue *notifications) {
+int db_events(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
   in_input_type input_event;
   em_Event emotion_event;
   nt_message *message;
-  char buffer[DEBUG_BUFF_SIZE];
+  char buffer[DB_BUFF_SIZE];
   int running, rc;
   
-  gsi_printLCD("push power button to exit");
+  gsi_printLCD("push power button to exit", phhandle);
 
   //loop until user presses power button
   running = 1;
@@ -141,7 +148,7 @@ int debug_events(em_State *emotions, qu_queue *notifications) {
     //print other events to the screen
     else if(input_event) {
       sprintf(buffer, "input %02d", input_event);
-      gsi_printLCD(buffer);	
+      gsi_printLCD(buffer, phhandle);	
     }
   	
   	//look for emotion events
@@ -150,7 +157,7 @@ int debug_events(em_State *emotions, qu_queue *notifications) {
     //print events on the screen
     if(!rc) {
       sprintf(buffer, "emotion %10s %02d", emotions->emotions[emotion_event.emotion].name, emotion_event.type);
-      gsi_printLCD(buffer);
+      gsi_printLCD(buffer, phhandle);
     }
   	
     //get notification events
@@ -159,32 +166,32 @@ int debug_events(em_State *emotions, qu_queue *notifications) {
     //print details on the screen
     if(message) {
       sprintf(buffer, "message %10s: %10s", message->app, message->user);
-      gsi_printLCD(buffer);
-      gsi_printLCD(message->text);
+      gsi_printLCD(buffer, phhandle);
+      gsi_printLCD(message->text, phhandle);
     }
   
     sleep(1);
   }
   
-  gsi_printLCD("exit");
-  return ERR_NONE;
+  gsi_printLCD("exit", phhandle);
+  return UT_ERR_NONE;
 }
 
 //manually change modes
-int debug_modes(em_State *emotions, qu_queue *notifications) {
+int db_modes(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
   const char *menu[] = {"react", "sleep", "demo", "debug", "guess"};
   const int menu_size = 5;
   int mode, rc;
   
-  gsi_printLCD("select mode");
+  gsi_printLCD("select mode", phhandle);
 
   //display mode list
-  mode = debug_menu(menu, menu_size);
+  mode = db_menu(menu, menu_size, phhandle);
     
-  if(mode != DEBUG_EXIT) {
+  if(mode != DB_EXIT) {
   	
     //switch to chosen mode
-    rc = mode_run(mode + 1, emotions, notifications);
+    rc = md_run(mode + 1, emotions, notifications, phhandle);
         
     //pass errors to calling function
     if(rc) {
@@ -192,13 +199,13 @@ int debug_modes(em_State *emotions, qu_queue *notifications) {
     }
   }
   
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }
 
 //display a menu on the lcd screen allowing the user to choose between
 //item's. the function returns the item number or debug_none if the operation
 //is canceled
-int debug_menu(const char **items, int num_items) {
+int db_menu(const char **items, int num_items, ph_handle *phhandle) {
   in_input_type input;
   int selected, current;
 
@@ -213,7 +220,7 @@ int debug_menu(const char **items, int num_items) {
   	assert(current <= num_items);
   	
     //print the current item on the screen
-    gsi_printLCD(items[current]);
+    gsi_printLCD(items[current], phhandle);
     
     //wait for input from the user
     do {
@@ -239,7 +246,7 @@ int debug_menu(const char **items, int num_items) {
     
     //power button or debug key quits debug
     else if(input == INPT_DEBUG || input == INPT_POWER_OFF) {
-      current = DEBUG_EXIT;
+      current = DB_EXIT;
       selected = 1;
     }
     
@@ -249,9 +256,9 @@ int debug_menu(const char **items, int num_items) {
 
 //get a number from the user between min and max with
 //steps of the given size
-int debug_input(int min, int max, int step) {
+int db_input(int min, int max, int step, ph_handle *phhandle) {
   in_input_type input;
-  char num_string[DEBUG_BUFF_SIZE];
+  char num_string[DB_BUFF_SIZE];
   int selected, current;
 
   //make sure step is at least 1
@@ -270,7 +277,7 @@ int debug_input(int min, int max, int step) {
   	
     //print the current number on the screen
     sprintf(num_string, "%8d", current);
-    gsi_printLCD(num_string);
+    gsi_printLCD(num_string, phhandle);
     
     //wait for input from the user
     do {
@@ -296,7 +303,7 @@ int debug_input(int min, int max, int step) {
     
     //power button or debug key quits debug
     else if(input == INPT_DEBUG || input == INPT_POWER_OFF) {
-      current = DEBUG_EXIT;
+      current = DB_EXIT;
       selected = 1;
     }
     

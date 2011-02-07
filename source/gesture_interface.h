@@ -12,25 +12,32 @@
 #define GSI_PHER 1
 #define GSI_OK 0
 
-extern int gsi_happy_level1(void);
-extern int gsi_fun_level1(void);
-extern int gsi_notification(void);
-extern int gsi_test(void);
-extern int gsi_shake_head(void);
-extern int gsi_move_arms(void);
-extern int gsi_raise_arms(void);
-extern int gsi_eyeflash(void);
-int gsi_wave_right(void);
-int gsi_wave_left(void);
-int gsi_raise_right(void);
-int gsi_raise_left(void);
-extern int gsi_printLCD(const char* str);
+int gsi_gesture_init(ph_handle *handle);
+int gsi_gesture_close(ph_handle *handle);
+int gsi_happy_level1(ph_handle *handle);
+int gsi_fun_level1(ph_handle *handle);
+int gsi_test(ph_handle *handle);
+int gsi_shake_head(ph_handle *handle);
+int gsi_move_arms(ph_handle *handle);
+int gsi_raise_arms(ph_handle *handle);
+int gsi_eyeflash(ph_handle *handle);
+int gsi_rapid_eyeflash(ph_handle *handle);
+int gsi_sound(const char *sound, int repeat);
+int gsi_raise_left(ph_handle *handle);
+int gsi_raise_right(ph_handle *handle);
+int gsi_wave_left(ph_handle *handle);
+int gsi_wave_right(ph_handle *handle);
 
-/* representation of a gesture [needs to go in gesture] */
+extern int gsi_printLCD(const char* str, ph_handle *handle);
+
+
 typedef struct gsi_reaction {
-  int (*gesture)(void);	/* pointer to the gesture that should be called */
-  const char *message;	/* string to display on the lcd screen */
+    int (*gesture)(ph_handle *);	/* pointer to the gesture that should be called */
+    const char *message;        /* string to display on the lcd screen */
+    const char *sound;
+    int sndrepeat;
+	
 } gsi_Reaction;
 
-int gsi_react(const gsi_Reaction *resp);
+int gsi_react(const gsi_Reaction *resp, ph_handle *handle);
 #endif

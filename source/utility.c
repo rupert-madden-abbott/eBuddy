@@ -1,7 +1,7 @@
 #include "utility.h"
 
 /* test to see if a path is valid and writable */
-int test_path(const char *path) {
+int ut_test_path(const char *path) {
   FILE *file;
 	
   file = fopen(path, "w");

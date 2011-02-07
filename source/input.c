@@ -1,5 +1,30 @@
 #include "input.h"
 
+
+
+int in_input_init(ph_handle *handle)
+{
+    in_RFID_init(handle->RFIDhandle);
+    in_kit_input_init(handle->IFKhandle);
+    return 0;
+}
+
+int in_RFID_init(CPhidgetRFIDHandle RFID)
+{
+    CPhidgetRFID_set_OnTag_Handler(RFID, in_RFID_TagHandler, NULL);
+    CPhidgetRFID_set_OnTagLost_Handler(RFID, in_RFID_TagLostHandler, NULL);
+    CPhidgetRFID_setAntennaOn(RFID, 1);
+    return 0;
+
+}
+
+int in_kit_input_init(CPhidgetInterfaceKitHandle ifKit)
+{
+    CPhidgetInterfaceKit_set_OnInputChange_Handler (ifKit, in_kit_InputChangeHandler, NULL);
+    CPhidgetInterfaceKit_set_OnSensorChange_Handler (ifKit, in_kit_SensorChangeHandler, NULL);
+    return 0;
+}
+
 int in_last_input;
 /* RFID input*/
 int in_RFID_TagHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char *TagVal)

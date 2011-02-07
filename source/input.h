@@ -5,6 +5,7 @@
 #include <time.h>
 
 #include <phidget21.h>
+#include "phidget.h"
 
 #define IN_PRESS 400
 #define IN_DISC 386
@@ -36,11 +37,11 @@ INPT_DEBUG = 11
 typedef enum in_input_type in_input_type;
 
 
-//not currently used
-typedef struct PhidgetHandle {
-  void *example;
-} PhidgetHandle;
 
+/*input initialisation*/
+int in_input_init(ph_handle *handle);
+int in_RFID_init(CPhidgetRFIDHandle RFID);
+int in_kit_input_init(CPhidgetInterfaceKitHandle ifKit);
 /* RFID input header*/
 int in_RFID_TagHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char *TagVal);
 int in_RFID_TagLostHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char *TagVal);

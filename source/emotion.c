@@ -1,9 +1,19 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <math.h>
+#include <assert.h>
+
+#include "utility.h"
 #include "emotion.h"
 
-/* allocate and return a pointer to a new emotional state */
-em_State *em_create(const em_Emotion *emotions, int num_emotions) {
+em_State *em_init(const em_Emotion *emotions, int num_emotions) {
   em_State *state;
   time_t now;
+  
+  assert(emotions);
+  assert(num_emotions);
   
   /* get current time */
   now = time(NULL);
@@ -36,26 +46,28 @@ em_State *em_create(const em_Emotion *emotions, int num_emotions) {
 
 /* free up a state */
 void em_destroy(em_State *state) {
+  assert(state);
+  
   free(state->levels);	
   free(state);
 }
 
-/* return all levels to their default values (0) */
 void em_reset(em_State *state) {
   time_t now;
   int i;
+  
+  assert(state);
 	
   now = time(NULL);
 	
-  //initialise each level to full level
+  //initialise each level to low level
   for(i = 0; i < state->num_emotions; i++) {
-    state->levels[i].last_value = state->emotions[i].full;
+    state->levels[i].last_value = state->emotions[i].low;
     state->levels[i].last_update = now;
     state->levels[i].last_event = now;
   }
 }
 
-/* load an emotional state from a file */
 int em_load(em_State *state, const char *path) {
   char name[EM_NAME_LEN];
   FILE *file;
@@ -63,6 +75,8 @@ int em_load(em_State *state, const char *path) {
   time_t now;
   double value;
   int id, rc;
+  
+  assert(state);
 
   /* get current time */
   now = time(NULL);
@@ -72,7 +86,7 @@ int em_load(em_State *state, const char *path) {
 	
   /* check file opened correctly */
   if(!file) {
-    return ERR_BAD_PATH;
+    return UT_ERR_BAD_PATH;
   }
 	
   /* read the value and timestamp of each level from the file */
@@ -82,7 +96,7 @@ int em_load(em_State *state, const char *path) {
     
     /* return an error if items diddn't scan */
     if(rc != EM_LINE_ITEMS) {
-      return ERR_BAD_FILE;
+      return UT_ERR_BAD_FILE;
     }
     
     /* convert calendar time to a time_t */
@@ -93,7 +107,7 @@ int em_load(em_State *state, const char *path) {
     rc = em_get_id(state, name, &id);
     
     if(rc) {
-      return ERR_BAD_FILE;
+      return UT_ERR_BAD_FILE;
     }
     
     state->levels[id].last_value = value;
@@ -106,10 +120,9 @@ int em_load(em_State *state, const char *path) {
   } while(!feof(file));
 	
   fclose(file);
-  return ERR_NONE;
+  return UT_ERR_NONE;
 } 
 
-/* save state to a file */
 int em_save(em_State *state, const char *path) {
   struct tm *time;
   FILE *file;
@@ -120,7 +133,7 @@ int em_save(em_State *state, const char *path) {
 
   /* check file is open */
   if(!file) {
-    return ERR_BAD_PATH;
+    return UT_ERR_BAD_PATH;
   }
 
   /* write time and value of each level */
@@ -139,7 +152,6 @@ int em_save(em_State *state, const char *path) {
   return 0;
 }
 
-/* returns the level of an emotion */
 double em_get(em_State *state, int emotion) {
   double difference, num_decays, value;
   
@@ -160,7 +172,6 @@ double em_get(em_State *state, int emotion) {
   return value;
 }
 
-/* return the condition of an emotion */
 em_condition em_get_condition(em_State *state, int emotion) {
 int level;
 
@@ -183,8 +194,6 @@ else {
 }
 }
 
-
-/* returns the average value of all the levels in a state */
 double em_overall(em_State *state) {
   double total;
   int i;
@@ -198,25 +207,20 @@ double em_overall(em_State *state) {
   return total / (double) state->num_emotions;
 }
 
-/* sets the level of an emotion to the value given. will not allow the
- * level to go above EM_MAX_LEVEL or below 0. returns the condition of
- * the emotion after the update */
-int em_set(em_State *state, int emotion, double value) {
+ut_ErrorCode em_set(em_State *state, int emotion, double value) {
 
   /* check bounds */
   if(value > state->emotions[emotion].max || value < 0) {
-    return ERR_BAD_ARG;
+    return UT_ERR_BAD_ARG;
   }
 	
   state->levels[emotion].last_value = value;
   state->levels[emotion].last_update = time(NULL);
   
-  return 0;
+  return UT_ERR_NONE;
 }
 
-/* adds the value given to the level of an emotion. will not allow the
- * level to go above EM_MAX_LEVEL or below 0. */
-int em_update(em_State *state, int emotion, double value) {
+ut_ErrorCode em_update(em_State *state, int emotion, double value) {
   double total;
 	
   /* add the previous value to the update vale to get the total */
@@ -237,11 +241,9 @@ int em_update(em_State *state, int emotion, double value) {
     em_set(state, emotion, total);	
   }
   
-  return 0;
+  return UT_ERR_NONE;
 }
 
-/* checks for emotional events and stores the first one found in event.
- * returns ERR_NONE if an event was found or ERR_EMPTY otherwise */
 int em_check(em_State *state, em_Event *event) {
   em_condition condition;
   time_t now;
@@ -268,17 +270,16 @@ int em_check(em_State *state, em_Event *event) {
   	  	event->type = condition;
   	  	event->emotion = i;
   	  	
-  	    return ERR_NONE;
+  	    return UT_ERR_NONE;
   	  }
     } 
   }
   
   /* return no event */
-  return ERR_EMPTY;
+  return UT_ERR_EMPTY;
 }
 
-/* updates a state according to the a reaction struct. */
-int em_react(em_State *state, const em_Reaction *reaction) {
+ut_ErrorCode em_react(em_State *state, const em_Reaction *reaction) {
   
   /* set the emotion to the value if action is set */
   if(reaction->action == EM_ACTION_SET) {
@@ -292,17 +293,16 @@ int em_react(em_State *state, const em_Reaction *reaction) {
   
   /* do nothing if action is none */
   else if(reaction->action == EM_ACTION_NONE) {
-    return ERR_NONE;
+    return UT_ERR_NONE;
   }
   
   /* otherwise return an error */
   else {
-    return ERR_BAD_ACTION;
+    return UT_ERR_BAD_ACTION;
   }
 }
 
-//return the number of an emotion given its name
-int em_get_id(em_State *state, const char *name, int *id) {
+ut_ErrorCode em_get_id(em_State *state, const char *name, int *id) {
   int i;
   
   //loop through all emotions
@@ -313,25 +313,23 @@ int em_get_id(em_State *state, const char *name, int *id) {
  
   	  //if store number and return
   	  *id = i;
-  	  return ERR_NONE;
+  	  return UT_ERR_NONE;
   	}
   }
   
   //if not found return bad arg
-  return ERR_BAD_ARG;
+  return UT_ERR_BAD_ARG;
 }
 
-//return a pointer to the name of an emotion given its number
-int em_get_name(em_State *state, int id, const char **name) {
+ut_ErrorCode em_get_name(em_State *state, int id, const char **name) {
   assert(id > 0);
   assert(id < state->num_emotions);
 	
   //look name up in emotion array
   *name = state->emotions[id].name;
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }
 
-//store the list of emotions names of a state in an array
 void em_get_names(em_State *state, const char **names) {
   int i;
 	
