@@ -118,6 +118,11 @@ int em_load(em_State *state, const char *path) {
     state->levels[id].last_value = value;
     state->levels[id].last_update = mktime(&timestamp);
     
+    //check time is valid
+    if(state->levels[id].last_update == -1) {
+      return UT_ERR_BAD_FILE;
+    }
+    
     //set the last event time to now 
     state->levels[id].last_event = now;
     
