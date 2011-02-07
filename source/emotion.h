@@ -16,6 +16,7 @@
 #ifndef EM_H
 #define EM_H
 
+#include <time.h>
 #include "utility.h"
 
 //Number of items on one line of the state file.
