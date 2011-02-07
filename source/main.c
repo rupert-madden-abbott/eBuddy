@@ -127,7 +127,7 @@ int main(void) {
   em_save(emotions, MN_EM_STATE_PATH);
   em_destroy(emotions);
   gsi_gesture_close(&phhandle);
-  //nt_destroy();
+  nt_destroy(notifications);
   ph_destruct(&phhandle);
   return 0;
 }
