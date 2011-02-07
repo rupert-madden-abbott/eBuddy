@@ -2,23 +2,25 @@
 #define MAIN_H
 
 #include "emotion.h"
+#include "phidget.h"
+#include "queue.h"
 
 //Number of emotions in the emotion table
-#define NUM_EMOTIONS 5
+#define MN_NUM_EMOTIONS 5
 
-//path to the configuration directory
-#define CONFIG_PATH "conf/"
+//The path to the configuration directory
+#define MN_CONFIG_PATH "conf/"
 
-//notification configuration file
-#define NT_CONFIG CONFIG_PATH "notify.json"
+//Notification configuration file
+#define MN_NT_CONFIG MN_CONFIG_PATH "notify.json"
 
-//emotion state file
-#define EM_STATE_PATH CONFIG_PATH "em_state"
+//Emotion state file
+#define MN_EM_STATE_PATH MN_CONFIG_PATH "em_state"
 
-//the mode to run on startup
-#define STARTUP_MODE MODE_REACT
+//The mode to run on startup
+#define MN_STARTUP_MODE MN_REACT
 
-//list of emotions and their tabe row numbers
+//List of emotions and their array element numbers
 typedef enum emotion_type {
   EMO_NONE = -1,
   EMO_HUNGER = 0,
@@ -28,11 +30,25 @@ typedef enum emotion_type {
   EMO_FUN = 4
 } emotion_type;
 
-//list of emotions and their decay times etc
-//each emotion will decay to 1*factor of its original value
-//after one life. when the level is above full or below low
-//the user will be alerted once every alert time. all times
-//are in seconds.
-const em_Emotion main_emotions[NUM_EMOTIONS];
+typedef enum mn_mode {
+  MN_END = -1,
+  MN_NONE = 0,
+  MN_REACT = 1,
+  MN_SLEEP = 2,
+  MN_DEMO = 3,
+  MN_DEBUG = 4,
+  MN_GUESS = 5,
+} mn_mode;
 
+/* Contains the emotion definition array which will be passed
+ * to the emotion module.
+ */
+const em_Emotion mn_emotions[MN_NUM_EMOTIONS];
+
+/**
+ * Initialisises all modules and switches to the mode defined in
+ * MN_STARTUP_MODE.
+ */
+int main(void);
+int mn_run(mn_mode mode, em_State *emotions, qu_queue *notifications, ph_handle *phhandle);
 #endif

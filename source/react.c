@@ -1,7 +1,6 @@
 #include <assert.h>
 
 #include "utility.h"
-#include "mode.h"
 #include "main.h"
 #include "emotion.h"
 #include "gesture_interface.h"
@@ -19,37 +18,37 @@
  * Critical gesture
  * Critical mode
  */
-const rc_EmotionAction RC_EM_ACTION[NUM_EMOTIONS] = {
+const rc_EmotionAction RC_EM_ACTION[MN_NUM_EMOTIONS] = {
   
   //Hunger
   {{gsi_eyeflash,   "*burp*"},
    {gsi_eyeflash,   "hungry"},
    {gsi_raise_arms, "feed me"},
-   MODE_NONE},
+   MN_NONE},
    
   //Energy
   {{gsi_eyeflash,   "aaauuuoowhh"},
    {gsi_raise_arms, "*yaawn*"},
    {gsi_raise_arms, "*yaaaaaawn*"},
-   MODE_SLEEP},
+   MN_SLEEP},
    
   //Cleanliness
   {{NULL,           ""},
    {gsi_eyeflash,   "euhg"},
    {gsi_shake_head, "eeeewwwwww"},
-   MODE_NONE},
+   MN_NONE},
    
   //Social
   {{NULL,           ":)"},
    {gsi_raise_arms, "hey"},
    {gsi_fun_level1, "helloooo"},
-   MODE_NONE},
+   MN_NONE},
    
   //Fun
   {{gsi_fun_level1, "wooooo"},
    {gsi_eyeflash,   ":("},
    {gsi_shake_head, "booooring"},
-   MODE_NONE}
+   MN_NONE}
 };
 
 
@@ -73,7 +72,7 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {gsi_eyeflash,    "munch munch"},
    {gsi_shake_head,  "yummm!!!"},
    
-   MODE_NONE}, 
+   MN_NONE}, 
 
   //Oil can
   {{EM_ACTION_UPDATE,   EMO_ENERGY, -25},
@@ -83,7 +82,7 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {gsi_eyeflash,    "glug"},
    {gsi_shake_head,  "yuck"},
    
-   MODE_NONE}, 
+   MN_NONE}, 
 
   //Battery
   {{EM_ACTION_UPDATE,   EMO_FUN,   -25},
@@ -93,7 +92,7 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {gsi_eyeflash,     "buzz..."},
    {gsi_shake_head,   "..."},
    
-   MODE_NONE},  
+   MN_NONE},  
   
   //Force sensor
   {{EM_ACTION_UPDATE,   EMO_SOCIAL, 20},
@@ -103,7 +102,7 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {gsi_move_arms,     "tee he he"},
    {gsi_happy_level1,  "yeaaaa"},
    
-   MODE_NONE},
+   MN_NONE},
 
   //Dark sensor
   {{EM_ACTION_NONE,    EMO_ENERGY,  0},
@@ -113,7 +112,7 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {gsi_move_arms,    "yawn"},
    {gsi_raise_arms,   "yaaawn"},
    
-   MODE_SLEEP},
+   MN_SLEEP},
   
   //Left hand
   {{EM_ACTION_NONE,     EMO_FUN,    0},
@@ -123,7 +122,7 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {gsi_raise_left,   ":D"},
    {gsi_raise_left,   ":)"},
    
-   MODE_GUESS},
+   MN_GUESS},
 
   //Right hand 
   {{EM_ACTION_NONE,     EMO_FUN,    0},
@@ -133,7 +132,7 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {gsi_raise_right,  ":D"},
    {gsi_raise_right,  ":)"},
    
-   MODE_NONE},
+   MN_NONE},
    
   //Power on
   {{EM_ACTION_NONE,     EMO_NONE,   0},
@@ -143,7 +142,7 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {NULL,            ""},
    {gsi_eyeflash,    "i am a robot"},
    
-   MODE_NONE},
+   MN_NONE},
 
   //Power off
   {{EM_ACTION_NONE,     EMO_NONE,   0},
@@ -153,7 +152,7 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {NULL,           ""},
    {gsi_wave_right, "bye bye"},
 
-   MODE_END},
+   MN_END},
     
   //Demo key
   {{EM_ACTION_NONE,     EMO_NONE,   0},
@@ -163,7 +162,7 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {NULL,            ""},
    {gsi_eyeflash,    "demo"},
    
-   MODE_DEMO},
+   MN_DEMO},
 
   //Debug key
   {{EM_ACTION_NONE,     EMO_NONE,   0},
@@ -173,7 +172,7 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {NULL,             ""},
    {gsi_eyeflash,     "debug"},
    
-   MODE_DEBUG}
+   MN_DEBUG}
 };
 
 const gsi_Reaction RC_MSG_ACTION = {gsi_shake_head,   "beep beep"};
@@ -187,7 +186,7 @@ const rc_InputAction rc_sleep_action =
   {gsi_eyeflash,    "zzzzz"},
   {gsi_eyeflash,    "zzZZZzZz"},
 
-  MODE_END};
+  MN_END};
 
 
 const int RC_MAIN_PAUSE  = 1;
@@ -254,13 +253,13 @@ ut_ErrorCode rc_main(em_State *emotions, qu_queue *notifications, ph_handle *phh
       }
       
       //check for shutdown signal
-      if(in_action->mode == MODE_END) {
+      if(in_action->mode == MN_END) {
         running = 0;
       }
     
       //if the input triggers a mode change and emotion level isnt full switch mode
       else if(in_action->mode && condition != EM_COND_FULL) {
-        rc = md_run(in_action->mode, emotions, notifications, phhandle);
+        rc = mn_run(in_action->mode, emotions, notifications, phhandle);
       
         //return errors to parent mode
         if(rc) {
@@ -293,13 +292,13 @@ ut_ErrorCode rc_main(em_State *emotions, qu_queue *notifications, ph_handle *phh
         gsi_react(&em_action->critical_gesture, phhandle);
         
         //if critical mode is kill end main loop
-        if(em_action->critical_mode == MODE_END) {
+        if(em_action->critical_mode == MN_END) {
           running = 0;
         }
         
         //check for other mode changes
         else if(em_action->critical_mode) {
-          md_run(em_action->critical_mode, emotions, notifications, phhandle);
+          mn_run(em_action->critical_mode, emotions, notifications, phhandle);
         }
       }
     }
@@ -382,13 +381,13 @@ ut_ErrorCode rc_sleep(em_State *emotions, qu_queue *notifications, ph_handle *ph
       gsi_react(&rc_sleep_action.full_gesture, phhandle);
       
       //check for wake up signal
-      if(rc_sleep_action.mode == MODE_END) {
+      if(rc_sleep_action.mode == MN_END) {
         asleep = 0;
       }
     
       //if the input triggers a mode change switch to that mode
       else if(rc_sleep_action.mode) {
-        rc = md_run(rc_sleep_action.mode, emotions, notifications, phhandle);
+        rc = mn_run(rc_sleep_action.mode, emotions, notifications, phhandle);
       
         //return errors to parent mode
         if(rc) {

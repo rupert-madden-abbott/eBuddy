@@ -5,7 +5,6 @@
 #include "utility.h"
 #include "debug.h"
 #include "gesture_interface.h"
-#include "mode.h"
 #include "guess.h"
 
 int guess_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {

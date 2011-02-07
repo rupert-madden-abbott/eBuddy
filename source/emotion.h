@@ -19,11 +19,13 @@
 #include <time.h>
 #include "utility.h"
 
+
 //Number of items on one line of the state file.
 #define EM_LINE_ITEMS 8
 
 //Maximum length of an emotion name.
 #define EM_NAME_LEN 12
+
 
 //The level of an emotion relative to it's event values.
 typedef enum em_condition {

@@ -8,8 +8,12 @@
 #include "emotion.h"
 #include "queue.h"
 #include "notify.h"
-#include "mode.h"
 #include "gesture_interface.h"
+#include "react.h"
+#include "guess.h"
+#include "debug.h"
+#include "demo.h"
+
 #include "main.h"
 
 //list of emotions and their decay times etc
@@ -17,7 +21,7 @@
 //after one life. when the level is above full or below low
 //the user will be alerted once every alert time. all times
 //are in seconds.
-const em_Emotion main_emotions[] = {
+const em_Emotion mn_emotions[] = {
 	
 //name				life			factor		alert			max		full	low		critical
   {"hunger",		UT_HOUR * 24,	0.2,		UT_MIN * 5,		100,	95,		30,		10},
@@ -35,7 +39,7 @@ int main(void) {
   ut_ErrorCode rc;
 
   //create a new emotion state using the emotion table
-  emotions = em_init(main_emotions, NUM_EMOTIONS);
+  emotions = em_init(mn_emotions, MN_NUM_EMOTIONS);
 
   if(!emotions) {
     printf("Error initialising emotions\n");
@@ -44,7 +48,7 @@ int main(void) {
   }
   
   //load the emotion values from the last session
-  rc = em_load(emotions, EM_STATE_PATH);
+  rc = em_load(emotions, MN_EM_STATE_PATH);
   
   //if file is corrupt keep running using defaults
   if(rc == UT_ERR_BAD_FILE) {
@@ -53,7 +57,7 @@ int main(void) {
   }
   
   //if file doesn't exist but path is valid keep running
-  else if(rc == UT_ERR_BAD_PATH && ut_test_path(EM_STATE_PATH)) {
+  else if(rc == UT_ERR_BAD_PATH && ut_test_path(MN_EM_STATE_PATH)) {
     printf("Could not find state file\n");
     printf("Reseting to defaults\n");
   }
@@ -65,7 +69,7 @@ int main(void) {
   }
   
   //initialise the phidgets
-  rc = ph_init(CONFIG_PATH, &phhandle);
+  rc = ph_init(MN_CONFIG_PATH, &phhandle);
   
   if(rc) {
   	printf("Error initialising phidgits\n");
@@ -106,14 +110,42 @@ int main(void) {
   }
   
   //enter main interactive mode
-  rc = md_run(STARTUP_MODE, emotions, notifications, &phhandle);
+  rc = mn_run(MN_STARTUP_MODE, emotions, notifications, &phhandle);
   
   //finalise and unload all modules
   printf("Shutting down\n");
-  em_save(emotions, EM_STATE_PATH);
+  em_save(emotions, MN_EM_STATE_PATH);
   em_destroy(emotions);
   gsi_gesture_close(&phhandle);
   //nt_destroy();
   ph_destruct(&phhandle);
   return 0;
 }
+
+//takes a run_mode and calls the appropriate function
+int mn_run(mn_mode mode, em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
+	
+  switch(mode) {
+    case MN_REACT:
+      return rc_main(emotions, notifications, phhandle);
+      
+    case MN_SLEEP:
+      return rc_sleep(emotions, notifications, phhandle);
+      
+    case MN_DEMO:
+      return dm_main(emotions, notifications, phhandle);
+      
+    case MN_DEBUG:
+      return db_main(emotions, notifications, phhandle);
+
+    case MN_GUESS:
+      return guess_main(emotions, notifications, phhandle);
+
+    case MN_NONE:
+      return UT_ERR_NONE;
+      
+    default:
+      return UT_ERR_BAD_MODE;
+  } 
+}
+

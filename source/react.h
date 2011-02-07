@@ -10,7 +10,6 @@
 #define REACT_H
 
 #include "utility.h"
-#include "mode.h"
 #include "main.h"
 #include "emotion.h"
 #include "gesture_interface.h"
@@ -31,7 +30,7 @@ typedef struct rc_input_action {
   const gsi_Reaction full_gesture;
   const gsi_Reaction normal_gesture;
   const gsi_Reaction low_gesture;
-  const md_mode mode;
+  const mn_mode mode;
 } rc_InputAction;
 
 /**
@@ -43,7 +42,7 @@ typedef struct rc_emotion_action {
   const gsi_Reaction full_gesture;
   const gsi_Reaction low_gesture;
   const gsi_Reaction critical_gesture;
-  const md_mode critical_mode;
+  const mn_mode critical_mode;
 } rc_EmotionAction;
 
 
@@ -51,7 +50,7 @@ typedef struct rc_emotion_action {
  * The emotion action array contains one emotion action for each emotion
  * and is indexed by emotion number 
  */
-const rc_EmotionAction RC_EM_ACTION[NUM_EMOTIONS];
+const rc_EmotionAction RC_EM_ACTION[MN_NUM_EMOTIONS];
 
 
 /* The input action array contains one input action for each input and

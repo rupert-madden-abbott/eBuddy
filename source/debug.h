@@ -9,7 +9,7 @@
 #include "input.h"
 #include "emotion.h"
 #include "gesture_interface.h"
-#include "mode.h"
+#include "main.h"
 #include "notify.h"
 #include "queue.h"
 

@@ -4,7 +4,7 @@
 #include "utility.h"
 #include "input.h"
 #include "gesture_interface.h"
-#include "mode.h"
+#include "main.h"
 #include "debug.h"
 
 //debug mode main menu
@@ -191,7 +191,7 @@ int db_modes(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
   if(mode != DB_EXIT) {
   	
     //switch to chosen mode
-    rc = md_run(mode + 1, emotions, notifications, phhandle);
+    rc = mn_run(mode + 1, emotions, notifications, phhandle);
         
     //pass errors to calling function
     if(rc) {
