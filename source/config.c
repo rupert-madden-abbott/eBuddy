@@ -22,7 +22,7 @@ cf_json *cf_read(const char *input) {
 
 int cf_write(const cf_json *root, const char *path) {
   //Input is automatically formatted to provide consistent config files
-  if(json_dump_file(root, input, JSON_INDENT(2) || JSON_SORT_KEYS)) {
+  if(json_dump_file(root, path, JSON_INDENT(2) || JSON_SORT_KEYS)) {
     return UT_ERR_JSON_ENCODE;
   }
   
@@ -32,12 +32,17 @@ int cf_write(const cf_json *root, const char *path) {
 cf_json *cf_create(const char *str, const char *path) {
   int rc;
   json_t *root;
-  
+
   //Ensure str and path are set
-  if(!str || !path) return NULL;
+  if(!str || !path) {
+          printf("hello\n");
+    return NULL;
+  }
 
   root = json_loads(str, 0, NULL);
-  if(!root) return NULL;
+  if(!root) {
+    return NULL;
+  }
   
   rc = cf_write(root, path);
   if(rc) {
@@ -66,13 +71,13 @@ cf_json *cf_get_array(const cf_json *root, int key) {
 
 /* The following functions first get an object containing the required value
    and then convert the object into the required type */
-const char *cf_get_string(const cf_json *root, const char *key) {
+char *cf_get_string(const cf_json *root, const char *key) {
   cf_json *object = NULL;
   
   object = cf_get_object(root, key);
   if(!object) return NULL;
   
-  return json_string_value(object);
+  return (char *)json_string_value(object);
 }
 
 int cf_get_integer(const cf_json *root, const char *key) {
@@ -93,13 +98,17 @@ double cf_get_double(const cf_json *root, const char *key) {
   return json_real_value(object);
 }
 
-const char *cf_get_nstring(const cf_json *root, const char *key, int buffer) {
+char *cf_get_nstring(const cf_json *root, const char *key, int buffer) {
   int rc;
-  const char *check;
+  char *check;
   
   check = cf_get_string(root, key);
+  if(!check) {
+    return NULL;
+  }
+  
   rc = strlen(check);
-  if(rc > buffer || !check) {
+  if(rc > buffer) {
     return NULL;
   }
   

@@ -1,3 +1,5 @@
+#include <string.h>
+#include <ctype.h>
 #include "utility.h"
 
 /* test to see if a path is valid and writable */

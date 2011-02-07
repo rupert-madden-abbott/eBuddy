@@ -78,7 +78,7 @@ void cf_free(cf_json *root);
  */
 cf_json *cf_get_object(const cf_json *root, const char *key);
 cf_json *cf_get_array(const cf_json *root, int key);
-const char *cf_get_string(const cf_json *root, const char *key);
+char *cf_get_string(const cf_json *root, const char *key);
 int cf_get_integer(const cf_json *root, const char *key);
 double cf_get_double(const cf_json *root, const char *key);
 ///@}

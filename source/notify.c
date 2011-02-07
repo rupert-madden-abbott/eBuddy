@@ -14,6 +14,7 @@
 int nt_init(qu_queue *queue, const char *config) {
   int         authenticated, 
               rc;
+  nt_arg      *data = { { "", "" }, { "", "" }, queue, config };
   nt_token    user = { "", "" }, 
               app = { "", "" };
   cf_json     *root = NULL;
@@ -24,6 +25,10 @@ int nt_init(qu_queue *queue, const char *config) {
   if(rc) {
     return UT_ERR_CURL_SETUP;
   }
+  
+  //Initialize nt_arg
+  data->
+  
 
   //Attempt to load the config file or create a default if it cannot be found
   root = cf_read(config);
@@ -69,7 +74,8 @@ int nt_init(qu_queue *queue, const char *config) {
   return UT_ERR_NONE;
 }
 
-int nt_destroy() {
+int nt_destroy(qu_queue *queue) {
+  qu_free(queue);
   curl_global_cleanup();
   return UT_ERR_NONE;
 }
@@ -87,10 +93,10 @@ int nt_authenticate(const nt_token app, nt_token *user, const char *config,
   }
 
   //Determine the command to open a browser window, according to the OS  
-  if(OS == LINUX) {
+  if(UT_OS == UT_OS_LINUX) {
     command = "xdg-open";
   }
-  else if(OS == OSX) {
+  else if(UT_OS == UT_OS_OSX) {
     command = "open";
   }
   else {
@@ -261,20 +267,25 @@ char *nt_parse_arg(char *arg, const char *name) {
   return strtok(NULL, "=");
 }
 
-void *nt_poll(void *queue) {
+void *nt_poll(void *arg) {
+  int rc;
   cf_json *root;
   nt_message *tweet; 
   const char *config = "conf/notify.json";
   char last_tweet[NT_ID_MAX], *check;
   nt_token user = { "", "" }, app = { "", "" };
-  
+
   //Attempt to load the config file
   root = cf_read(config);
   if(!root) {
     return NULL;
   }
-  
+
   //Extract data from config file
+  rc = strlen(NT_APP_KEY);
+  if(rc > NT_KEY_MAX) {
+    return NULL;
+  }
   check = cf_get_nstring(root, "app_key", NT_KEY_MAX);
   if(!check) {
     cf_free(root);
@@ -310,10 +321,15 @@ void *nt_poll(void *queue) {
   }
   strcpy(last_tweet, check);
 
+      printf("poll\n");
+      fflush(stdout);
+
   //Poll for tweets every 20 seconds
   while(1) {
     tweet = nt_get_tweet(NT_TWITTER_POLL, app, user);
     if(!tweet) {
+      printf("No tweet\n");
+      fflush(stdout);
       return NULL;
     }
     
@@ -329,7 +345,6 @@ void *nt_poll(void *queue) {
     sleep(20);
   }
   pthread_exit(NULL);
->>>>>>> Cleaned up notifications
 }
 
 nt_message *nt_get_tweet(const char *uri, nt_token app, nt_token user) {

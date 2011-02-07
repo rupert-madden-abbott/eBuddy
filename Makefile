@@ -90,8 +90,8 @@ config_test: config.o config_test.o
 config_test.o: test/config_test.c test/test.h source/config.h
 	$(CC) $(CFLAGS) -c test/config_test.c -o build/config_test.o $(INCLUDE)
 
-notify_test: notify_test.o notify.o config.o queue.o
-	$(CC) $(CFLAGS) build/notify_test.o build/notify.o build/config.o build/queue.o $(LIB) $(LIB_LINUX) -o build/notify_test
+notify_test: notify_test.o notify.o config.o queue.o utility.o
+	$(CC) $(CFLAGS) build/notify_test.o build/notify.o build/config.o build/queue.o build/utility.o $(LIB) $(LIB_LINUX) -o build/notify_test
 
 notify_test.o: test/notify_test.c test/test.h source/notify.h
 	$(CC) $(CFLAGS) -c test/notify_test.c -o build/notify_test.o $(INCLUDE)

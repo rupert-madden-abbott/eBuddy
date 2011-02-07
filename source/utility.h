@@ -41,7 +41,7 @@ typedef enum ut_error_code {
   UT_ERR_CURL_SETUP, //failed to setup CURL
   UT_ERR_OAUTH_SIGN, //failed to sign an oauth url
   UT_ERR_INVALID_RESPONSE, //response is corrupt
-} ut_error_code;
+} ut_ErrorCode;
 
 /* test to see if a path is valid and writable */
 int ut_test_path(const char *path);
