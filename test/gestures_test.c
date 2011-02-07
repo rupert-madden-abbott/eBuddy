@@ -1,4 +1,4 @@
-#include "gestures.h"
+#include "gesture.h"
 #include "test.h"
 
 int main(void) {
