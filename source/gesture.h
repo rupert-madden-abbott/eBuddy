@@ -30,10 +30,18 @@
 
 
 //defined servo phidget library fucntions
-#define GS_SETPOS(a, b, c) error = CPhidgetAdvancedServo_setPosition (a, b, c)
-#define GS_SETENG(a, b, c) error = CPhidgetAdvancedServo_setEngaged(a, b, c)
-#define GS_SETACC(a, b, c) error = CPhidgetAdvancedServo_setAcceleration(a, b, c)
-#define GS_SETVEL(a, b, c) error = CPhidgetAdvancedServo_setVelocityLimit(a, b, c)
+#define GS_SETPOS(a, b, c) if((error = CPhidgetAdvancedServo_setPosition (a, b, c)) != 0) { \
+                             return error; \
+                           }
+#define GS_SETENG(a, b, c) if((error = CPhidgetAdvancedServo_setEngaged(a, b, c)) != 0) { \
+                             return error; \
+                           }
+#define GS_SETACC(a, b, c) if((error = CPhidgetAdvancedServo_setAcceleration(a, b, c)) != 0) { \
+                             return error; \
+                           }
+#define GS_SETVEL(a, b, c) if((error = CPhidgetAdvancedServo_setVelocityLimit(a, b, c)) != 0) { \
+                             return error; \
+                           }
 
 #define GS_RIGHTEYE 0
 #define GS_LEFTEYE 2
