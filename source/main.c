@@ -65,6 +65,7 @@ int main(void) {
   //all other errors are fatal
   else if(rc) {
     printf("Error reading state file\n");
+    em_destroy(emotions);
     exit(1);
   }
   
@@ -73,6 +74,7 @@ int main(void) {
   
   if(rc) {
     printf("Error initialising phidgits\n");
+    em_destroy(emotions);
     exit(1);
   }
 
@@ -81,6 +83,8 @@ int main(void) {
   
   if(rc) {
     printf("Error initialising gestures\n");
+    em_destroy(emotions);
+    ph_destruct(&phhandle);
     exit(1);
   }
 
@@ -89,6 +93,9 @@ int main(void) {
   
   if(rc) {
     printf("Error initialising input\n");
+    gsi_gesture_close(&phhandle);
+    em_destroy(emotions);
+    ph_destruct(&phhandle);
     exit(1);
   }*/
   
@@ -98,11 +105,14 @@ int main(void) {
   if(!notifications) {
     printf("Could not initialise notification queue\n");
     printf("Check enough memory is available and try again\n");
+    gsi_gesture_close(&phhandle);
+    em_destroy(emotions);
+    ph_destruct(&phhandle);
     exit(1);
   }
   
   //initialise notification system
-  rc = nt_init(notifications, MN_NT_CONFIG);
+  //rc = nt_init(notifications, NT_CONFIG);
   
   if(rc) {
     printf("Error initialising notification system\n");
@@ -117,7 +127,7 @@ int main(void) {
   em_save(emotions, MN_EM_STATE_PATH);
   em_destroy(emotions);
   gsi_gesture_close(&phhandle);
-  nt_destroy(notifications);
+  //nt_destroy();
   ph_destruct(&phhandle);
   return 0;
 }
