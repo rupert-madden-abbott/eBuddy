@@ -312,8 +312,8 @@ int gs_raise_left(CPhidgetAdvancedServoHandle servo)
 int gs_raise_right(CPhidgetAdvancedServoHandle servo)
 {
   int error;
-  GS_SETENG(servo, GS_SERVO_LEFTARM, 1);
-  GS_SETPOS(servo, GS_SERVO_LEFTARM, 80);
+  GS_SETENG(servo, GS_SERVO_RIGHTARM, 1);
+  GS_SETPOS(servo, GS_SERVO_RIGHTARM, 80);
   usleep(UT_MICRO * 1500);
   gs_set_pos(servo);
   return 0;
