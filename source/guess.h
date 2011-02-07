@@ -1,3 +1,11 @@
+/**
+ * @file guess.h
+ * @author Andrew Pickin
+ *
+ * The guess module is run when the user enters guess mode to play the  
+ * guessing game
+ */
+
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
@@ -20,4 +28,8 @@
 // number of fun points added if game is won
 #define GUESS_FUNPOINTS 30 
 
+/**
+ * Allows the user to play the eBuddy's guessing game
+ * Returns from the function when the user wins or loses the game
+ */
 int guess_main(em_State *emotions, qu_queue *notifications, ph_handle *phandle);
