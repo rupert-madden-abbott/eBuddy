@@ -38,7 +38,7 @@ int main(void) {
   ph_handle phhandle;
   ut_ErrorCode rc;
 
-  /*//create a new emotion state using the emotion table
+  //create a new emotion state using the emotion table
   emotions = em_init(mn_emotions, MN_NUM_EMOTIONS);
 
   if(!emotions) {
@@ -46,10 +46,10 @@ int main(void) {
     printf("Check enough memory is available and try again\n");
     exit(1);
   }
-  
+
   //load the emotion values from the last session
   rc = em_load(emotions, MN_EM_STATE_PATH);
-  
+   /* 
   //if file is corrupt keep running using defaults
   if(rc == UT_ERR_BAD_FILE) {
     printf("Error: state file is corrupt\n");
