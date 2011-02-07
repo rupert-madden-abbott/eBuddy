@@ -1,12 +1,9 @@
+#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include "utility.h"
 
-<<<<<<< HEAD
-
 //test to see if a path is valid and writable
-=======
->>>>>>> Commented part of the utility module
 int ut_test_path(const char *path) {
   FILE *file;
 	
