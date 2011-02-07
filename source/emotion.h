@@ -203,7 +203,8 @@ ut_ErrorCode em_load(em_State *state, const char *path);
 /**
  * Saves a state to a file specified by path. The file will be created if it
  * does not exist. Returns UT_ERR_NONE on success or UT_ERR_BAD_PATH if the
- * path cannot be written to.
+ * path cannot be written to. Not that this function uses mktime which is
+ * not thread safe.
  *
  * @arg state The state to save
  * @arg path The path of the file to save to
