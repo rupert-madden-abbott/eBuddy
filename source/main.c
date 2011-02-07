@@ -46,10 +46,10 @@ int main(void) {
     printf("Check enough memory is available and try again\n");
     exit(1);
   }
-  
+
   //load the emotion values from the last session
   rc = em_load(emotions, MN_EM_STATE_PATH);
-  
+   /* 
   //if file is corrupt keep running using defaults
   if(rc == UT_ERR_BAD_FILE) {
     printf("Error: state file is corrupt\n");
@@ -97,7 +97,7 @@ int main(void) {
     em_destroy(emotions);
     ph_destruct(&phhandle);
     exit(1);
-  }
+  }*/
   
   //create the notification queue
   notifications = qu_init();
