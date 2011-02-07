@@ -212,7 +212,7 @@ ut_ErrorCode rc_main(em_State *emotions, qu_queue *notifications, ph_handle *phh
   
   while(running) {
 
-    //look for input events
+    /*//look for input events
     input_event = in_get_input();
   
     //react to events
@@ -307,9 +307,11 @@ ut_ErrorCode rc_main(em_State *emotions, qu_queue *notifications, ph_handle *phh
           mn_run(em_action->critical_mode, emotions, notifications, phhandle);
         }
       }
-    }
+    }*/
     
     //Check if the queue is has notifications
+    printf("%i ", qu_size(notifications));
+    fflush(stdout);
     if(qu_size(notifications) > 0) {
       //get notification events
       message = qu_pop(notifications);
