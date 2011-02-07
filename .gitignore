@@ -4,3 +4,4 @@ out/
 build/
 *.o
 *.gch
+notify.json

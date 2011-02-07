@@ -32,6 +32,7 @@ int cf_write(const cf_json *root, const char *path) {
 cf_json *cf_create(const char *str, const char *path) {
   int rc;
   json_t *root;
+  json_error_t error;
 
   //Ensure str and path are set
   if(!str || !path) {
@@ -39,8 +40,12 @@ cf_json *cf_create(const char *str, const char *path) {
     return NULL;
   }
 
-  root = json_loads(str, 0, NULL);
+  root = json_loads(str, 0, &error);
   if(!root) {
+  
+      printf("%s\n", error.text);
+  fflush(stdout);  
+
     return NULL;
   }
   

@@ -308,14 +308,21 @@ ut_ErrorCode rc_main(em_State *emotions, qu_queue *notifications, ph_handle *phh
         }
       }
     }
+    
+    //Check if the queue is has notifications
+    if(qu_size(notifications) > 0) {
+      //get notification events
+      message = qu_pop(notifications);
   
-    //get notification events
-    message = qu_pop(notifications);
-  
-    //do a gesture and print the text on the screen
-    if(message) {
-      gsi_react(&RC_MSG_ACTION, phhandle);
-      gsi_printLCD(message->text, phhandle);
+      //do a gesture and print the text on the screen
+      if(message) {
+        //return errors to parent mode 
+        if(message->error) {
+          return message->error;
+        }
+        gsi_react(&RC_MSG_ACTION, phhandle);
+        gsi_printLCD(message->text, phhandle);
+      }
     }
   
     sleep(RC_MAIN_PAUSE);

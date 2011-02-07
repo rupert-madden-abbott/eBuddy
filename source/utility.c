@@ -23,16 +23,16 @@ int ut_isint(char *line) {
   //reject empty strings
   rc = strlen(line);
   if(rc == 0) {
-    return ERR_UNKNOWN;
+    return UT_ERR_UNKNOWN;
   }
   
   for(i = 0; i < strlen(line); i++) {
     //reject characters that aren't digits
     rc = isdigit(line[i]);
     if(!rc) {
-      return ERR_UNKNOWN;
+      return UT_ERR_UNKNOWN;
     }
   }
   
-  return ERR_NONE;  
+  return UT_ERR_NONE;  
 }

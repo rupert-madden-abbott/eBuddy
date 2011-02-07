@@ -1,16 +1,5 @@
-//#include <string.h>
-//#include <curl/curl.h>
-//#include <pthread.h>
-//#include <unistd.h>
-//#include <oauth.h>
-//#include <ctype.h>
-//#include <string.h>
-//#include <jansson.h>
-//#include "utility.h"
-//#include "config.h"
 #include "queue.h"
 #include "notify.h"
-//#include "test.h"
 
 int main(void) {
   int rc;
@@ -19,13 +8,23 @@ int main(void) {
   nt_message *msg;
 
   rc = nt_init(queue, "conf/notify.json");
+  if(rc) {
+    printf("%i\n", rc);
+    return 1;
+  }
   
   while(1) {
     sleep(1);
     if(qu_size(queue) > 0) {
       msg = qu_pop(queue);
+      if(msg) {
+        if(msg->error) {
+          printf("Thread threw an error\n");
+          return 0;
+        }
       printf("%s", msg->text);
       fflush(stdout);
+      }
     }
   }
  

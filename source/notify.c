@@ -14,7 +14,6 @@
 int nt_init(qu_queue *queue, const char *config) {
   int         authenticated, 
               rc;
-  nt_arg      *data = { { "", "" }, { "", "" }, queue, config };
   nt_token    user = { "", "" }, 
               app = { "", "" };
   cf_json     *root = NULL;
@@ -25,10 +24,6 @@ int nt_init(qu_queue *queue, const char *config) {
   if(rc) {
     return UT_ERR_CURL_SETUP;
   }
-  
-  //Initialize nt_arg
-  data->
-  
 
   //Attempt to load the config file or create a default if it cannot be found
   root = cf_read(config);
@@ -38,7 +33,7 @@ int nt_init(qu_queue *queue, const char *config) {
       return UT_ERR_JSON_ENCODE;
     }
   }
-  
+
   //Initialize app key
   rc = strlen(NT_APP_KEY);
   if(rc > NT_KEY_MAX) {
@@ -119,7 +114,10 @@ int nt_authenticate(const nt_token app, nt_token *user, const char *config,
   }       
   
   //Open a browser with the specified url
-  if(system(url)) return UT_ERR_UNKNOWN;
+  rc = system(url);
+  if(rc) {
+    return UT_ERR_UNKNOWN;
+  }
   
   //Keep requesting an access token until one is returned
   j = 0;
@@ -127,7 +125,7 @@ int nt_authenticate(const nt_token app, nt_token *user, const char *config,
     if(j) {
       //If the user has entered an incorrect value, print an error message
       rc = printf("The PIN you entered was rejected. Please try again: ");
-      if(rc) {
+      if(rc < 0) {
         return UT_ERR_UNKNOWN;
       }
     }
@@ -138,7 +136,7 @@ int nt_authenticate(const nt_token app, nt_token *user, const char *config,
       //If the user has entered an incorrect value, print an error message
       if(i) {
         rc = printf("You must enter a whole number. Please try again: ");
-        if(rc) {
+        if(rc < 0) {
           return UT_ERR_UNKNOWN;
         }
       }
@@ -158,7 +156,7 @@ int nt_authenticate(const nt_token app, nt_token *user, const char *config,
     
     rc = snprintf(url, NT_URL_MAX, "%s?oauth_verifier=%s", NT_TWITTER_ACCESS, 
                   pin);
-    if(rc) {
+    if(rc < 0) {
       return UT_ERR_UNKNOWN;
     }
     
@@ -186,7 +184,7 @@ int nt_authenticate(const nt_token app, nt_token *user, const char *config,
   if(rc) {
     return rc;
   }
-  
+
   return UT_ERR_NONE;
 }
 
@@ -267,7 +265,7 @@ char *nt_parse_arg(char *arg, const char *name) {
   return strtok(NULL, "=");
 }
 
-void *nt_poll(void *arg) {
+void *nt_poll(void *queue) {
   int rc;
   cf_json *root;
   nt_message *tweet; 
@@ -275,34 +273,44 @@ void *nt_poll(void *arg) {
   char last_tweet[NT_ID_MAX], *check;
   nt_token user = { "", "" }, app = { "", "" };
 
+  //Make space for the tweet
+  tweet = (nt_message *)malloc(sizeof(nt_message));
+  if(!tweet) {
+    /*If a message can't be created then there is no way to tell the parent
+    thread that an error has happened. Therefore, just exit*/
+    exit(1);
+  }
+  
+  tweet->error = UT_ERR_UNKNOWN;
+
   //Attempt to load the config file
   root = cf_read(config);
   if(!root) {
+    qu_push(queue, tweet);
     return NULL;
   }
 
   //Extract data from config file
   rc = strlen(NT_APP_KEY);
   if(rc > NT_KEY_MAX) {
-    return NULL;
-  }
-  check = cf_get_nstring(root, "app_key", NT_KEY_MAX);
-  if(!check) {
     cf_free(root);
+    qu_push(queue, tweet);
     return NULL;
   }
-  strcpy(app.key, check);
-  
-  check = cf_get_nstring(root, "app_secret", NT_KEY_MAX);
-  if(!check) {
+  strcpy(app.key, NT_APP_KEY);
+
+  rc = strlen(NT_APP_SECRET);
+  if(rc > NT_KEY_MAX) {
     cf_free(root);
+    qu_push(queue, tweet);
     return NULL;
   }
-  strcpy(app.secret, check);
-  
+  strcpy(app.secret, NT_APP_SECRET);
+
   check = cf_get_nstring(root, "user_key", NT_KEY_MAX);
   if(!check) {
     cf_free(root);
+    qu_push(queue, tweet);
     return NULL;
   }
   strcpy(user.key, check);
@@ -310,55 +318,53 @@ void *nt_poll(void *arg) {
   check = cf_get_nstring(root, "user_secret", NT_KEY_MAX);
   if(!check) {
     cf_free(root);
+    qu_push(queue, tweet);
     return NULL;
   }
   strcpy(user.secret, check);
-  
+
   check = cf_get_nstring(root, "last_tweet", NT_KEY_MAX);
   if(!check) {
     cf_free(root);
+    qu_push(queue, tweet);
     return NULL;
   }
   strcpy(last_tweet, check);
-
-      printf("poll\n");
-      fflush(stdout);
-
+ 
   //Poll for tweets every 20 seconds
   while(1) {
-    tweet = nt_get_tweet(NT_TWITTER_POLL, app, user);
+    tweet = nt_get_tweet(NT_TWITTER_POLL, app, user, tweet);
     if(!tweet) {
-      printf("No tweet\n");
-      fflush(stdout);
+      cf_free(root);
+      tweet->error = UT_ERR_UNKNOWN;
+      qu_push(queue, tweet);
       return NULL;
     }
     
-    printf("Outside: Last Tweet: %s This Tweet: %s\n\n", last_tweet, tweet->id);
-    fflush(stdout);
     if(strcmp(tweet->id, last_tweet)) {
-      printf("Inside: Last Tweet: %s This Tweet: %s\n\n", last_tweet, tweet->id);
       strncpy(last_tweet, tweet->id, NT_ID_MAX);
       cf_set_string(root, "last_tweet", tweet->id);
       cf_write(root, config);
+      tweet->error = UT_ERR_NONE;
       qu_push(queue, tweet);
     }
     sleep(20);
   }
-  pthread_exit(NULL);
+  
+  return NULL;
 }
 
-nt_message *nt_get_tweet(const char *uri, nt_token app, nt_token user) {
-  nt_message *tweet;
+nt_message *nt_get_tweet(const char *uri, nt_token app, nt_token user, 
+                         nt_message *tweet) {
   cf_json *root, *object, *user_object;
   char *url = NULL, *postargs = NULL, *response = NULL, *check;
- 
   //Prepare the request with an oauth signature
   url = oauth_sign_url2(uri, &(postargs), OA_HMAC, "GET", app.key, app.secret, 
                         user.key, user.secret);
   if(!url) {
     return NULL;
   }
-  
+
   //Send the request
   response = nt_curl_get(url, postargs);
   free(postargs);
@@ -373,7 +379,7 @@ nt_message *nt_get_tweet(const char *uri, nt_token app, nt_token user) {
   if(!root) {
     return NULL;
   }
-  
+
   //Get the array of tweets
   object = cf_get_array(root, 0);
   if(!object) {
@@ -382,14 +388,14 @@ nt_message *nt_get_tweet(const char *uri, nt_token app, nt_token user) {
   }
 
   //Make space for the tweet
-  tweet = (nt_message *)malloc(sizeof(nt_message));
+  tweet = (nt_message *)realloc(tweet, sizeof(nt_message));
   if(!tweet) {
     cf_free(root);
     return NULL;
   } 
   
   //Set the application to twitter
-  strncpy(tweet->app, "twitter", NT_APP_MAX);
+  strcpy(tweet->app, "twitter");
   
   //Get the text of the tweet
   check = cf_get_nstring(object, "text", NT_TEXT_MAX);
@@ -423,6 +429,7 @@ nt_message *nt_get_tweet(const char *uri, nt_token app, nt_token user) {
     free(tweet);
     return NULL;
   }
+  strcpy(tweet->id, check);
     
   return tweet;
 }
@@ -438,14 +445,14 @@ char *nt_curl_get (const char *uri, const char *query) {
   if(!url) {
     return NULL;
   }
-  
+
   //Create the url from the uri and the query string
   rc = sprintf(url, "%s?%s", uri, query);
-  if(rc) {
+  if(rc < 0) {
     free(url);
     return NULL;
   }
-  
+ 
   //Initialise curl
   curl = curl_easy_init();
   if(!curl) {
