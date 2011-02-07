@@ -4,11 +4,11 @@
 #include <stdio.h>
 
 #ifdef __linux__
-#define OS LINUX
+#define UT_OS UT_OS_LINUX
 #endif
 #ifndef NeXTBSD
 #ifdef __APPLE__
-#define OS OSX
+#define UT_OS UT_OS_OSX
 #endif
 #endif
 
@@ -18,29 +18,29 @@
 
 #define UT_EPOCH_YEAR 1900
 
-#define MICRO 1000
+#define UT_MICRO 1000
 
-enum os {
-  LINUX,
-  OSX,
-  WINDOWS
-};
+typedef enum ut_os_type {
+  UT_OS_LINUX,
+  UT_OS_OSX,
+  UT_OS_WINDOWS
+} ut_OSType;
 
-typedef enum error_code {
-  ERR_UNKNOWN = -1,	//unknown error
-  ERR_NONE = 0,		//no error
-  ERR_CLOSE,		//shutdown signal was recieved
-  ERR_BAD_PATH,		//file path is invalid
-  ERR_BAD_FILE,		//file is corrupt
-  ERR_BAD_ARG,		//invalid argument to a function
-  ERR_BAD_MODE,		//invalid run mode selected
-  ERR_BAD_ACTION,	//an invalid action was requested
-  ERR_EMPTY,			//no data to read
-  ERR_JSON_ENCODE,  //failed to encode data into JSON
-  ERR_JSON_DECODE,  //failed to decode JSON data
-} error_code;
+typedef enum ut_error_code {
+  UT_ERR_UNKNOWN = -1,	//unknown error
+  UT_ERR_NONE = 0,		//no error
+  UT_ERR_CLOSE,		//shutdown signal was recieved
+  UT_ERR_BAD_PATH,		//file path is invalid
+  UT_ERR_BAD_FILE,		//file is corrupt
+  UT_ERR_BAD_ARG,		//invalid argument to a function
+  UT_ERR_BAD_MODE,		//invalid run mode selected
+  UT_ERR_BAD_ACTION,	//an invalid action was requested
+  UT_ERR_EMPTY,			//no data to read
+  UT_ERR_JSON_ENCODE,  //failed to encode data into JSON
+  UT_ERR_JSON_DECODE,  //failed to decode JSON data
+} ut_ErrorCode;
 
 /* test to see if a path is valid and writable */
-int test_path(const char *path);
+int ut_test_path(const char *path);
 
 #endif

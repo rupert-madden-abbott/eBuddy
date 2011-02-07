@@ -9,6 +9,7 @@
 #include "queue.h"
 #include "notify.h"
 #include "mode.h"
+#include "gesture_interface.h"
 #include "main.h"
 
 //list of emotions and their decay times etc
@@ -31,7 +32,7 @@ int main(void) {
   em_State *emotions;
   qu_queue *notifications;
   ph_handle phhandle;
-  error_code rc;
+  ut_ErrorCode rc;
 
   //create a new emotion state using the emotion table
   emotions = em_create(main_emotions, NUM_EMOTIONS);
@@ -46,13 +47,13 @@ int main(void) {
   rc = em_load(emotions, EM_STATE_PATH);
   
   //if file is corrupt keep running using defaults
-  if(rc == ERR_BAD_FILE) {
+  if(rc == UT_ERR_BAD_FILE) {
     printf("Error: state file is corrupt\n");
     printf("Reseting to defaults\n");
   }
   
   //if file doesn't exist but path is valid keep running
-  else if(rc == ERR_BAD_PATH && test_path(EM_STATE_PATH)) {
+  else if(rc == UT_ERR_BAD_PATH && ut_test_path(EM_STATE_PATH)) {
     printf("Could not find state file\n");
     printf("Reseting to defaults\n");
   }
@@ -65,6 +66,7 @@ int main(void) {
   
   //initialise the phidgets
   rc = ph_init(CONFIG_PATH, &phhandle);
+  
   if(rc) {
   	printf("Error initialising phidgits\n");
   	exit(1);
@@ -72,6 +74,7 @@ int main(void) {
 
   //initialise gestures
   rc = gsi_gesture_init(&phhandle);
+  
   if(rc) {
     printf("Error initialising gestures\n");
     exit(1);
@@ -79,6 +82,7 @@ int main(void) {
 
   //initialise input 
   rc = in_input_init(&phhandle);
+  
   if(rc) {
     printf("Error initialising input\n");
     exit(1);
@@ -102,7 +106,7 @@ int main(void) {
   }
   
   //enter main interactive mode
-  rc = mode_run(STARTUP_MODE, emotions, notifications, &phhandle);
+  rc = md_run(STARTUP_MODE, emotions, notifications, &phhandle);
   
   //finalise and unload all modules
   printf("Shutting down\n");

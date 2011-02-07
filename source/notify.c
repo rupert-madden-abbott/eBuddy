@@ -21,56 +21,56 @@ int nt_init(qu_queue *queue, const char *config) {
   curl_global_init(CURL_GLOBAL_ALL);
   
   root = cf_read(config);
-  if(!root) return ERR_UNKNOWN;
+  if(!root) return UT_ERR_UNKNOWN;
   
   disabled = cf_get_integer(root, "disabled");
-  if(disabled) return ERR_NONE;
+  if(disabled) return UT_ERR_NONE;
 
   authenticated = cf_get_integer(root, "authenticated");
   strncpy(app.key, cf_get_string(root, "app_key"), NT_KEY_MAX);
-  if(!app.key) return ERR_UNKNOWN;
+  if(!app.key) return UT_ERR_UNKNOWN;
   strncpy(app.secret, cf_get_string(root, "app_secret"), NT_KEY_MAX);
-  if(!app.secret) return ERR_UNKNOWN;
+  if(!app.secret) return UT_ERR_UNKNOWN;
   
   if(authenticated) {
     strncpy(user.key, cf_get_string(root, "user_key"), NT_KEY_MAX);
-    if(!user.key) return ERR_UNKNOWN;
+    if(!user.key) return UT_ERR_UNKNOWN;
     strncpy(user.secret, cf_get_string(root, "user_secret"), NT_KEY_MAX);
-    if(!user.secret) return ERR_NONE;
+    if(!user.secret) return UT_ERR_NONE;
   }
   else { 
-    if(nt_ask("Would you like to setup Twitter now?", &input)) return ERR_UNKNOWN;
+    if(nt_ask("Would you like to setup Twitter now?", &input)) return UT_ERR_UNKNOWN;
     if(nt_isno(input)) {
       input = '\0';
-      if(nt_ask("Would you like to disable the Twitter feature?", &input)) return ERR_UNKNOWN;
+      if(nt_ask("Would you like to disable the Twitter feature?", &input)) return UT_ERR_UNKNOWN;
       if(nt_isyes(input)) {
-        if(cf_set_integer(root, "disabled", 1)) return ERR_UNKNOWN;
-        if(cf_write(root, config)) return ERR_UNKNOWN;
+        if(cf_set_integer(root, "disabled", 1)) return UT_ERR_UNKNOWN;
+        if(cf_write(root, config)) return UT_ERR_UNKNOWN;
         printf("Twitter has been disabled\n");
-        return ERR_NONE;
+        return UT_ERR_NONE;
       }
       else if(nt_isno(input)) {
         printf("You will have the opportunity to setup Twitter when you next "
                "start your eBuddy\n");
-        return ERR_NONE;
+        return UT_ERR_NONE;
       }
-      else return ERR_UNKNOWN;
+      else return UT_ERR_UNKNOWN;
     }
     else if(nt_isyes(input)) {
       printf("Setting up Twitter...\n");
-      if(nt_authenticate(app, &user, config)) return ERR_UNKNOWN;
+      if(nt_authenticate(app, &user, config)) return UT_ERR_UNKNOWN;
     }
-    else return ERR_UNKNOWN;
+    else return UT_ERR_UNKNOWN;
   }
 
   pthread_create(&thread, NULL, nt_poll, queue);  
 
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }
 
 int nt_destroy() {
   curl_global_cleanup();
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }
 
 void *nt_poll(void *queue) {
@@ -112,22 +112,22 @@ int nt_authenticate(nt_token app, nt_token *user, const char *config) {
   cf_json *root;
   
   //Get request token
-  if(nt_request_token(NT_TWITTER_REQUEST, app, user)) return ERR_UNKNOWN;
+  if(nt_request_token(NT_TWITTER_REQUEST, app, user)) return UT_ERR_UNKNOWN;
 
   //Get authorization pin
-  if(OS == LINUX) {
+  if(UT_OS == UT_OS_LINUX) {
     sprintf(url, "xdg-open %s?oauth_token=%s", NT_TWITTER_AUTHORIZE, 
             user->key);
   }
-  else if(OS == OSX) {
+  else if(UT_OS == UT_OS_OSX) {
     sprintf(url, "open %s?oauth_token=%s", NT_TWITTER_AUTHORIZE, user->key);
   }
-  else return ERR_UNKNOWN;
+  else return UT_ERR_UNKNOWN;
   
   printf("In a moment, your browser will open. Please grant access to this "
          "application. You may need to login to your account. Once you have "
          "done so, enter the PIN below\nPIN: ");
-  if(system(url)) return ERR_UNKNOWN;
+  if(system(url)) return UT_ERR_UNKNOWN;
   
   j = 0;
   do {
@@ -150,15 +150,15 @@ int nt_authenticate(nt_token app, nt_token *user, const char *config) {
   
   root = cf_read(config);
 
-  if(cf_set_string(root, "user_key", user->key)) return ERR_UNKNOWN;
-  if(cf_set_string(root, "user_secret", user->secret)) return ERR_UNKNOWN;
-  if(cf_set_integer(root, "authenticated", 1)) return ERR_UNKNOWN;
+  if(cf_set_string(root, "user_key", user->key)) return UT_ERR_UNKNOWN;
+  if(cf_set_string(root, "user_secret", user->secret)) return UT_ERR_UNKNOWN;
+  if(cf_set_integer(root, "authenticated", 1)) return UT_ERR_UNKNOWN;
 
-  if(cf_write(root, config)) return ERR_UNKNOWN;
+  if(cf_write(root, config)) return UT_ERR_UNKNOWN;
   
   cf_free(root);
   
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }
 
 int nt_request_token(const char *uri, nt_token app, nt_token *user) {
@@ -169,35 +169,35 @@ int nt_request_token(const char *uri, nt_token app, nt_token *user) {
   response = oauth_http_post(url, postargs);
   if(postargs) free(postargs);
   if(url) free(url);
-  if(nt_parse_response(response, user)) return ERR_UNKNOWN;
-  return ERR_NONE;
+  if(nt_parse_response(response, user)) return UT_ERR_UNKNOWN;
+  return UT_ERR_NONE;
 }
 
 int nt_parse_response(char *response, nt_token *token) {
   char **rv = NULL, key[70], secret[70];
   
-  if(oauth_split_url_parameters(response, &rv) < 2) return ERR_UNKNOWN;
+  if(oauth_split_url_parameters(response, &rv) < 2) return UT_ERR_UNKNOWN;
   strcpy(key, rv[0]);
   strcpy(secret, rv[1]);
   free(rv);
   
-  if(nt_parse_arg(key, "oauth_token", token->key)) return ERR_UNKNOWN;
-  if(nt_parse_arg(secret, "oauth_token_secret", token->secret)) return ERR_UNKNOWN;
+  if(nt_parse_arg(key, "oauth_token", token->key)) return UT_ERR_UNKNOWN;
+  if(nt_parse_arg(secret, "oauth_token_secret", token->secret)) return UT_ERR_UNKNOWN;
   
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }
 
 int nt_parse_arg(char *arg, const char *type, char *value) {
   char *piece;
   
   piece = strtok(arg, "=");
-  if(!piece) return ERR_UNKNOWN;
-  if(strcmp(piece, type)) return ERR_UNKNOWN;
+  if(!piece) return UT_ERR_UNKNOWN;
+  if(strcmp(piece, type)) return UT_ERR_UNKNOWN;
   piece = strtok(NULL, "=");
-  if(!piece) return ERR_UNKNOWN;
+  if(!piece) return UT_ERR_UNKNOWN;
   memcpy(value, piece, 50 * sizeof(char));
   
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }
 
 nt_message *nt_get_tweet(const char *uri, nt_token app, nt_token user) {
@@ -269,12 +269,12 @@ size_t WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data) {
 
 int nt_validate_int(char *line) {
   unsigned int i;
-  if(strlen(line) == 0) return ERR_UNKNOWN;
+  if(strlen(line) == 0) return UT_ERR_UNKNOWN;
 
   for(i = 0; i < strlen(line); i++) {
-    if(!isdigit((int) line[i])) return ERR_UNKNOWN;
+    if(!isdigit((int) line[i])) return UT_ERR_UNKNOWN;
   }
-  return ERR_NONE;  
+  return UT_ERR_NONE;  
 }
 
 int nt_flush(void) {
@@ -282,22 +282,22 @@ int nt_flush(void) {
   
   while ((c = getchar()) != '\n' && c != EOF);
   
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }
 
 int nt_isyes(char input) {
-  if(input == 'y' || input == 'Y') return ERR_UNKNOWN;
-  else return ERR_NONE;
+  if(input == 'y' || input == 'Y') return UT_ERR_UNKNOWN;
+  else return UT_ERR_NONE;
 }
 
 int nt_isno(char input) {
-  if(input == 'n' || input == 'N') return ERR_UNKNOWN;
-  else return ERR_NONE;
+  if(input == 'n' || input == 'N') return UT_ERR_UNKNOWN;
+  else return UT_ERR_NONE;
 }
 
 int nt_isans(char input) {
-  if(nt_isyes(input) || nt_isno(input)) return ERR_UNKNOWN;
-  else return ERR_NONE;
+  if(nt_isyes(input) || nt_isno(input)) return UT_ERR_UNKNOWN;
+  else return UT_ERR_NONE;
 }
 
 int nt_ask(const char *question, char *input) {
@@ -309,10 +309,10 @@ int nt_ask(const char *question, char *input) {
       printf("Please enter y or n: ");
     }
     *input = getchar();
-    if(nt_flush()) return ERR_UNKNOWN;
+    if(nt_flush()) return UT_ERR_UNKNOWN;
     i = 1;
   } while(!nt_isans(*input));
   
-  return ERR_NONE;
+  return UT_ERR_NONE;
 }
 

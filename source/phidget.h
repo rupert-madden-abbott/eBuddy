@@ -6,7 +6,6 @@
 #include <phidget21.h>
 
 
-
 typedef struct ph_handle{
 CPhidgetAdvancedServoHandle servohandle;
 CPhidgetRFIDHandle          RFIDhandle;

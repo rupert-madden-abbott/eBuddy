@@ -22,7 +22,7 @@ typedef struct input_action {
   const gsi_Reaction full_gesture;
   const gsi_Reaction normal_gesture;
   const gsi_Reaction low_gesture;
-  const run_mode mode;
+  const md_mode mode;
 } InputAction;
 
 //represents the gesture to perform when an emotion reaches a certain level
@@ -30,24 +30,24 @@ typedef struct emotion_action {
   const gsi_Reaction full_gesture;
   const gsi_Reaction low_gesture;
   const gsi_Reaction critical_gesture;
-  const run_mode critical_mode;
+  const md_mode critical_mode;
 } EmotionAction;
 
 
 //list of alerts for each emotion
 //each reaction is a gesture function and a text string for the lcd
-const EmotionAction rct_em_action[NUM_EMOTIONS];
+const EmotionAction rc_em_action[NUM_EMOTIONS];
 
 
 //list of alerts and updates for each input
-const InputAction rct_in_action[IN_NUM_INPUTS];
+const InputAction rc_in_action[IN_NUM_INPUTS];
 
 
 //reaction to notifications
-const gsi_Reaction rct_msg_action;
+const gsi_Reaction rc_msg_action;
 
 //main loop
-int rct_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle);
-int rct_sleep(em_State *emotions, qu_queue *notifications, ph_handle *phhandle);
+int rc_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle);
+int rc_sleep(em_State *emotions, qu_queue *notifications, ph_handle *phhandle);
 
 #endif
