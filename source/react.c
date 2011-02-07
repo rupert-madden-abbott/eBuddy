@@ -359,12 +359,19 @@ ut_ErrorCode rc_sleep(em_State *emotions, qu_queue *notifications, ph_handle *ph
     //look for emotion events but don't respond to them
     rc = em_check(emotions, &emotion_event);
   
-    //get notification events
-    message = qu_pop(notifications);
+    //Check if the queue is has notifications
+    if(qu_size(notifications) > 0) {
+      //get notification events
+      message = qu_pop(notifications);
   
-    //print the text on the screen
-    if(message) {
-      gsi_printLCD(message->text, phhandle);
+      //do a gesture and print the text on the screen
+      if(message) {
+        //return errors to parent mode 
+        if(message->error) {
+          return message->error;
+        }
+        gsi_printLCD(message->text, phhandle);
+      }
     }
     
     //get condition of primary sleep emotion
