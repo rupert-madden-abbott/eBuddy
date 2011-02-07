@@ -38,7 +38,7 @@ int main(void) {
   ph_handle phhandle;
   ut_ErrorCode rc;
 
-  /*//create a new emotion state using the emotion table
+  //create a new emotion state using the emotion table
   emotions = em_init(mn_emotions, MN_NUM_EMOTIONS);
 
   if(!emotions) {
@@ -112,7 +112,7 @@ int main(void) {
   }
   
   //initialise notification system
-  //rc = nt_init(notifications, NT_CONFIG);
+  rc = nt_init(notifications, MN_NT_CONFIG);
   
   if(rc) {
     printf("Error initialising notification system\n");
