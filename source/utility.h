@@ -1,8 +1,12 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
-#include <stdio.h>
-
+/**
+ * @define UT_OS
+ *
+ * Contains a ut_os_type representing the type of the
+ * current operating system.
+ */
 #ifdef __linux__
 #define UT_OS UT_OS_LINUX
 #endif

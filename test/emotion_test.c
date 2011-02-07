@@ -1,4 +1,4 @@
-#include "em.c"
+#include "emotion.c"
 
 const em_Emotion emotions[] = {
   {1,	0.0001,	14,	800,	450,	300},
