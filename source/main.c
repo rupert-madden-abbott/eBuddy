@@ -35,7 +35,7 @@ int main(void) {
   ut_ErrorCode rc;
 
   //create a new emotion state using the emotion table
-  emotions = em_create(main_emotions, NUM_EMOTIONS);
+  emotions = em_init(main_emotions, NUM_EMOTIONS);
 
   if(!emotions) {
     printf("Error initialising emotions\n");
