@@ -55,6 +55,9 @@ typedef enum ut_os_type {
  * UT_ERR_EMPTY          - No data to read
  * UT_ERR_JSON_ENCODE    - Failed to encode data into JSON
  * UT_ERR_JSON_DECODE    - Failed to decode JSON data
+ * UT_ERR_CURL_SETUP     - Failed to setup CURL
+ * UT_ERR_OAUTH_SIGN     - Failed to sign an oauth url
+ * UT_ERR_INVALID_RESPONSE - Response is corrupt
  */
 typedef enum ut_error_code {
   UT_ERR_UNKNOWN = -1,
@@ -67,7 +70,10 @@ typedef enum ut_error_code {
   UT_ERR_BAD_ACTION,
   UT_ERR_EMPTY,
   UT_ERR_JSON_ENCODE,
-  UT_ERR_JSON_DECODE
+  UT_ERR_JSON_DECODE,
+  UT_ERR_CURL_SETUP,
+  UT_ERR_OAUTH_SIGN,
+  UT_ERR_INVALID_RESPONSE,
 } ut_ErrorCode;
 
 /**
@@ -77,5 +83,7 @@ typedef enum ut_error_code {
  * @return 1 on success, 0 on failure
  */
 int ut_test_path(const char *path);
+
+int ut_isint(char *line);
 
 #endif
