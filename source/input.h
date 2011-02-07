@@ -1,3 +1,9 @@
+/**
+ * @file   input.h
+ * @author Ahmed Sarwat
+ *
+ * This module manages different inputs of phidgets.
+ */
 #ifndef INPUT_H
 #define INPUT_H
 
@@ -40,19 +46,99 @@ typedef enum in_input_type in_input_type;
 
 /*input initialisation*/
 int in_input_init(ph_handle *handle);
+
+/**
+ * Initialize RFID phidget handle
+ * 
+ * @param  RFID the RFID phidget handel
+ * 
+ */
 int in_RFID_init(CPhidgetRFIDHandle RFID);
+
+/**
+ * Initialize Interface Kit phidget handle
+ * 
+ * @param  ifKit the Interface Kit phidget handel
+ * 
+ */
 int in_kit_input_init(CPhidgetInterfaceKitHandle ifKit);
 /* RFID input header*/
-int in_RFID_TagHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char *TagVal);
-int in_RFID_TagLostHandler(CPhidgetRFIDHandle RFID, void *usrptr, unsigned char *TagVal);
+
+/* RFID input header*/
+
+/**
+ * reads any tag whenever it a tag is detected
+ * 
+ * @param  RFID the RFID phidget handel
+ * 
+ */
+int in_RFID_TagHandler(CPhidgetRFIDHandle RFID, void *usrptr, 
+                       unsigned char *TagVal);
+
+/**
+ * shows any tag after when it is no longer detected
+ * 
+ * @param  RFID the RFID phidget handel
+ * 
+ */
+int in_RFID_TagLostHandler(CPhidgetRFIDHandle RFID, void *usrptr, 
+                           unsigned char *TagVal);
+
+/**
+ * whenever a tag is detected , this function is called and hold the tag value
+ * to analyze and specify the input type
+ *
+ * @param  tagv holds the read tag value
+ * 
+ */
 void in_RFID_savetag(int tagv);
 /*Interface Kit input header*/
-int in_kit_InputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int State);
-int in_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int Value);
 
-void in_kit_laugh(int sindex, int svalue);
+/**
+ * senses any change in the input
+ * 
+ * @param  IFK the Interdace Kit phidget handel
+ * @param  Index the input index
+ * @param  State the input value
+ */
+int in_kit_InputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, 
+                              int Index, int State);
+
+/**
+ * senses any change in the sensors
+ * 
+ * @param  IFK the Interdace Kit phidget handel
+ * @param  Index the input index
+ * @param  Value the input value
+ */
+int in_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, 
+                               int Index, int Value);
+
+/**
+ * whenever a sensor change is detected , this function is called and hold the 
+ * sensor index and value value to analyze and specify the input type
+ * 
+ * @param  sindex the sensor index value
+ * @param  svalu the sensor value
+ */
+void in_kit_save(int sindex, int svalue);
 /*in_input_type functions header*/
+
+/**
+ * whenever it is called,it will return the last input
+ * 
+ * @return last input value
+ * 
+ */
 int in_get_input(void);
+
+/**
+ * whenever an input is detected , this function will be used to set the input
+ * but the input must be used before setting it with a new input type.
+ * 
+ * @param  input the last input type
+ * 
+ */
 void in_set_input(int input);
 
 #endif

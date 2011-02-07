@@ -93,10 +93,14 @@ int ph_lcd_DetachHandler(CPhidgetHandle TXT, void *userptr);
  *Callback functions called on phidget error
  *@arg ph_handle *handle Struct points to the handles for each phidget.
  */
-int ph_servo_ErrorHandler(CPhidgetHandle phidget_servo, void *p, int ErrorCode, const char *Description);
-int ph_RFID_ErrorHandler(CPhidgetHandle RFID, void *userptr, int ErrorCode, const char *unknown);
-int ph_kit_ErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const char *unknown);
-int ph_lcd_ErrorHandler(CPhidgetHandle TXT, void *userptr, int ErrorCode, const char *Description);
+int ph_servo_ErrorHandler(CPhidgetHandle phidget_servo, void *p, int ErrorCode,
+                                         const char *Description);
+int ph_RFID_ErrorHandler(CPhidgetHandle RFID, void *userptr, int ErrorCode,
+                                         const char *unknown);
+int ph_kit_ErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode,
+                                         const char *unknown);
+int ph_lcd_ErrorHandler(CPhidgetHandle TXT, void *userptr, int ErrorCode, 
+                                         const char *Description);
 ///}
 
 
