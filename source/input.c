@@ -96,6 +96,7 @@ int in_kit_InputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr,
                               int Index, int State)
 {
 	//printf("Digital Input: %d > State: %d\n", Index, State);
+	ph_kit_inputs(Index,State);
 	return 0;
 }
 
@@ -105,6 +106,19 @@ int in_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr,
 	//printf("Sensor: %d > Value: %d\n", Index, Value);
 	in_kit_save(Index,Value);
 	return 0;
+}
+
+void ph_kit_inputs(int in_index, int in_value)
+{
+	if(in_value == 1 && in_index==IN_POWER_ON)
+		{
+			in_set_input(INPT_POWER_ON);//Power ON
+		}
+	if(in_value == 1 && in_index==IN_POWER_OFF)
+		{
+			in_set_input(INPT_POWER_OFF);//Power OFF
+		}
+
 }
 
 void in_kit_save(int sindex, int svalue)
@@ -139,6 +153,10 @@ void in_kit_save(int sindex, int svalue)
 	else if (svalue==0 && sindex==IN_TOUCHTWO)
 		{
 			in_set_input(INPT_LEFT_HAND);//TOUCH TWO(LEFT HAND)
+		}
+	else if (svalue < 12 && sindex==IN_LIGHT)
+		{
+			in_set_input(INPT_DARK);//Dark
 		}
 }
 

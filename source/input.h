@@ -22,6 +22,9 @@
 #define IN_TOUCHONE 1
 #define IN_TOUCHTWO 2
 #define IN_FORCE 0
+#define IN_LIGHT 3
+#define IN_POWER_ON 0
+#define IN_POWER_OFF 1
 
 //number of inputs excluding inpt_none
 #define IN_NUM_INPUTS 11
@@ -44,7 +47,7 @@ typedef enum in_input_type in_input_type;
 
 
 
-/*input initialisation*/
+//input initialisation
 int in_input_init(ph_handle *handle);
 
 /**
@@ -62,9 +65,8 @@ int in_RFID_init(CPhidgetRFIDHandle RFID);
  * 
  */
 int in_kit_input_init(CPhidgetInterfaceKitHandle ifKit);
-/* RFID input header*/
+// RFID input header
 
-/* RFID input header*/
 
 /**
  * reads any tag whenever it a tag is detected
@@ -92,7 +94,7 @@ int in_RFID_TagLostHandler(CPhidgetRFIDHandle RFID, void *usrptr,
  * 
  */
 void in_RFID_savetag(int tagv);
-/*Interface Kit input header*/
+//Interface Kit input header
 
 /**
  * senses any change in the input
@@ -116,13 +118,22 @@ int in_kit_SensorChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr,
 
 /**
  * whenever a sensor change is detected , this function is called and hold the 
- * sensor index and value value to analyze and specify the input type
+ * sensor index and its value to analyze and specify the input type
  * 
- * @param  sindex the sensor index value
+ * @param  sindex the sensor index
  * @param  svalu the sensor value
  */
 void in_kit_save(int sindex, int svalue);
-/*in_input_type functions header*/
+
+/**
+ * whenever an input state change is detected , this function is called and  
+ * hold input index and its value to analyze and specify the input type
+ * 
+ * @param  in_index the input index
+ * @param  in_value the in_sensor value
+ */
+void ph_kit_inputs(int in_index, int in_value);
+//in_input_type functions header
 
 /**
  * whenever it is called,it will return the last input
