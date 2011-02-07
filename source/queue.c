@@ -6,9 +6,17 @@
 #include "queue.h"
 
 qu_queue *qu_init(void) {
+  int rc;
   qu_queue *queue = malloc(sizeof(qu_queue));
   
-  if(!queue) return NULL;
+  if(!queue) {
+    return NULL;
+  }
+  
+  rc = pthread_mutex_init(&queue->mutex, NULL);
+  if(rc) {
+    return NULL;
+  }
   
   queue->size = 0;
   queue->head = queue->tail = NULL;
@@ -27,14 +35,18 @@ void qu_free(qu_queue *queue) {
     queue->size--;
   }
   
+  pthread_mutex_destroy(&queue->mutex);
+  
   free(queue);  
 }
 
 int qu_push(qu_queue *queue, void *data) {
   int rc;
   
-  rc = pthread_mutex_trylock(&(queue->mutex));
-  if(rc) return UT_ERR_UNKNOWN;
+  rc = pthread_mutex_lock(&(queue->mutex));
+  if(rc) {
+    return UT_ERR_UNKNOWN;
+  }
   
   if(!queue->head) {
     queue->head = (qu_node *)malloc(sizeof(qu_node));
