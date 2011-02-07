@@ -1,3 +1,8 @@
+/**
+ * @file react.c
+ * @author Rowan Saundry
+ */
+
 #include <assert.h>
 
 #include "utility.h"
@@ -65,8 +70,8 @@ const rc_EmotionAction RC_EM_ACTION[MN_NUM_EMOTIONS] = {
 const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
 
   //Nuts and bolts
-  {{EM_ACTION_UPDATE,   EMO_HUNGER, 50},
-   {EM_ACTION_NONE,    EMO_NONE,    0},
+  {{EM_ACTION_UPDATE,   MN_EM_HUNGER, 50},
+   {EM_ACTION_NONE,    MN_EM_NONE,    0},
    
    {gsi_shake_head,  "*burp*"},
    {gsi_eyeflash,    "munch munch"},
@@ -75,8 +80,8 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    MN_NONE}, 
 
   //Oil can
-  {{EM_ACTION_UPDATE,   EMO_ENERGY, -25},
-   {EM_ACTION_UPDATE,   EMO_FUN,    15},
+  {{EM_ACTION_UPDATE,   MN_EM_ENERGY, -25},
+   {EM_ACTION_UPDATE,   MN_EM_FUN,    15},
    
    {gsi_fun_level1,  "*glug* *glug*"},
    {gsi_eyeflash,    "glug"},
@@ -85,8 +90,8 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    MN_NONE}, 
 
   //Battery
-  {{EM_ACTION_UPDATE,   EMO_FUN,   -25},
-   {EM_ACTION_UPDATE,   EMO_ENERGY, 15},
+  {{EM_ACTION_UPDATE,   MN_EM_FUN,   -25},
+   {EM_ACTION_UPDATE,   MN_EM_ENERGY, 15},
    
    {gsi_raise_arms,   "buzz buzz buzz"},
    {gsi_eyeflash,     "buzz..."},
@@ -95,8 +100,8 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    MN_NONE},  
   
   //Force sensor
-  {{EM_ACTION_UPDATE,   EMO_SOCIAL, 20},
-   {EM_ACTION_UPDATE,   EMO_FUN,    5},
+  {{EM_ACTION_UPDATE,   MN_EM_SOCIAL, 20},
+   {EM_ACTION_UPDATE,   MN_EM_FUN,    5},
    
    {gsi_eyeflash,      "meh"},
    {gsi_move_arms,     "tee he he"},
@@ -105,8 +110,8 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    MN_NONE},
 
   //Dark sensor
-  {{EM_ACTION_NONE,    EMO_ENERGY,  0},
-   {EM_ACTION_NONE,    EMO_NONE,    0},
+  {{EM_ACTION_NONE,    MN_EM_ENERGY,  0},
+   {EM_ACTION_NONE,    MN_EM_NONE,    0},
 
    {gsi_shake_head,   ":("},
    {gsi_move_arms,    "yawn"},
@@ -115,8 +120,8 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    MN_SLEEP},
   
   //Left hand
-  {{EM_ACTION_NONE,     EMO_FUN,    0},
-   {EM_ACTION_NONE,     EMO_NONE,   0},
+  {{EM_ACTION_NONE,     MN_EM_FUN,    0},
+   {EM_ACTION_NONE,     MN_EM_NONE,   0},
    
    {gsi_shake_head,   ""},
    {gsi_raise_left,   ":D"},
@@ -125,8 +130,8 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    MN_GUESS},
 
   //Right hand 
-  {{EM_ACTION_NONE,     EMO_FUN,    0},
-   {EM_ACTION_NONE,     EMO_NONE,   0},
+  {{EM_ACTION_NONE,     MN_EM_FUN,    0},
+   {EM_ACTION_NONE,     MN_EM_NONE,   0},
 
    {gsi_shake_head,   ""},
    {gsi_raise_right,  ":D"},
@@ -135,8 +140,8 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    MN_NONE},
    
   //Power on
-  {{EM_ACTION_NONE,     EMO_NONE,   0},
-   {EM_ACTION_NONE,     EMO_NONE,   0},
+  {{EM_ACTION_NONE,     MN_EM_NONE,   0},
+   {EM_ACTION_NONE,     MN_EM_NONE,   0},
 
    {NULL,            ""},
    {NULL,            ""},
@@ -145,8 +150,8 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    MN_NONE},
 
   //Power off
-  {{EM_ACTION_NONE,     EMO_NONE,   0},
-   {EM_ACTION_NONE,     EMO_NONE,   0},
+  {{EM_ACTION_NONE,     MN_EM_NONE,   0},
+   {EM_ACTION_NONE,     MN_EM_NONE,   0},
 
    {NULL,           ""},
    {NULL,           ""},
@@ -155,8 +160,8 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    MN_END},
     
   //Demo key
-  {{EM_ACTION_NONE,     EMO_NONE,   0},
-   {EM_ACTION_NONE,     EMO_NONE,   0},
+  {{EM_ACTION_NONE,     MN_EM_NONE,   0},
+   {EM_ACTION_NONE,     MN_EM_NONE,   0},
 
    {NULL,            ""},
    {NULL,            ""},
@@ -165,8 +170,8 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    MN_DEMO},
 
   //Debug key
-  {{EM_ACTION_NONE,     EMO_NONE,   0},
-   {EM_ACTION_NONE,     EMO_NONE,   0},
+  {{EM_ACTION_NONE,     MN_EM_NONE,   0},
+   {EM_ACTION_NONE,     MN_EM_NONE,   0},
 
    {NULL,             ""},
    {NULL,             ""},
@@ -179,8 +184,8 @@ const gsi_Reaction RC_MSG_ACTION = {gsi_shake_head,   "beep beep"};
 
 const rc_InputAction rc_sleep_action =
 
-  {{EM_ACTION_UPDATE,   EMO_ENERGY,   1},
-  {EM_ACTION_NONE,      EMO_NONE,     0},
+  {{EM_ACTION_UPDATE,   MN_EM_ENERGY,   1},
+  {EM_ACTION_NONE,      MN_EM_NONE,     0},
   
   {gsi_shake_head,  "..."},
   {gsi_eyeflash,    "zzzzz"},
@@ -191,6 +196,7 @@ const rc_InputAction rc_sleep_action =
 
 const int RC_MAIN_PAUSE  = 1;
 const int RC_SLEEP_PAUSE = 5;
+
 
 ut_ErrorCode rc_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
   const rc_EmotionAction *em_action;
@@ -216,7 +222,7 @@ ut_ErrorCode rc_main(em_State *emotions, qu_queue *notifications, ph_handle *phh
       in_action = &RC_IN_ACTION[input_event - 1];
     
       //get condition of primary emotion before update
-      if(in_action->primary_emotion.emotion != EMO_NONE) {
+      if(in_action->primary_emotion.emotion != MN_EM_NONE) {
         condition = em_get_condition(emotions, in_action->primary_emotion.emotion);
       }
     
@@ -355,7 +361,7 @@ ut_ErrorCode rc_sleep(em_State *emotions, qu_queue *notifications, ph_handle *ph
     }
     
     //get condition of primary sleep emotion
-    if(rc_sleep_action.primary_emotion.emotion != EMO_NONE) {
+    if(rc_sleep_action.primary_emotion.emotion != MN_EM_NONE) {
       condition = em_get_condition(emotions, rc_sleep_action.primary_emotion.emotion);
     }
     

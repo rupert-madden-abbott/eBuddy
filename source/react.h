@@ -1,4 +1,7 @@
 /**
+ * @file react.h
+ * @author Rowan Saundry
+ *
  * The react module reads events from the emotion, notification and input
  * modules and controls how the eBuddy reacts to them. It contains two main
  * loops, one for normal interaction and one for sleeping. The eBuddys
