@@ -1,8 +1,3 @@
-/* Impliments functions from phidgit.h, input.h and gesture.h
- * using the simulation module instead of the phidgits library.
- * Does not have a header file as it uses those from the modules
- * it simulates. */
-
 #include <stdio.h>
 #include <assert.h>
 #include "simulation_input.h"
@@ -14,13 +9,10 @@
 smi_Reader *sm_input_reader;
 
 
-//starts a simulation input reader using stin
 int ph_init(const char *config_path, ph_handle *phhandle) {
   return UT_ERR_NONE;
 }
 
-//these funtions have just been added to make the simulation compile
-//something needs to be done with them
 int gsi_gesture_init(ph_handle *handle) {
   return UT_ERR_NONE;
 }
@@ -36,15 +28,13 @@ int in_input_init(ph_handle *handle) {
   return UT_ERR_NONE;
 }
 
-//destroys the simulation input reader
 int ph_destruct(ph_handle *phhandle) {
   smi_destroy((smi_Reader *) &phhandle);
   return 0;
 }
 
-//read input from the input reader
 int in_get_input(void) {
-  int last_input;
+  in_input_type last_input;
   
   assert(sm_input_reader);
   
@@ -55,7 +45,6 @@ int in_get_input(void) {
   return last_input;
 }
 
-//output the given reaction to the user in text form
 int gsi_react(const gsi_Reaction *resp, ph_handle *phhandle) {
 	
   //check message is not null or null string

@@ -103,7 +103,7 @@ int guess_main(em_State *emotions, qu_queue *notifications,
   gsi_printLCD("You guessed everything! That was fun :)", phhandle);  
 
   // add fun points
-  em_update(emotions,EMO_FUN,GUESS_FUNPOINTS);  
+  em_update(emotions,MN_EM_FUN,GUESS_FUNPOINTS);  
 
-  return 0;     
+  return 0;
 }

@@ -1,3 +1,8 @@
+/**
+ * @file emotion.c
+ * @author Rowan Saundry
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

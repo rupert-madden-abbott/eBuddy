@@ -1,16 +1,23 @@
-/* the simulation module is used by the simulation
- * wrapper to allow it to emulate the phidgits. */
+/**
+ * @file simulation_input.c
+ * @author Rowan Saundry
+ */
+ 
 #include <stdlib.h> 
+#include <unistd.h>
+#include <pthread.h>
+
+#include "utility.h"
+#include "input.h"
 #include "simulation_input.h"
 
-//create and start a new input reader
 smi_Reader *smi_init(void) {
   smi_Reader *reader;
   int rc;
   
   //create a new sim reader
   reader = (smi_Reader *) malloc(sizeof(smi_Reader));
-	
+  
   //clear input buffer
   reader->buffer = INPT_NONE;
   
@@ -22,7 +29,7 @@ smi_Reader *smi_init(void) {
   
   //check for errors
   if(rc) {
-  	free(reader);
+    free(reader);
     return NULL;
   } 
   
@@ -31,17 +38,16 @@ smi_Reader *smi_init(void) {
     
   //check for errors
   if(rc) {
-  	free(reader->thread);
-  	free(reader);
+    free(reader->thread);
+    free(reader);
     return NULL;
   }  
   
   return reader;
 }
 
-//halt and destory an input reader
 void smi_destroy(smi_Reader *reader) {
-  	
+    
   //tell the input thread to quit
   pthread_mutex_lock(&reader->mutex);
   reader->mode = SMI_QUIT;
@@ -57,9 +63,8 @@ void smi_destroy(smi_Reader *reader) {
   free(reader);
 }
 
-//get the last input from the reader and store it in the buffer
-void smi_read(smi_Reader *reader, int *buffer) {
-	
+void smi_read(smi_Reader *reader, in_input_type *buffer) {
+  
   //lock the struct
   pthread_mutex_lock(&reader->mutex);
   
@@ -73,12 +78,11 @@ void smi_read(smi_Reader *reader, int *buffer) {
   pthread_mutex_unlock(&reader->mutex);
 }
 
-//main loop of sim_reader
 void *smi_loop(void *reader_pointer) {
   smi_Reader *reader;
   char command[SMI_BUFF_SIZE];
   int input, running;
-	
+  
   //get reader pointer from void pointer
   reader = (smi_Reader *) reader_pointer;
 
@@ -94,9 +98,9 @@ void *smi_loop(void *reader_pointer) {
   running = 1;
   
   while(running) {
-  	
-  	//get input from user
-  	printf(">> ");
+    
+    //get input from user
+    printf(">> ");
     
     //scanf is unsafe but this module is only for testing
     scanf("%s", command);
@@ -120,15 +124,15 @@ void *smi_loop(void *reader_pointer) {
       printf("l(eft)\t\t- left hand\n");
       printf("r(ight)\t\t- right hand\n");
       printf("(dem)m(o)\t- demo key\n");
-      printf("d(ebug)\t\t- debug key\n");	
+      printf("d(ebug)\t\t- debug key\n");  
       printf("q(uit)\t\t- send shutdown signal\n");
       printf("h(elp)\t\t- print out this message\n");
     }
       
     //store commands in the buffer
     else {
-      	
-   	  //lock the struct
+        
+       //lock the struct
       pthread_mutex_lock(&reader->mutex);
   
       //store the input in the buffer if it is empty
@@ -159,12 +163,10 @@ void *smi_loop(void *reader_pointer) {
   return NULL;
 }
 
-//map an command string to an input number
-//uses only the first letter of the command
-int smi_get_input(char *command) {
+in_input_type smi_get_input(char *command) {
   switch(*command) {
-  	
-  	//nuts and bolts
+    
+    //nuts and bolts
     case 'n':
       return INPT_BOLTS;
       
@@ -203,8 +205,8 @@ int smi_get_input(char *command) {
     //debug key 
     case 'd':
       return INPT_DEBUG;
-  	
-  	//help
+    
+    //help
     case 'h':
       return SMI_HELP;
     
