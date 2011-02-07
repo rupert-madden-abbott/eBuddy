@@ -376,6 +376,8 @@ int gs_printstring(const char* string,CPhidgetTextLCDHandle txt_lcd)
             startpoint=j;
          }
       }
+      // if flag==0 at this point then there is a word that is greater than
+      // LCDWIDTH characters
       if (flag==0) {
          strncpy(str1,tmp+startpoint,LCDWIDTH);
          str1[LCDWIDTH]='\0';

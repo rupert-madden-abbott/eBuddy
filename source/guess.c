@@ -14,15 +14,17 @@ int guess_main(em_State *emotions, qu_queue *notifications) {
    int sequence[GUESS_NUMBERTOGUESS+1];  // array to store sequence of gestures
 
    i=0;
-   while (i<GUESS_NUMBERTOGUESS) {  // populate sequence of gestures
-      j=rand()%GUESS_NUMGESTURES;
+   while (i < GUESS_NUMBERTOGUESS) {  // populate sequence of gestures
+      j = rand() % GUESS_NUMGESTURES;
 
       if (j==0) {
-         sequence[i]=INPT_LEFT_HAND;
+         sequence[i] =INPT_LEFT_HAND;
       }
+
       if (j==1) {
          sequence[i]=INPT_RIGHT_HAND;
       }
+
       if (j==2) {
          sequence[i]=INPT_FORCE;
       }
