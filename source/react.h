@@ -19,6 +19,8 @@
 #include "input.h"
 
 /**
+ * @struct rc_input_action
+ *
  * Represents the action to take when an input is recieved or when sleeping.
  * The full gesture will be performed if the level of the primary emotion is
  * full before the emotions are updated. The normal gesture will be used if
@@ -37,6 +39,8 @@ typedef struct rc_input_action {
 } rc_InputAction;
 
 /**
+ * @struct rc_emotion_action
+ *
  * Represents the action to perform when an emotion reaches a certain level. 
  * There is one gesture for each event type. Critical mode contains the mode
  * to execute after the gesture if the emotion level is critical.
@@ -50,13 +54,18 @@ typedef struct rc_emotion_action {
 
 
 /**
+ * @define RC_EM_ACTION
+ *
  * The emotion action array contains one emotion action for each emotion
  * and is indexed by emotion number 
  */
 const rc_EmotionAction RC_EM_ACTION[MN_NUM_EMOTIONS];
 
 
-/* The input action array contains one input action for each input and
+/**
+ * @define RC_IN_ACTION
+ *
+ * The input action array contains one input action for each input and
  * is indexed by input number. It is 1 based not zero based so for example
  * element 3 refers to input number 4.
  */
@@ -64,13 +73,25 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS];
 
 
 /**
+ * @define RC_MSG_ACTION
+ *
  * The msg action struct contains the gesture to perform when a message arrives
  * before displaying it on the screen.
  */
 const gsi_Reaction RC_MSG_ACTION;
 
-//The time to pause in seconds after each loop
+/**
+ * @define RC_MAIN_PAUSE
+ *
+ * The time to pause in seconds after each cycle of the main loop
+ */
 const int RC_MAIN_PAUSE;
+
+/**
+ * @define RC_MAIN_PAUSE
+ *
+ * The time to pause in seconds after each cycle of the sleep loop
+ */
 const int RC_SLEEP_PAUSE;
 
 
