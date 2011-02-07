@@ -20,65 +20,145 @@
 #include "utility.h"
 
 
-//Number of items on one line of the state file.
-#define EM_LINE_ITEMS 8
-
-//Maximum length of an emotion name.
+/**
+ * @define EM_NAME_LEN
+ * 
+ * Maximum length of an emotion name
+ */
 #define EM_NAME_LEN 12
 
+/**
+ * @define EM_LINE_ITEMS
+ * 
+ * The number of items on one line of the state file.
+ */
+#define EM_LINE_ITEMS 8
 
-//The level of an emotion relative to it's event values.
+/**
+ * @enum em_condition
+ * 
+ * The level of an emotion relative to it's full, low and critical values.
+ *
+ * Contains the following values:
+ *
+ * EM_COND_NORMAL       - The level is between low and full.
+ * EM_COND_FULL         - The level is above full.
+ * EM_COND_LOW          - The level is between critical and low.
+ * EM_COND_CRITICAL     - The level is below critical.
+ */
 typedef enum em_condition {
-  EM_COND_NORMAL = 0,            //The level is between low and full.
-  EM_COND_FULL,                  //The level is above full.
-  EM_COND_LOW,                   //The level is between critical and low.
-  EM_COND_CRITICAL               //The level is below critical.
+  EM_COND_NORMAL = 0,
+  EM_COND_FULL,
+  EM_COND_LOW,
+  EM_COND_CRITICAL
 } em_condition;
 
-//Represents an action that can be performed on an emotion level.
+/**
+ * @enum em_action
+ *
+ * Represents an action that can be performed on an emotion level.
+ *
+ * EM_ACTION_NONE        - Does nothing.
+ * EM_ACTION_SET         - Sets the emotion to the value (calls em_set).
+ * EM_ACTION_UPDATE      - Updates the emotion  by the value (calls em_update).
+ */
 typedef enum em_action {
-  EM_ACTION_NONE = 0,            //Does nothing.
-  EM_ACTION_SET,                 //Sets the emotion to the value (calls em_set).
-  EM_ACTION_UPDATE               //Updates the emotion  by the value (calls em_update).
+  EM_ACTION_NONE = 0,
+  EM_ACTION_SET,
+  EM_ACTION_UPDATE
 } em_action;
 
-//Represents a type of emotion
+/**
+ * @struct em_emotion
+ *
+ * Represents a type of emotion and is used to initialise a state.
+ * Contains the following fields:
+ *
+ * name        - The name of the emotion (string of any alphanum chars).
+ * decay_time  - The time it takes for this emotion to decay in seconds.
+ * factor      - The value the emotion will have after one deacy time.
+ * event_time  - The amount of time in seconds between event notifications.
+ * max         - The highest value the emotion can take.
+ * full        - Above this value the emotion is full.
+ * low         - Below this value the emotion is low.
+ * critical    - Below this value the emotion is critical.
+ */
 typedef struct em_emotion {
-  char name[EM_NAME_LEN];        //The name of this emotion (string of any alphanum chars).
-  int decay_time;                //The time it takes for this emotion to decay in seconds.
-  double factor;                 //The value the emotion will have after one deacy time.
-  int event_time;                //The amount of time in seconds between event notifications.
-  double max;                    //The highest value the emotion can take.
-  double full;                   //Above this value the emotion is full.
-  double low;                    //Below this value the emotion is low.
-  double critical;               //Below this value the emotion is critical.
+  char name[EM_NAME_LEN];
+  int decay_time;
+  double factor;
+  int event_time;
+  double max;
+  double full;
+  double low;
+  double critical;
 } em_Emotion;
 
-//Represents the current level of an emotion
+/**
+ * @struct em_level
+ *
+ * Represents the current level of a single emotion and stores its
+ * last event time.
+ *
+ * Contains the following fields:
+ *
+ * last_value      - The Value after the last update
+ * last_update     - The time of the last update
+ * last_event      - The time of the last event notification
+ */
 typedef struct em_level {
-    double last_value;           //The Value after the last update
-    time_t last_update;          //The time of the last update
-    time_t last_event;           //The time of the last event notification
+    double last_value;
+    time_t last_update;
+    time_t last_event;
 } em_Level;
 
-//Represents a set of emotions and their levels
+/**
+ * @struct em_state
+ *
+ * Represents a set of emotions and their levels.
+ *
+ * Contains the following fields.
+ *
+ * emotions       - The array of emotions this state represents.
+ * levels         - The levels of each emotion.
+ * num_emotions   - The number of emotions.
+ */
 typedef struct em_state {
-    const em_Emotion *emotions;  //The array of emotions this state represents.
-    em_Level *levels;            //The levels of the emotions.
-    int num_emotions;            //The number of emotions.
+    const em_Emotion *emotions;
+    em_Level *levels;
+    int num_emotions;
 } em_State;
 
-//Represents an emotion event
+/**
+ * @struct em_event
+ *
+ * Represents an emotion event.
+ *
+ * Contains the following fields:
+ *
+ * type          - The type of the event
+ * emotion       - The emotion the event applies to.
+ */
 typedef struct em_event {
-  em_condition type;             //The condition the emotion is in.
-  int emotion;                   //The emotion the condition applies to.
+  em_condition type;
+  int emotion;
 } em_Event;
 
-//Represents a change to a state
+/**
+ * @struct em_reaction
+ *
+ * Represents an operation on a state.
+ *
+ * Contains the following fields:
+ *
+ * action             - The action to perform.
+ * emotion            - The emotion to perform it on.
+ * value              - The argument for the action.
+ */
 typedef struct em_reaction {
-  em_action action;              //The action to perform.
-  int emotion;                   //The emotion to perform it on.
-  double value;                  //The argument for the action.
+  em_action action;
+  int emotion;
+  double value;
 } em_Reaction;
 
 
@@ -111,8 +191,8 @@ void em_reset(em_State *state);
 /**
  * Loads a state from a file specified by path. The the number of emtions and
  * their names inside the file must match those in the array passed to init.
- * Returns UT_ERR_NONE on success, UT_ERR_BAD_PATH if the file cannot be read or,
- * UT_ERR_BAD_FILE if the file is not in the correct format.
+ * Returns UT_ERR_NONE on success, UT_ERR_BAD_PATH if the file cannot be read
+ * or, UT_ERR_BAD_FILE if the file is not in the correct format.
  * 
  * @arg state The state to load
  * @arg path The path of the file to load from
@@ -121,9 +201,9 @@ void em_reset(em_State *state);
 ut_ErrorCode em_load(em_State *state, const char *path);
 
 /**
- * Saves a state to a file specified by path. The file will be created if it does
- * not exist. Returns UT_ERR_NONE on success or UT_ERR_BAD_PATH if the path cannot
- * be written to.
+ * Saves a state to a file specified by path. The file will be created if it
+ * does not exist. Returns UT_ERR_NONE on success or UT_ERR_BAD_PATH if the
+ * path cannot be written to.
  *
  * @arg state The state to save
  * @arg path The path of the file to save to
@@ -158,8 +238,9 @@ em_condition em_get_condition(em_State *state, int emotion);
 double em_overall(em_State *state);
 
 /**
- * Sets the level of an emotion to the value given. Returns UT_ERR_NONE on success
- * or UT_ERR_BAD_ARG if the value is not between zero and the maximum value.
+ * Sets the level of an emotion to the value given. Returns UT_ERR_NONE on
+ * success or UT_ERR_BAD_ARG if the value is not between zero and the
+ * maximum value.
  *
  * @arg state The state containing the emotion
  * @arg emotion The number of the emotion to set
@@ -222,8 +303,8 @@ ut_ErrorCode em_get_name(em_State *state, int id, const char **name);
 
 /*
  * Gets the names of all the emotions in the state. The names are not copied,
- * a pointer is returned to the name field in the array the state was initialised
- * with.
+ * a pointer is returned to the name field in the array the state was
+ * initialised with.
  *
  * @arg state The state containing the names
  * @arg names The array of character pointers that will store the names

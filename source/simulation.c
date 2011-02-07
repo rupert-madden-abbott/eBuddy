@@ -29,7 +29,7 @@ int in_input_init(ph_handle *handle) {
 }
 
 int ph_destruct(ph_handle *phhandle) {
-  smi_destroy((smi_Reader *) &phhandle);
+  smi_destroy(sm_input_reader);
   return 0;
 }
 

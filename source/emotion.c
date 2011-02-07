@@ -95,8 +95,9 @@ int em_load(em_State *state, const char *path) {
   
   //read the value and timestamp of each level from the file 
   do {
-    rc = fscanf(file, "%10s %d/%d/%d %d:%d:%d  %lf\n", name, &timestamp.tm_mday, &timestamp.tm_mon,
-                  &timestamp.tm_year, &timestamp.tm_hour, &timestamp.tm_min, &timestamp.tm_sec, &value);
+    rc = fscanf(file, "%10s %d/%d/%d %d:%d:%d  %lf\n", name, &timestamp.tm_mday,
+                &timestamp.tm_mon, &timestamp.tm_year, &timestamp.tm_hour,
+                &timestamp.tm_min, &timestamp.tm_sec, &value);
     
     //return an error if items diddn't scan 
     if(rc != EM_LINE_ITEMS) {
@@ -147,8 +148,10 @@ int em_save(em_State *state, const char *path) {
     time = gmtime(&state->levels[i].last_update);
     
     //print the value and the date to the file 
-    fprintf(file, "%10s %02d/%02d/%02d %02d:%02d:%02d  %lf\n", state->emotions[i].name, time->tm_mday, time->tm_mon + 1,
-              time->tm_year + UT_EPOCH_YEAR, time->tm_hour, time->tm_min, time->tm_sec, state->levels[i].last_value);
+    fprintf(file, "%10s %02d/%02d/%02d %02d:%02d:%02d  %lf\n",
+            state->emotions[i].name, time->tm_mday, time->tm_mon + 1,
+            time->tm_year + UT_EPOCH_YEAR, time->tm_hour, time->tm_min,
+            time->tm_sec, state->levels[i].last_value);
   }
   
   //close and return 
@@ -166,7 +169,8 @@ double em_get(em_State *state, int emotion) {
   num_decays = difference / (double) state->emotions[emotion].decay_time;
   
   //caluclate the current value 
-  value = state->levels[emotion].last_value  * pow(state->emotions[emotion].factor, num_decays);
+  value = state->levels[emotion].last_value  *
+          pow(state->emotions[emotion].factor, num_decays);
   
   //dont let value go above the max
   if(value > state->emotions[emotion].max) {
@@ -262,12 +266,12 @@ int em_check(em_State *state, em_Event *event) {
   for(i = 0; i < state->num_emotions; i++) {
     
     //check if the emotion is due for an event 
-    if(state->emotions[i].event_time < difftime(now, state->levels[i].last_event)) {
+    if(state->emotions[i].event_time <
+       difftime(now, state->levels[i].last_event)) {
     
       //get the condition of the emotion 
       condition = em_get_condition(state, i);
 
-      // 
       if(condition) {
         //update last event 
         state->levels[i].last_event = now;

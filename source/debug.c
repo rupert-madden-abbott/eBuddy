@@ -161,7 +161,8 @@ int db_events(em_State *emotions, qu_queue *notifications,
   
     //print events on the screen
     if(!rc) {
-      sprintf(buffer, "emotion %10s %02d", emotions->emotions[emotion_event.emotion].name,
+      sprintf(buffer, "emotion %10s %02d",
+              emotions->emotions[emotion_event.emotion].name,
               emotion_event.type);
               
       gsi_printLCD(buffer, phhandle);

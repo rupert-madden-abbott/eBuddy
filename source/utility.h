@@ -29,7 +29,7 @@ typedef enum ut_os_type {
 typedef enum ut_error_code {
   UT_ERR_UNKNOWN = -1,	//unknown error
   UT_ERR_NONE = 0,		//no error
-  UT_ERR_CLOSE,		//shutdown signal was recieved
+  UT_ERR_CLOSE,			//shutdown signal was recieved
   UT_ERR_BAD_PATH,		//file path is invalid
   UT_ERR_BAD_FILE,		//file is corrupt
   UT_ERR_BAD_ARG,		//invalid argument to a function

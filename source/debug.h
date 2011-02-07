@@ -22,13 +22,25 @@
 #include "notify.h"
 #include "queue.h"
 
-//The size between steps when setting or updating emotions
+/**
+ * @define DB_EM_STEP
+ *
+ *The size between steps when setting or updating emotions
+ */
 #define DB_EM_STEP 10
 
-//The size of the buffer used to store generated text
+/**
+ * @define DB_BUFF_SIZE
+ *
+ * The size of the buffer used to store generated text
+ */
 #define DB_BUFF_SIZE 32
 
-//The menu item number used to exit debug
+/**
+ * @define DB_EXIT
+ *
+ * The menu item number used to exit debug
+ */
 #define DB_EXIT -999
 
 
