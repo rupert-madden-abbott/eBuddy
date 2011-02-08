@@ -44,6 +44,6 @@ int main(void) {
 
   CPhidget_close((CPhidgetHandle)servo);
   getchar();
-  printf("%d\n", gs_dance_basic(servo)); // should through error as phidget 
+  printf("%d\n", gs_dance_basic(servo)); // should throw error as phidget 
   return 0;
 }
