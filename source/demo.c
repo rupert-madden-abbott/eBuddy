@@ -11,7 +11,7 @@
 #include "demo.h"
 
 //Demo mode
-int dm_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
+int dm_main(em_State *emotions, qu_Queue *notifications, ph_handle *phhandle) {
   nt_message *message;
 
   while(1) {

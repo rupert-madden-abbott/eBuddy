@@ -8,7 +8,7 @@
 #include "gesture_interface.h"
 #include "guess.h"
 
-int guess_main(em_State *emotions, qu_queue *notifications,
+int guess_main(em_State *emotions, qu_Queue *notifications,
                ph_handle *phhandle) {
   
   in_input_type input;

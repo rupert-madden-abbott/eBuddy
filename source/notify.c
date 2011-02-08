@@ -11,7 +11,7 @@
 #include "queue.h"
 #include "notify.h"
 
-int nt_init(qu_queue *queue, const char *config) {
+int nt_init(qu_Queue *queue, const char *config) {
   int         authenticated, 
               rc;
   nt_token    user = { "", "" }, 
@@ -69,7 +69,7 @@ int nt_init(qu_queue *queue, const char *config) {
   return UT_ERR_NONE;
 }
 
-int nt_destroy(qu_queue *queue) {
+int nt_destroy(qu_Queue *queue) {
   qu_free(queue);
   curl_global_cleanup();
   return UT_ERR_NONE;

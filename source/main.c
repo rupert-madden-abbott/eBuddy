@@ -34,7 +34,7 @@ const em_Emotion MN_EMOTIONS[] = {
 
 int main(void) {
   em_State *emotions;
-  qu_queue *notifications;
+  qu_Queue *notifications;
   ph_handle phhandle;
   ut_ErrorCode rc;
 
@@ -132,7 +132,7 @@ int main(void) {
   return 0;
 }
 
-ut_ErrorCode mn_run(mn_mode mode, em_State *emotions, qu_queue *notifications, ph_handle *phhandle) {
+ut_ErrorCode mn_run(mn_mode mode, em_State *emotions, qu_Queue *notifications, ph_handle *phhandle) {
   
   switch(mode) {
     case MN_REACT:

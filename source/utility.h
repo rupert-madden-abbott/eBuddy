@@ -71,20 +71,24 @@ typedef enum ut_os_type {
  *
  * Defines shared error codes.
  *
- * @member UT_ERR_UNKNOWN        - Unknown error
- * @member UT_ERR_NONE           - No error
- * @member UT_ERR_CLOSE          - Shutdown signal was recieved
- * @member UT_ERR_BAD_PATH       - File path is invalid
- * @member UT_ERR_BAD_FILE       - File is corrupt
- * @member UT_ERR_BAD_ARG        - Invalid argument to a function
- * @member UT_ERR_BAD_MODE       - Invalid run mode selected
- * @member UT_ERR_BAD_ACTION     - An invalid action was requested
- * @member UT_ERR_EMPTY          - No data to read
- * @member UT_ERR_JSON_ENCODE    - Failed to encode data into JSON
- * @member UT_ERR_JSON_DECODE    - Failed to decode JSON data
- * @member UT_ERR_CURL_SETUP     - Failed to setup CURL
- * @member UT_ERR_OAUTH_SIGN     - Failed to sign an oauth url
- * @member UT_ERR_INVALID_RESPONSE - Response is corrupt
+ * @member UT_ERR_UNKNOWN          - Unknown error
+ * @member UT_ERR_NONE             - No error
+ * @member UT_ERR_CLOSE            - Shutdown signal was recieved
+ * @member UT_ERR_BAD_PATH         - File path is invalid
+ * @member UT_ERR_BAD_FILE         - File is corrupt
+ * @member UT_ERR_BAD_ARG          - Invalid argument to a function
+ * @member UT_ERR_BAD_MODE         - Invalid run mode selected
+ * @member UT_ERR_BAD_ACTION       - An invalid action was requested
+ * @member UT_ERR_EMPTY            - No data to read
+ * @member UT_ERR_JSON_ENCODE      - Failed to encode data into JSON
+ * @member UT_ERR_JSON_DECODE      - Failed to decode JSON data
+ * @member UT_ERR_CURL_SETUP       - Failed to setup CURL
+ * @member UT_ERR_OAUTH_SIGN       - Failed to sign an oauth url
+ * @member UT_ERR_INVALID_RESPONSE - Network response is corrupt
+ * @member UT_ERR_MUTEX_LOCK       - Failed to lock a mutex
+ * @member UT_ERR_MUTEX_UNLOCK     - Failed to unlock a mutex
+ * @member UT_ERR_MEMORY           - No memory for resource allocation
+ * @member UT_ERR_POINTER_NULL     - Attempt to access pointer set to NULL
  */
 typedef enum ut_error_code {
   UT_ERR_UNKNOWN = -1,
@@ -101,6 +105,10 @@ typedef enum ut_error_code {
   UT_ERR_CURL_SETUP,
   UT_ERR_OAUTH_SIGN,
   UT_ERR_INVALID_RESPONSE,
+  UT_ERR_MUTEX_LOCK,
+  UT_ERR_MUTEX_UNLOCK,
+  UT_ERR_MEMORY,
+  UT_ERR_POINTER_NULL
 } ut_ErrorCode;
 
 /**

@@ -3,12 +3,18 @@
  * @author Rupert Madden-Abbott
 */
 
+#include <stdlib.h>
+
+#include <pthread.h>
+
+#include "utility.h"
 #include "queue.h"
 
-qu_queue *qu_init(void) {
+qu_Queue *qu_init(void) {
   int rc;
-  qu_queue *queue = malloc(sizeof(qu_queue));
+  qu_Queue *queue;
   
+  queue = malloc(sizeof(qu_Queue));
   if(!queue) {
     return NULL;
   }
@@ -24,13 +30,15 @@ qu_queue *qu_init(void) {
   return queue;
 }
 
-void qu_free(qu_queue *queue) {
-  qu_node *node;
+void qu_free(qu_Queue *queue) {
+  qu_Node *node;
   
+  //While there are still nodes left in the queue, destroy them
   while(queue->size > 0) {
     node = queue->head;
     queue->head = queue->head->link;
     free(node);
+    node = NULL;
     
     queue->size--;
   }
@@ -38,57 +46,89 @@ void qu_free(qu_queue *queue) {
   pthread_mutex_destroy(&queue->mutex);
   
   free(queue);  
+  queue = NULL;
 }
 
-int qu_push(qu_queue *queue, void *data) {
+int qu_push(qu_Queue *queue, void *data) {
   int rc;
   
-  rc = pthread_mutex_lock(&(queue->mutex));
-  if(rc) {
-    return UT_ERR_UNKNOWN;
+  //Ensure the queue exists
+  if(!queue) {
+    return UT_ERR_POINTER_NULL;
   }
   
+  //Lock the queue for thread safety
+  rc = pthread_mutex_trylock(&(queue->mutex));
+  if(rc) {
+    return UT_ERR_MUTEX_LOCK;
+  }
+  
+  //Check if the queue already contains nodes
   if(!queue->head) {
-    queue->head = (qu_node *)malloc(sizeof(qu_node));
+    //If it doesn't create the first node
+    queue->head = (qu_Node *)malloc(sizeof(qu_Node));
     if(!queue->head) {
-      pthread_mutex_unlock(&(queue->mutex));
-      return UT_ERR_UNKNOWN;
+      rc = pthread_mutex_unlock(&(queue->mutex));
+      if(rc) {
+        return UT_ERR_MUTEX_UNLOCK;
+      }
+      return UT_ERR_MEMORY;
     }
     
+    //Set the data onto the node
     queue->head->data = data;
     queue->tail = queue->head;
   } 
   else {
-    queue->tail->link = (qu_node *)malloc(sizeof(qu_node));
+    //If it does, add the node to the end
+    queue->tail->link = (qu_Node *)malloc(sizeof(qu_Node));
     if(!queue->tail->link) {
-      pthread_mutex_unlock(&(queue->mutex));
-      return UT_ERR_UNKNOWN;
+      rc = pthread_mutex_unlock(&(queue->mutex));
+      if(rc) {
+        return UT_ERR_MUTEX_UNLOCK;
+      }
+      return UT_ERR_MEMORY;
     }
     
+    //Set the data onto the node
     queue->tail = queue->tail->link;
     queue->tail->data = data;
   }
 
+  //Increase the size of the queue
   queue->tail->link = NULL;
   queue->size++;
   
-  pthread_mutex_unlock(&(queue->mutex));
-  
+  //Allow other threads to access the queue
+  rc = pthread_mutex_unlock(&(queue->mutex));
+  if(rc) {
+    return UT_ERR_MUTEX_UNLOCK;
+  }  
   return UT_ERR_NONE;
 }
 
-void *qu_pop(qu_queue *queue) {
+void *qu_pop(qu_Queue *queue) {
   int rc;
-  qu_node *node = NULL;
+  qu_Node *node = NULL;
+  void *data = NULL;
 
-  if(!queue) return NULL;
+  //Ensure the queue exists
+  if(!queue) {
+    return NULL;
+  }
   
+  //Lock the queue for thread safety
   rc = pthread_mutex_trylock(&(queue->mutex));
-  if(rc) return NULL;
+  if(rc) {
+    return NULL;
+  }
   
+  //Ensure the queue contains nodes
   if(queue->size > 0) {
     node = queue->head;
+    data = node->data;
     queue->size--;
+    //Check if there are nodes left on the queue
     if(queue->size) {
       queue->head = queue->head->link;
     } 
@@ -96,22 +136,35 @@ void *qu_pop(qu_queue *queue) {
       queue->head = queue->tail = NULL;
     }
     
-    pthread_mutex_unlock(&(queue->mutex));
+    //Allow other threads to access the queue
+    rc = pthread_mutex_unlock(&(queue->mutex));
+    if(rc) {
+      return NULL;
+    }
+    free(node);
+    node = NULL;
     return node->data;
   }
   
-  pthread_mutex_unlock(&(queue->mutex));
+  //Allow other threads to access the queue
+  rc = pthread_mutex_unlock(&(queue->mutex));
+  if(rc) {
+    return NULL;
+  }
   
   return NULL;
 }
 
-int qu_size(qu_queue *queue) {
+int qu_size(qu_Queue *queue) {
     int size, rc;
     
     rc = pthread_mutex_trylock(&(queue->mutex));
     if(rc) return UT_ERR_UNKNOWN;
     
     size = queue->size;
-    pthread_mutex_unlock(&(queue->mutex));
+    rc = pthread_mutex_unlock(&(queue->mutex));
+    if(rc) {
+      return UT_ERR_MUTEX_UNLOCK;
+    }
     return size;
 }
