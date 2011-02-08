@@ -110,8 +110,9 @@ int gs_sound(const char *sound, int repeat) {
   cf_free(root);
 
   command[0] ='\0';
-  strcpy(command, "mpg123 -q & ");
+  strcpy(command, "mpg123 -q ");
   strcat(command, filepath);
+  strcat(command, " &");
   while(i < repeat){
     system(command);
     i++;

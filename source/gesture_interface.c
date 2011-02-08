@@ -9,6 +9,7 @@ int gsi_gesture_init(ph_handle *handle) {
 }
 
 int gsi_gesture_close(ph_handle *handle) {
+  gsi_sound("servo1", 1);
   gs_set_pos(handle->servohandle);
   gs_eyesoff(handle->IFKhandle);
   return 0;
@@ -106,6 +107,7 @@ int gsi_move_arms(ph_handle *handle) {
 }
 
 int gsi_raise_arms(ph_handle *handle) {
+  gsi_sound("servo2", 1);
   return gs_raise_arms(handle->servohandle);
 }
 
