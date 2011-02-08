@@ -105,7 +105,7 @@ const int RC_SLEEP_PAUSE;
  * @arg phhandle The handle used to access the phidgets
  * @return A ut_error_code. Passes back errors from child modes.
  */
-ut_ErrorCode rc_main(em_State *emotions, qu_queue *notifications, ph_handle *phhandle);
+ut_ErrorCode rc_main(em_State *emotions, qu_Queue *notifications, ph_handle *phhandle);
 
 /**
  * The sleep loop is similar to the main loop and also reads events from the input
@@ -118,6 +118,6 @@ ut_ErrorCode rc_main(em_State *emotions, qu_queue *notifications, ph_handle *phh
  * @arg phhandle The handle used to access the phidgets
  * @return A ut_error_code. Passes back errors from child modes.
  */
-ut_ErrorCode rc_sleep(em_State *emotions, qu_queue *notifications, ph_handle *phhandle);
+ut_ErrorCode rc_sleep(em_State *emotions, qu_Queue *notifications, ph_handle *phhandle);
 
 #endif
