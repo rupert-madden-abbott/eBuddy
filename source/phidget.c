@@ -1,3 +1,10 @@
+/**
+ *@file phidget.c
+ *@author Andrew Barber, Andrew Pickin & Ahmed Sarwat
+ *
+ */
+
+
 #include "phidget.h"
 
 
@@ -24,23 +31,26 @@ int ph_servo_init(ph_handle *handle) {
   double minAccel, maxVel;
   int servo_wait_result;
   const char *servo_attach_error;
+  //initialise servo handle
   handle->servohandle = 0;
+  //create servo handle
   CPhidgetAdvancedServo_create(&handle->servohandle);
+  //set callbacks
   CPhidget_set_OnAttach_Handler((CPhidgetHandle)handle->servohandle,
                                 ph_servo_AttachHandler, NULL);
   CPhidget_set_OnDetach_Handler((CPhidgetHandle)handle->servohandle,
                                 ph_servo_DetachHandler, NULL);
   CPhidget_set_OnError_Handler((CPhidgetHandle)handle->servohandle,
                                 ph_servo_ErrorHandler, NULL);
-
+  //open phidget
   CPhidget_open((CPhidgetHandle)handle->servohandle, -1);
-
+  //wait for attachment
   if((servo_wait_result = CPhidget_waitForAttachment((CPhidgetHandle)handle->
                                                        servohandle, 10000))) {
     CPhidget_getErrorDescription(servo_wait_result, &servo_attach_error);
     printf("Error eBuddy servo not connected: %s\n", servo_attach_error);
   }
-
+  //set default velocity and acceleration
   CPhidgetAdvancedServo_getAccelerationMax(handle->servohandle, 0, &minAccel);
   CPhidgetAdvancedServo_getVelocityMax(handle->servohandle, 0, &maxVel);
   return 0;
@@ -89,7 +99,7 @@ int ph_RFID_rfid_init(ph_handle *handle) {
 
   CPhidget_open((CPhidgetHandle)handle->RFIDhandle, -1);
 
-//CPhidget_open((CPhidgetHandle)rfid, -1);
+
 
 //get the program to wait for an RFID device to be attached
   if((result = CPhidget_waitForAttachment((CPhidgetHandle)handle->RFIDhandle, 

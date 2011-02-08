@@ -1,3 +1,11 @@
+/**
+ *@file gesture.c
+ *@author Andrew Barber & Andrew Pickin
+ *
+ */
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

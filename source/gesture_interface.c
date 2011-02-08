@@ -1,6 +1,14 @@
+/**
+ *@file gesture_interface.c
+ *@author Andrew Barber
+ *
+ */
+
+
+
 #include "gesture_interface.h"
 
-
+//initialise gesture phidgets
 int gsi_gesture_init(ph_handle *handle) {
   gs_set_pos(handle->servohandle);
   gs_eyeson(handle->IFKhandle);
@@ -8,6 +16,7 @@ int gsi_gesture_init(ph_handle *handle) {
   return 0;
 }
 
+//shut down gesture phidgets
 int gsi_gesture_close(ph_handle *handle) {
   gsi_sound("servo1", 1);
   gs_set_pos(handle->servohandle);
@@ -22,14 +31,17 @@ int gsi_sound(const char *sound, int repeat) {
 
 int gsi_react(const gsi_Reaction *resp, ph_handle *handle) {
   int error;
+  //if no function pointer specified return error
   if(resp->gesture == NULL){
     return GSI_NULL;
   }
   error = resp->gesture(handle);
-        
+  
+  //if message print to LCD screen      
   if(resp->message != NULL){
     error = gsi_printLCD(resp->message, handle);
   }
+  //if sound play sound
   if(resp->sound != NULL){
     error = gs_sound(resp->sound, 1);
   }
