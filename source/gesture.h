@@ -59,13 +59,14 @@
 #define GS_LEFTEYE 2
 ///}
 
-///{
+///@{
 /**
+ *@name GS_SET*
  *@define GS_SET*
  *defined code to aid readability in long getsure functions.
- *@a CPhidgetAdvancedServoHandle
- *@b servo index
- *@c position or state
+ *a CPhidgetAdvancedServoHandle
+ *b servo index
+ *c position or state
  */
 
 #define GS_SETPOS(a, b, c) if((error = CPhidgetAdvancedServo_setPosition \
@@ -85,11 +86,12 @@
                              return error; \
                            }
 
-///}
+///@}
 
 
-///{
+///@{
 /**
+ *@name servo functions
  *These servo functions all act to create movements in the servos via directy
  * calls to the phidget library.
  *
@@ -115,11 +117,12 @@ int gs_wave_right(CPhidgetAdvancedServoHandle servo);
 int gs_raise_right(CPhidgetAdvancedServoHandle servo);
 int gs_raise_left(CPhidgetAdvancedServoHandle servo);
 
-///}
+///@}
 
 
-///{
+///@{
 /**
+ *@name LED functions
  *These functions control the phidget LEDs via interface kit calls to the 
  *phidget library.  Thse functions turn the eyes on and off. 
  *
@@ -133,7 +136,7 @@ int gs_eyesoff(CPhidgetInterfaceKitHandle ifkit);
 int gs_eyeflash(CPhidgetInterfaceKitHandle ifkit);
 int gs_rapid_eyeflash(CPhidgetInterfaceKitHandle ifkit);
 
-///}
+///@}
 
 /**
  *This function allows playing of sound via an external program

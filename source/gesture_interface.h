@@ -1,6 +1,7 @@
 /**
  *@file gesture_interface.h
  *@author Andrew Barber
+ *
  *This module acts to interface between main functions and the gesture module.
  *Funtions in this module take a ph_handle struct as an argument and return an
  *error.
@@ -31,30 +32,26 @@ typedef enum gsi_error {
 } gsi_error;
 
 /**
- *@struct used by gsi_react function to determine function to call and pass correct value.
- *@member int (*gesture)(ph_handle *) pointer to the gesture that should be called. 
- *@member const char *message string to display on the lcd screen. 
- *@member const char *sound Sound to be played.
- *@member int sndrepeat SOund repeat.    
+ *@struct used by gsi_react function to determine function to call and pass correct value.  
 */
 
 typedef struct gsi_reaction {
-  int (*gesture)(ph_handle *);	
-  const char *message;        
-  const char *sound;
-  int sndrepeat;
+  int (*gesture)(ph_handle *);	//pointer to the gesture that should be called. 
+  const char *message;          //string to display on the lcd screen.
+  const char *sound;            //Sound to be played.
+  int sndrepeat;                //Sound repeat.
 	
 } gsi_Reaction;
 
 
-///{
+///@{
 /**
+ *@name gesture interface functions
  *These are standard gsi_ functions that map to one or more gestures.
  *
  *@arg ph_handle *handle Struct points to the handles for each phidget.
  *@return GSI error code.
  */
-
 int gsi_gesture_init(ph_handle *handle);
 int gsi_gesture_close(ph_handle *handle);
 int gsi_happy_level1(ph_handle *handle);
@@ -70,13 +67,13 @@ int gsi_raise_right(ph_handle *handle);
 int gsi_wave_left(ph_handle *handle);
 int gsi_wave_right(ph_handle *handle);
 
-///}
+///@}
 
 /**
  *This function allows playing of sound via an external program
  *
  *@arg const char *sound The sound name specified in the sound.json file.
- *@arg int repeat Allows the sound fucntion to repeat a sound multiple times.
+ *@arg int repeat Allows the sound function to repeat a sound multiple times.
  *@return value greater than zero if error.
  */
 int gsi_sound(const char *sound, int repeat);
