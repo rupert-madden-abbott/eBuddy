@@ -12,7 +12,7 @@
 
 //Demo mode
 int dm_main(em_State *emotions, qu_Queue *notifications, ph_handle *phhandle) {
-  nt_message *message;
+  nt_Message *message;
 
   while(1) {
     sleep(1);

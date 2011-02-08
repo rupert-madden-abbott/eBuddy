@@ -109,7 +109,7 @@ int gs_sound(const char *sound, int repeat) {
   int i = 0;
   char filepath[100];
   char command[110];
-  cf_json *root;
+  cf_Json *root;
 
   root = cf_read("conf/sound.json");
   if(!root) return 1;

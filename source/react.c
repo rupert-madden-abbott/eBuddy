@@ -201,7 +201,7 @@ const int RC_SLEEP_PAUSE = 5;
 ut_ErrorCode rc_main(em_State *emotions, qu_Queue *notifications, ph_handle *phhandle) {
   const rc_EmotionAction *em_action;
   const rc_InputAction *in_action;
-  nt_message *message;
+  nt_Message *message;
   em_Event emotion_event; 
   em_condition condition;
   in_input_type input_event;
@@ -333,7 +333,7 @@ ut_ErrorCode rc_main(em_State *emotions, qu_Queue *notifications, ph_handle *phh
 }
 
 ut_ErrorCode rc_sleep(em_State *emotions, qu_Queue *notifications, ph_handle *phhandle) {
-  nt_message *message;
+  nt_Message *message;
   em_Event emotion_event; 
   em_condition condition;
   in_input_type input_event;

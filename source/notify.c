@@ -14,9 +14,9 @@
 int nt_init(qu_Queue *queue, const char *config) {
   int         authenticated, 
               rc;
-  nt_token    user = { "", "" }, 
+  nt_Token    user = { "", "" }, 
               app = { "", "" };
-  cf_json     *root = NULL;
+  cf_Json     *root = NULL;
   pthread_t   thread;
 
   //Initialize curl  
@@ -75,8 +75,8 @@ int nt_destroy(qu_Queue *queue) {
   return UT_ERR_NONE;
 }
 
-int nt_authenticate(const nt_token app, nt_token *user, const char *config, 
-                    cf_json *root) {
+int nt_authenticate(const nt_Token app, nt_Token *user, const char *config, 
+                    cf_Json *root) {
   int i, j, rc;
   char url[NT_URL_MAX], pin[NT_KEY_MAX];
   const char *command;
@@ -188,7 +188,7 @@ int nt_authenticate(const nt_token app, nt_token *user, const char *config,
   return UT_ERR_NONE;
 }
 
-int nt_request_token(const char *uri, nt_token app, nt_token *user) {
+int nt_request_token(const char *uri, nt_Token app, nt_Token *user) {
   int rc;
   char *url = NULL, *response = NULL, *postargs;
   
@@ -214,7 +214,7 @@ int nt_request_token(const char *uri, nt_token app, nt_token *user) {
   return UT_ERR_NONE;
 }
 
-int nt_parse_response(char *response, nt_token *token) {
+int nt_parse_response(char *response, nt_Token *token) {
   int rc;
   char **rv = NULL, *check;
   
@@ -267,14 +267,14 @@ char *nt_parse_arg(char *arg, const char *name) {
 
 void *nt_poll(void *queue) {
   int rc;
-  cf_json *root;
-  nt_message *tweet; 
+  cf_Json *root;
+  nt_Message *tweet; 
   const char *config = "conf/notify.json";
   char last_tweet[NT_ID_MAX], *check;
-  nt_token user = { "", "" }, app = { "", "" };
+  nt_Token user = { "", "" }, app = { "", "" };
 
   //Make space for the tweet
-  tweet = (nt_message *)malloc(sizeof(nt_message));
+  tweet = (nt_Message *)malloc(sizeof(nt_Message));
   if(!tweet) {
     /*If a message can't be created then there is no way to tell the parent
     thread that an error has happened. Therefore, just exit*/
@@ -354,9 +354,9 @@ void *nt_poll(void *queue) {
   return NULL;
 }
 
-nt_message *nt_get_tweet(const char *uri, nt_token app, nt_token user, 
-                         nt_message *tweet) {
-  cf_json *root, *object, *user_object;
+nt_Message *nt_get_tweet(const char *uri, nt_Token app, nt_Token user, 
+                         nt_Message *tweet) {
+  cf_Json *root, *object, *user_object;
   char *url = NULL, *postargs = NULL, *response = NULL, *check;
   //Prepare the request with an oauth signature
   url = oauth_sign_url2(uri, &(postargs), OA_HMAC, "GET", app.key, app.secret, 
@@ -388,7 +388,7 @@ nt_message *nt_get_tweet(const char *uri, nt_token app, nt_token user,
   }
 
   //Make space for the tweet
-  tweet = (nt_message *)realloc(tweet, sizeof(nt_message));
+  tweet = (nt_Message *)realloc(tweet, sizeof(nt_Message));
   if(!tweet) {
     cf_free(root);
     return NULL;
@@ -438,7 +438,7 @@ char *nt_curl_get (const char *uri, const char *query) {
   int rc;
   CURL *curl;
   char *url = NULL;
-  nt_response chunk = { NULL, 0 };
+  nt_Response chunk = { NULL, 0 };
 
   //Create space for the url  
   url = (char *)malloc(sizeof(char) * (strlen(uri) + strlen(query) + 2));
@@ -497,12 +497,12 @@ char *nt_curl_get (const char *uri, const char *query) {
 
 size_t nt_write_response(void *ptr, size_t size, size_t nmemb, void *data) {
   size_t real_size = size * nmemb;
-  nt_response *mem = (nt_response *)data;
+  nt_Response *mem = (nt_Response *)data;
 
   //Reallocate the space if the response is too large
   mem->data = (char *)realloc(mem->data, mem->size + real_size + 1);
   if(mem->data) {
-    //Reinitialize nt_response
+    //Reinitialize nt_Response
     memcpy(&(mem->data[mem->size]), ptr, real_size);
     mem->size += real_size;
     mem->data[mem->size] = 0;

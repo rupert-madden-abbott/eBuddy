@@ -131,7 +131,7 @@ int db_events(em_State *emotions, qu_Queue *notifications,
                 
   in_input_type input_event;
   em_Event emotion_event;
-  nt_message *message;
+  nt_Message *message;
   char buffer[DB_BUFF_SIZE];
   int running, rc;
   
