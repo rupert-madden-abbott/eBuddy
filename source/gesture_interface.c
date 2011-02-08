@@ -15,8 +15,8 @@ int gsi_gesture_close(ph_handle *handle) {
 }
 
 int gsi_sound(const char *sound, int repeat) {
-  gs_sound(sound, repeat);
-  return 0;
+  return gs_sound(sound, repeat);
+  
 }
 
 int gsi_react(const gsi_Reaction *resp, ph_handle *handle) {

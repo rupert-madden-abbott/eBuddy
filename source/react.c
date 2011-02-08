@@ -322,6 +322,7 @@ ut_ErrorCode rc_main(em_State *emotions, qu_Queue *notifications, ph_handle *phh
         }
         gsi_react(&RC_MSG_ACTION, phhandle);
         gsi_printLCD(message->text, phhandle);
+        //gsi_sound("computing", 1);
       }
     }
   

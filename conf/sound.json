@@ -1,10 +1,7 @@
 {
-  "0": "./assets/beep1.mp3",
-  "1": "./assets/robotsound1.mp3",
-  "2": "./assets/tinkle.mp3",
-  "3": "./assets/servo1.mp3",
-  "4": "./assets/servo2.mp3",
-  "5": "./assets/servo3.mp3",
-  "6": "./assets/servo4.mp3",
-  "7": "./assets/computing.mp3"
+  "servo1": "./assets/servo1.mp3",
+  "servo2": "./assets/servo2.mp3",
+  "servo3": "./assets/servo3.mp3",
+  "servo4": "./assets/servo4.mp3",
+  "computing": "./assets/computing.mp3"
 }
