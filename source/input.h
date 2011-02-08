@@ -32,7 +32,7 @@
 /**
  * The input types
  * 
- * @enum INPT_NONE indicates that there is no input.
+ * @enum INPT_NONE indicates that there is no input detected.
  * @enum INPT_BOLTS indicates the BOLTS rfid tag has been detected.
  * @enum INPT_OIL indicates the OIL rfid tag has been detected.
  * @enum INPT_BATTERY indicates the BATTERY rfid tag has been detected.
