@@ -11,9 +11,6 @@ INCLUDE     := -Isource/
 
 all: linux
 
-demo: checkdir config.o demo.o demo_test.o emotion.o guess.o gesture.o gesture_interface.o input.o notify.o phidget.o queue.o react.o utility.o 
-	$(CC) $(CFLAGS) build/demo build/demo_test.o build/config.o build/demo.o build/emotion.o build/guess.o build/gesture.o build/gesture_interface.o build/input.o build/notify.o build/phidget.o build/queue.o build/utility.o $(LIB) $(LIB_LINUX) -o build/demo
-
 linux: checkdir config.o debug.o demo.o emotion.o guess.o gesture.o gesture_interface.o input.o main.o notify.o phidget.o queue.o react.o utility.o 
 	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/guess.o build/gesture.o build/gesture_interface.o build/input.o build/main.o build/notify.o build/phidget.o build/queue.o build/react.o build/utility.o $(LIB) $(LIB_LINUX) -o build/ebuddy
 
@@ -76,7 +73,7 @@ utility.o: source/utility.c source/utility.h
 
   
 # TESTS
-test: queue_test config_test notify_test
+test: queue_test config_test notify_test emotion_test
 
 queue_test: queue_test.o queue.o
 	$(CC) $(CFLAGS) build/queue_test.o build/queue.o $(LIB) $(LIB_LINUX) -o build/queue_test
@@ -90,17 +87,17 @@ config_test: config.o config_test.o
 config_test.o: test/config_test.c test/test.h source/config.h
 	$(CC) $(CFLAGS) -c test/config_test.c -o build/config_test.o $(INCLUDE)
 
+emotion_test: emotion.o emotion_test.o
+	$(CC) $(CFLAGS) build/emotion.o build/emotion_test.o $(LIB) $(LIB_LINUX) -o build/emotion_test
+
+emotion_test.o: test/emotion_test.c
+	$(CC) $(CFLAGS) -c test/emotion_test.c -o build/emotion_test.o $(INCLUDE)
+
 notify_test: notify_test.o notify.o config.o queue.o utility.o
 	$(CC) $(CFLAGS) build/notify_test.o build/notify.o build/config.o build/queue.o build/utility.o $(LIB) $(LIB_LINUX) -o build/notify_test
 
 notify_test.o: test/notify_test.c test/test.h source/notify.h
 	$(CC) $(CFLAGS) -c test/notify_test.c -o build/notify_test.o $(INCLUDE)
-
-gestures_test: gestures_test.o gesture.o phidget.o 
-	$(CC) $(CFLAGS) build/gestures_test.o build/phidget.o build/gesture.o build/config.o $(LIB) $(LIB_LINUX) -o build/gestures_test
-
-gestures_test.o: test/gestures_test.c test/test.h source/gesture.h
-	$(CC) $(CFLAGS) -c test/gestures_test.c -o build/gestures_test.o $(INCLUDE)
 
 demo_test.o: test/demo_test.c test/test.h source/main.h
 	$(CC) $(CFLAGS) -c test/demo_test.c -o build/demo_test.o $(INCLUDE)
