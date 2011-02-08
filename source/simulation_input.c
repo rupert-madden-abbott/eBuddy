@@ -38,7 +38,7 @@ smi_Reader *smi_init(void) {
     
   //check for errors
   if(rc) {
-    free(reader->thread);
+    free(&reader->thread);
     free(reader);
     return NULL;
   }  

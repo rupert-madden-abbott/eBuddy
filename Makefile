@@ -11,9 +11,6 @@ INCLUDE     := -Isource/
 
 all: linux
 
-demo: checkdir config.o demo.o demo_test.o emotion.o guess.o gesture.o gesture_interface.o input.o notify.o phidget.o queue.o react.o utility.o 
-	$(CC) $(CFLAGS) build/demo build/demo_test.o build/config.o build/demo.o build/emotion.o build/guess.o build/gesture.o build/gesture_interface.o build/input.o build/notify.o build/phidget.o build/queue.o build/utility.o $(LIB) $(LIB_LINUX) -o build/demo
-
 linux: checkdir config.o debug.o demo.o emotion.o guess.o gesture.o gesture_interface.o input.o main.o notify.o phidget.o queue.o react.o utility.o 
 	$(CC) $(CFLAGS) build/config.o build/debug.o build/demo.o build/emotion.o build/guess.o build/gesture.o build/gesture_interface.o build/input.o build/main.o build/notify.o build/phidget.o build/queue.o build/react.o build/utility.o $(LIB) $(LIB_LINUX) -o build/ebuddy
 
