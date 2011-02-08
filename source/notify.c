@@ -69,10 +69,9 @@ int nt_init(qu_Queue *queue, const char *config) {
   return UT_ERR_NONE;
 }
 
-int nt_destroy(qu_Queue *queue) {
+void nt_destroy(qu_Queue *queue) {
   qu_free(queue);
   curl_global_cleanup();
-  return UT_ERR_NONE;
 }
 
 int nt_authenticate(const nt_Token app, nt_Token *user, const char *config, 

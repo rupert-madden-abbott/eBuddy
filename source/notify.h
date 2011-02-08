@@ -95,18 +95,110 @@ typedef struct nt_message {
   char id[NT_ID_MAX];
 } nt_Message;
 
+/**
+ * Initialises the notification module. First checks if the user has
+ * already authenticated. If they haven't, go through the oAuth algorithm.
+ * Otherwise, create a new thread and being polling Twitter in that thread.
+ *
+ * @param queue The queue to be used for communication with the polling thread
+ * @param config The path to the location of the configuration file
+ * @return UT_ERR_CURL_SETUP if curl setup failed. UT_ERR_JSON_ENCODE if 
+ * reading/creating the configuration file failed. 0 on success
+ */
 int nt_init(qu_Queue *queue, const char *config);
-int nt_destroy(qu_Queue *queue);
+
+/**
+ * Perform cleanup when the notifications module is finished with.
+ *
+ * @param queue The queue to be destroyed.
+ */
+void nt_destroy(qu_Queue *queue);
+
+/**
+ * Contains the main algorithm for authenticating a user based on the oAuth 
+ * method. Acquires a request token and then asks the user to log in to
+ * Twitter via a browser. The user then copies the provided PIN number back
+ * into the command line and an access token is acquired and then saved to
+ * configuration file.
+ *
+ * @param app The token containing the applications key and secret
+ * @param user The token containing to hold both the request and access data
+ * @param config The path to the configuration file
+ * @param root A JSON object holding the current configuration data
+ */
 int nt_authenticate(const nt_Token app, nt_Token *user, const char *config, 
                     cf_Json *root);
+                    
+/**
+ * Performs a request to the specified uri. If the response contains a token in 
+ * a valid, url encoded format, this data is extracted and returned in the user
+ * parameter.
+ *
+ * @param uri The uri to send the request to
+ * @param app The applications token to uniquely identify the application
+ * @param user The returned token to uniquely identify the user
+ */
 int nt_request_token(const char *uri, nt_Token app, nt_Token *user);
+
+/**
+ * Parses a response and, if the response is valid and url encoded, returns the 
+ * data in the token parameter.
+ * 
+ * @param response The string containing the response
+ * @param token The token in which to store the extracted data
+ */
 int nt_parse_response(char *response, nt_Token *token);
+
+/**
+ * Parses a url encoded argument in the format of name=value. Confirms that the
+ * name of the parameter is equivalent to @p name.
+ *
+ * @param arg The string containing the formatted argument
+ * @param name The expected name of the argument
+ * @return The value of the argument or NULL on error
+ */
 char *nt_parse_arg(char *arg, const char *name);
+
+/**
+ * Performs a get request to Twitter's friend timeline every 20 seconds. Should
+ * be called from pthread_create so that it runs in its own thread. When a new
+ * tweet is recieved, the data is written to the location pointed at by @p data
+ *
+ * @param The location at which recieved data is stored
+ * @return The return should not be checked as it is called by pthread
+ */
+void *nt_poll(void *data);
+
+/**
+ * Performs a get request to the specified URI. The request is signed with both
+ * the application and user secrets. The response is expected to be in a JSON
+ * format and, if valid, is parsed into an nt_Message structure
+ *
+ * @warning The user must have been authenticated in order to use this function
+ *
+ * @param uri The uri to send the request to
+ * @param app The application's token to uniquely identify the application
+ * @param user A valid access token to uniquely identify the user
+ * @param tweet The structure in which to store the response data
+ * @return The response data on success or NULL on error
+ */
 nt_Message *nt_get_tweet(const char *uri, nt_Token app, nt_Token user, 
                          nt_Message *tweet);
+                         
+/**
+ * Performs a get request to the specified URI with the specified query string
+ *
+ * @param uri The uri to send the request to
+ * @param query The query string to append to the uri
+ * @return The response data formatted as a string on success or NULL on error
+ */
 char *nt_curl_get (const char *uri, const char *query);
+
+/**
+ * A callback function used exclusively by libcurl to recursively create space
+ * for the response until there is enough for the entire response
+ */
 size_t nt_write_response(void *ptr, size_t size, size_t nmemb, void *data);
-void *nt_poll(void *data);
 
 #endif
 
