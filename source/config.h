@@ -16,7 +16,6 @@
 
 #include "utility.h"
 
-
 /**
  * @typedef cf_Json
  * Represents a JSON structure (Renamed to maintain a consistent public API)
