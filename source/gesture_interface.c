@@ -38,11 +38,11 @@ int gsi_react(const gsi_Reaction *resp, ph_handle *handle) {
   error = resp->gesture(handle);
   
   //if message print to LCD screen      
-  if(resp->message != NULL){
+  if((resp->message != NULL) && (resp->message[0] != '\0')){
     error = gsi_printLCD(resp->message, handle);
   }
   //if sound play sound
-  if(resp->sound != NULL){
+  if((resp->sound != NULL) && (resp->sound[0] != '\0')){
     error = gs_sound(resp->sound, 1);
   }
   return error;
