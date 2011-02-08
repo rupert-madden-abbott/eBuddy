@@ -112,7 +112,6 @@ int gs_move_arms(CPhidgetAdvancedServoHandle servo);
 int gs_turn(CPhidgetAdvancedServoHandle servo);
 int gs_wave_left(CPhidgetAdvancedServoHandle servo);
 int gs_wave_right(CPhidgetAdvancedServoHandle servo);
-int gs_rapid_eyeflash(CPhidgetInterfaceKitHandle ifkit);
 int gs_raise_right(CPhidgetAdvancedServoHandle servo);
 int gs_raise_left(CPhidgetAdvancedServoHandle servo);
 
@@ -132,6 +131,7 @@ int gs_raise_left(CPhidgetAdvancedServoHandle servo);
 int gs_eyeson(CPhidgetInterfaceKitHandle ifkit);
 int gs_eyesoff(CPhidgetInterfaceKitHandle ifkit);
 int gs_eyeflash(CPhidgetInterfaceKitHandle ifkit);
+int gs_rapid_eyeflash(CPhidgetInterfaceKitHandle ifkit);
 
 ///}
 

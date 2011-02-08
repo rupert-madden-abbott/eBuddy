@@ -96,6 +96,12 @@ notify_test: notify_test.o notify.o config.o queue.o utility.o
 notify_test.o: test/notify_test.c test/test.h source/notify.h
 	$(CC) $(CFLAGS) -c test/notify_test.c -o build/notify_test.o $(INCLUDE)
 
+gestures_test: gestures_test.o gesture.o phidget.o 
+	$(CC) $(CFLAGS) build/gestures_test.o build/phidget.o build/gesture.o build/config.o $(LIB) $(LIB_LINUX) -o build/gestures_test
+
+gestures_test.o: test/gestures_test.c test/test.h source/gesture.h
+	$(CC) $(CFLAGS) -c test/gestures_test.c -o build/gestures_test.o $(INCLUDE)
+
 demo_test.o: test/demo_test.c test/test.h source/main.h
 	$(CC) $(CFLAGS) -c test/demo_test.c -o build/demo_test.o $(INCLUDE)
 	
