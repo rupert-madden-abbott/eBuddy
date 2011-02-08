@@ -90,6 +90,12 @@ config_test: config.o config_test.o
 config_test.o: test/config_test.c test/test.h source/config.h
 	$(CC) $(CFLAGS) -c test/config_test.c -o build/config_test.o $(INCLUDE)
 
+emotion_test: emotion.o emotion_test.o
+	$(CC) $(CFLAGS) build/emotion.o build/emotion_test.o $(LIB) $(LIB_OSX) -o build/emotion_test
+
+emotion_test.o: test/emotion_test.c
+	$(CC) $(CFLAGS) -c test/emotion_test.c -o build/emotion_test.o $(INCLUDE)
+
 notify_test: notify_test.o notify.o config.o queue.o utility.o
 	$(CC) $(CFLAGS) build/notify_test.o build/notify.o build/config.o build/queue.o build/utility.o $(LIB) $(LIB_LINUX) -o build/notify_test
 
