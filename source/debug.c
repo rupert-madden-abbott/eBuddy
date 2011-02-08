@@ -10,9 +10,10 @@
 #include "input.h"
 #include "gesture_interface.h"
 #include "main.h"
+#include "queue.h"
 #include "debug.h"
 
-int db_main(em_State *emotions, qu_Queue *notifications,
+ut_ErrorCode db_main(em_State *emotions, qu_Queue *notifications,
             ph_handle *phhandle) {
               
   const char *menu[] = {"emotions", "events", "modes"};
@@ -58,7 +59,7 @@ int db_main(em_State *emotions, qu_Queue *notifications,
   return UT_ERR_NONE;
 }
 
-int db_emotions(em_State *emotions, qu_Queue *notifications,
+ut_ErrorCode db_emotions(em_State *emotions, qu_Queue *notifications,
                 ph_handle *phhandle) {
                   
   const char *action_menu[] = {"get", "set", "update"};
@@ -185,7 +186,7 @@ int db_events(em_State *emotions, qu_Queue *notifications,
   return UT_ERR_NONE;
 }
 
-int db_modes(em_State *emotions, qu_Queue *notifications,
+ut_ErrorCode db_modes(em_State *emotions, qu_Queue *notifications,
              ph_handle *phhandle) {
                
   const char *menu[] = {"react", "sleep", "demo", "debug", "guess"};
@@ -266,7 +267,7 @@ int db_input(int min, int max, int step, ph_handle *phhandle) {
   int selected, current;
 
   assert(step > 0);
-  assert(min < DB_EXIT);
+  assert(min > DB_EXIT);
 
   //start at average value
   current = (min + max) / 2;
