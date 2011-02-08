@@ -19,11 +19,24 @@
 //The size of the input buffer
 #define SMI_BUFF_SIZE 20
 
-//Input numbers used internally
-#define SMI_UNKNOWN -1
+/**
+ * @define SMI_HELP
+ * The input number used to represent the help command
+ */
 #define SMI_HELP -2
 
-//Modes used by the smi_reader
+/**
+ * @define SMI_UNKNOWN
+ * The input number used to represent an unknown command
+ */
+#define SMI_UNKNOWN -1
+
+/**
+ * Modes used by the smi_reader
+ *
+ * @member SMI_RUN     - Tells reader thread to keep running
+ * @member SMI_QUIT    - Tells reader thread to end
+ */
 typedef enum smi_mode {
   SMI_RUN,
   SMI_QUIT
@@ -32,12 +45,17 @@ typedef enum smi_mode {
 /**
  * The smi reader is the stuct used to represent and communicate with the
  * input reader and contains the thread, lock, buffer and mode variable.
+ *
+ * @member thread    - The thread the input loop runs in
+ * @member mutex     - Lock for mode and buffer
+ * @member buffer    - The last input from the user
+ * @member mode      - Controls the behaviour of the input thread
  */
 typedef struct smi_reader {
-  pthread_t thread;         //The thread the input loop runs in
-  pthread_mutex_t mutex;    //Lock for mode and buffer
-  int buffer;               //The last input from the user
-  int mode;                 //Controls the behaviour of the input thread
+  pthread_t thread;
+  pthread_mutex_t mutex;
+  int buffer;
+  int mode;
 } smi_Reader;
 
 

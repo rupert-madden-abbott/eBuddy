@@ -29,11 +29,9 @@
  *
  * Defines operating system types.
  *
- * Contains the following values:
- *
- * UT_OS_LINUX     - Linux
- * UT_OS_OSX       - Mac OSX
- * UT_OS_WINDOWS   - Windows
+ * @member UT_OS_LINUX     - Linux
+ * @member UT_OS_OSX       - Mac OSX
+ * @member UT_OS_WINDOWS   - Windows
  */
 typedef enum ut_os_type {
   UT_OS_LINUX,
@@ -46,22 +44,20 @@ typedef enum ut_os_type {
  *
  * Defines shared error codes.
  *
- * Contains the following values:
- *
- * UT_ERR_UNKNOWN        - Unknown error
- * UT_ERR_NONE           - No error
- * UT_ERR_CLOSE          - Shutdown signal was recieved
- * UT_ERR_BAD_PATH       - File path is invalid
- * UT_ERR_BAD_FILE       - File is corrupt
- * UT_ERR_BAD_ARG        - Invalid argument to a function
- * UT_ERR_BAD_MODE       - Invalid run mode selected
- * UT_ERR_BAD_ACTION     - An invalid action was requested
- * UT_ERR_EMPTY          - No data to read
- * UT_ERR_JSON_ENCODE    - Failed to encode data into JSON
- * UT_ERR_JSON_DECODE    - Failed to decode JSON data
- * UT_ERR_CURL_SETUP     - Failed to setup CURL
- * UT_ERR_OAUTH_SIGN     - Failed to sign an oauth url
- * UT_ERR_INVALID_RESPONSE - Response is corrupt
+ * @member UT_ERR_UNKNOWN        - Unknown error
+ * @member UT_ERR_NONE           - No error
+ * @member UT_ERR_CLOSE          - Shutdown signal was recieved
+ * @member UT_ERR_BAD_PATH       - File path is invalid
+ * @member UT_ERR_BAD_FILE       - File is corrupt
+ * @member UT_ERR_BAD_ARG        - Invalid argument to a function
+ * @member UT_ERR_BAD_MODE       - Invalid run mode selected
+ * @member UT_ERR_BAD_ACTION     - An invalid action was requested
+ * @member UT_ERR_EMPTY          - No data to read
+ * @member UT_ERR_JSON_ENCODE    - Failed to encode data into JSON
+ * @member UT_ERR_JSON_DECODE    - Failed to decode JSON data
+ * @member UT_ERR_CURL_SETUP     - Failed to setup CURL
+ * @member UT_ERR_OAUTH_SIGN     - Failed to sign an oauth url
+ * @member UT_ERR_INVALID_RESPONSE - Response is corrupt
  */
 typedef enum ut_error_code {
   UT_ERR_UNKNOWN = -1,

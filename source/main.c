@@ -21,7 +21,7 @@
 
 #include "main.h"
 
-const em_Emotion mn_emotions[] = {
+const em_Emotion MN_EMOTIONS[] = {
   
 //name        life           factor   alert         max    full  low  critical
   {"hunger",  UT_HOUR * 24,  0.2,     UT_MIN * 5,   100,   95,   30,  10},
@@ -39,7 +39,7 @@ int main(void) {
   ut_ErrorCode rc;
 
   //create a new emotion state using the emotion table
-  emotions = em_init(mn_emotions, MN_NUM_EMOTIONS);
+  emotions = em_init(MN_EMOTIONS, MN_NUM_EMOTIONS);
 
   if(!emotions) {
     printf("Error initialising emotions\n");

@@ -39,12 +39,10 @@
  * 
  * The level of an emotion relative to it's full, low and critical values.
  *
- * Contains the following values:
- *
- * EM_COND_NORMAL       - The level is between low and full.
- * EM_COND_FULL         - The level is above full.
- * EM_COND_LOW          - The level is between critical and low.
- * EM_COND_CRITICAL     - The level is below critical.
+ * @member EM_COND_NORMAL       - The level is between low and full.
+ * @member EM_COND_FULL         - The level is above full.
+ * @member EM_COND_LOW          - The level is between critical and low.
+ * @member EM_COND_CRITICAL     - The level is below critical.
  */
 typedef enum em_condition {
   EM_COND_NORMAL = 0,
@@ -58,9 +56,9 @@ typedef enum em_condition {
  *
  * Represents an action that can be performed on an emotion level.
  *
- * EM_ACTION_NONE        - Does nothing.
- * EM_ACTION_SET         - Sets the emotion to the value (calls em_set).
- * EM_ACTION_UPDATE      - Updates the emotion  by the value (calls em_update).
+ * @member EM_ACTION_NONE        - Does nothing.
+ * @member EM_ACTION_SET         - Sets the emotion to the value (calls em_set).
+ * @member EM_ACTION_UPDATE      - Updates the emotion  by the value (calls em_update).
  */
 typedef enum em_action {
   EM_ACTION_NONE = 0,
@@ -72,16 +70,15 @@ typedef enum em_action {
  * @struct em_emotion
  *
  * Represents a type of emotion and is used to initialise a state.
- * Contains the following fields:
  *
- * name        - The name of the emotion (string of any alphanum chars).
- * decay_time  - The time it takes for this emotion to decay in seconds.
- * factor      - The value the emotion will have after one deacy time.
- * event_time  - The amount of time in seconds between event notifications.
- * max         - The highest value the emotion can take.
- * full        - Above this value the emotion is full.
- * low         - Below this value the emotion is low.
- * critical    - Below this value the emotion is critical.
+ * @member name        - The name of the emotion (string of any alphanum chars).
+ * @member decay_time  - The time it takes for this emotion to decay in seconds.
+ * @member factor      - The value the emotion will have after one deacy time.
+ * @member event_time  - The amount of time in seconds between event notifications.
+ * @member max         - The highest value the emotion can take.
+ * @member full        - Above this value the emotion is full.
+ * @member low         - Below this value the emotion is low.
+ * @member critical    - Below this value the emotion is critical.
  */
 typedef struct em_emotion {
   char name[EM_NAME_LEN];
@@ -100,11 +97,9 @@ typedef struct em_emotion {
  * Represents the current level of a single emotion and stores its
  * last event time.
  *
- * Contains the following fields:
- *
- * last_value      - The Value after the last update
- * last_update     - The time of the last update
- * last_event      - The time of the last event notification
+ * @member last_value      - The Value after the last update
+ * @member last_update     - The time of the last update
+ * @member last_event      - The time of the last event notification
  */
 typedef struct em_level {
     double last_value;
@@ -117,11 +112,9 @@ typedef struct em_level {
  *
  * Represents a set of emotions and their levels.
  *
- * Contains the following fields.
- *
- * emotions       - The array of emotions this state represents.
- * levels         - The levels of each emotion.
- * num_emotions   - The number of emotions.
+ * @member emotions       - The array of emotions this state represents.
+ * @member levels         - The levels of each emotion.
+ * @member num_emotions   - The number of emotions.
  */
 typedef struct em_state {
     const em_Emotion *emotions;
@@ -134,10 +127,8 @@ typedef struct em_state {
  *
  * Represents an emotion event.
  *
- * Contains the following fields:
- *
- * type          - The type of the event
- * emotion       - The emotion the event applies to.
+ * @member type          - The type of the event
+ * @member emotion       - The emotion the event applies to.
  */
 typedef struct em_event {
   em_condition type;
@@ -149,11 +140,9 @@ typedef struct em_event {
  *
  * Represents an operation on a state.
  *
- * Contains the following fields:
- *
- * action             - The action to perform.
- * emotion            - The emotion to perform it on.
- * value              - The argument for the action.
+ * @member action             - The action to perform.
+ * @member emotion            - The emotion to perform it on.
+ * @member value              - The argument for the action.
  */
 typedef struct em_reaction {
   em_action action;
