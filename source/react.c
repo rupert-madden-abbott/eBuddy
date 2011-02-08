@@ -73,9 +73,9 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
   {{EM_ACTION_UPDATE,   MN_EM_HUNGER, 50},
    {EM_ACTION_NONE,    MN_EM_NONE,    0},
    
-   {gsi_shake_head,  "*burp*"},
-   {gsi_eyeflash,    "munch munch"},
-   {gsi_shake_head,  "yummm!!!"},
+   {gsi_shake_head,  "*burp*",          "",     0},
+   {gsi_eyeflash,    "munch munch",     "",     0},
+   {gsi_shake_head,  "yummm!!!",        "",     0},
    
    MN_NONE}, 
 
@@ -83,9 +83,9 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
   {{EM_ACTION_UPDATE,   MN_EM_ENERGY, -25},
    {EM_ACTION_UPDATE,   MN_EM_FUN,    15},
    
-   {gsi_fun_level1,  "*glug* *glug*"},
-   {gsi_eyeflash,    "glug"},
-   {gsi_shake_head,  "yuck"},
+   {gsi_fun_level1,  "*glug* *glug*",   "",     0},
+   {gsi_eyeflash,    "glug",            "",     0},
+   {gsi_shake_head,  "yuck",            "",     0},
    
    MN_NONE}, 
 
@@ -93,9 +93,9 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
   {{EM_ACTION_UPDATE,   MN_EM_FUN,   -25},
    {EM_ACTION_UPDATE,   MN_EM_ENERGY, 15},
    
-   {gsi_raise_arms,   "buzz buzz buzz"},
-   {gsi_eyeflash,     "buzz..."},
-   {gsi_shake_head,   "..."},
+   {gsi_raise_arms,   "buzz buzz buzz", "",     0},
+   {gsi_eyeflash,     "buzz...",        "",     0},
+   {gsi_shake_head,   "...",            "",     0},
    
    MN_NONE},  
   
@@ -103,9 +103,9 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
   {{EM_ACTION_UPDATE,   MN_EM_SOCIAL, 20},
    {EM_ACTION_UPDATE,   MN_EM_FUN,    5},
    
-   {gsi_eyeflash,      "meh"},
-   {gsi_move_arms,     "tee he he"},
-   {gsi_happy_level1,  "yeaaaa"},
+   {gsi_eyeflash,      "meh",           "",     0},
+   {gsi_move_arms,     "tee he he",     "",     0},
+   {gsi_happy_level1,  "yeaaaa",        "",     0},
    
    MN_NONE},
 
@@ -113,9 +113,9 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
   {{EM_ACTION_NONE,    MN_EM_ENERGY,  0},
    {EM_ACTION_NONE,    MN_EM_NONE,    0},
 
-   {gsi_shake_head,   ":("},
-   {gsi_move_arms,    "yawn"},
-   {gsi_raise_arms,   "yaaawn"},
+   {gsi_shake_head,   ":(",             "",     0},
+   {gsi_move_arms,    "yawn",           "",     0},
+   {gsi_raise_arms,   "yaaawn",         "",     0},
    
    MN_SLEEP},
   
@@ -123,19 +123,19 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
   {{EM_ACTION_NONE,     MN_EM_FUN,    0},
    {EM_ACTION_NONE,     MN_EM_NONE,   0},
    
-   {gsi_shake_head,   ""},
-   {gsi_raise_left,   ":D"},
-   {gsi_raise_left,   ":)"},
+   {gsi_shake_head,   "",               "",     0},
+   {gsi_raise_left,   ":D",             "",     0},
+   {gsi_raise_left,   ":)",             "",     0},
    
    MN_GUESS},
 
   //Right hand 
   {{EM_ACTION_NONE,     MN_EM_FUN,    0},
    {EM_ACTION_NONE,     MN_EM_NONE,   0},
-
-   {gsi_shake_head,   ""},
-   {gsi_raise_right,  ":D"},
-   {gsi_raise_right,  ":)"},
+  
+   {gsi_shake_head,   "",               "",     0},
+   {gsi_raise_right,  ":D",             "",     0},
+   {gsi_raise_right,  ":)",             "",     0},
    
    MN_NONE},
    
@@ -143,9 +143,9 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
   {{EM_ACTION_NONE,     MN_EM_NONE,   0},
    {EM_ACTION_NONE,     MN_EM_NONE,   0},
 
-   {NULL,            ""},
-   {NULL,            ""},
-   {gsi_eyeflash,    "i am a robot"},
+   {NULL,            "",                "",     0},
+   {NULL,            "",                "",     0},
+   {gsi_eyeflash,    "i am a robot",    "",     0},
    
    MN_NONE},
 
@@ -153,9 +153,9 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
   {{EM_ACTION_NONE,     MN_EM_NONE,   0},
    {EM_ACTION_NONE,     MN_EM_NONE,   0},
 
-   {NULL,           ""},
-   {NULL,           ""},
-   {gsi_wave_right, "bye bye"},
+   {NULL,           "",                 "",     0},
+   {NULL,           "",                 "",     0},
+   {gsi_wave_right, "bye bye",          "",     0},
 
    MN_END},
     
@@ -163,9 +163,9 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
   {{EM_ACTION_NONE,     MN_EM_NONE,   0},
    {EM_ACTION_NONE,     MN_EM_NONE,   0},
 
-   {NULL,            ""},
-   {NULL,            ""},
-   {gsi_eyeflash,    "demo"},
+   {NULL,            "",                "",     0},
+   {NULL,            "",                "",     0},
+   {gsi_eyeflash,    "demo",            "",     0},
    
    MN_DEMO},
 
@@ -173,14 +173,14 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
   {{EM_ACTION_NONE,     MN_EM_NONE,   0},
    {EM_ACTION_NONE,     MN_EM_NONE,   0},
 
-   {NULL,             ""},
-   {NULL,             ""},
-   {gsi_eyeflash,     "debug"},
+   {NULL,             "",             "",       0},
+   {NULL,             "",             "",       0},
+   {gsi_eyeflash,     "debug",        "",       0},
    
    MN_DEBUG}
 };
 
-const gsi_Reaction RC_MSG_ACTION = {gsi_shake_head,   "beep beep"};
+const gsi_Reaction RC_MSG_ACTION = {gsi_shake_head,   "beep beep",  "",   0};
 
 const rc_InputAction rc_sleep_action =
 
