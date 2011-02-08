@@ -38,7 +38,6 @@ void qu_free(qu_Queue *queue) {
     node = queue->head;
     queue->head = queue->head->link;
     free(node);
-    node = NULL;
     
     queue->size--;
   }
@@ -46,7 +45,6 @@ void qu_free(qu_Queue *queue) {
   pthread_mutex_destroy(&queue->mutex);
   
   free(queue);  
-  queue = NULL;
 }
 
 int qu_push(qu_Queue *queue, void *data) {
@@ -143,7 +141,7 @@ void *qu_pop(qu_Queue *queue) {
     }
     free(node);
     node = NULL;
-    return node->data;
+    return data;
   }
   
   //Allow other threads to access the queue

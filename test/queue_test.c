@@ -33,13 +33,12 @@ int main(void) {
   
   check = qu_pop(queue);
   if(!check) fail("Failed to return data from populated queue");
-  if(!strcmp(check, data)) fail("Returned data does not match pushed data");
+  if(strcmp(check, data)) fail("Returned data does not match pushed data");
   
   rc = qu_size(queue);
   if(rc != 0) fail("Queue size is set incorrectly by pop");
 
   qu_free(queue);
-  if(queue) fail("Failed to free queue");  
 
   return 0;
 }
