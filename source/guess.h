@@ -32,4 +32,4 @@
  * Allows the user to play the eBuddy's guessing game
  * Returns from the function when the user wins or loses the game
  */
-int guess_main(em_State *emotions, qu_queue *notifications, ph_handle *phandle);
+int guess_main(em_State *emotions, qu_Queue *notifications, ph_handle *phandle);

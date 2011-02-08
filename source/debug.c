@@ -12,7 +12,7 @@
 #include "main.h"
 #include "debug.h"
 
-int db_main(em_State *emotions, qu_queue *notifications,
+int db_main(em_State *emotions, qu_Queue *notifications,
             ph_handle *phhandle) {
               
   const char *menu[] = {"emotions", "events", "modes"};
@@ -58,7 +58,7 @@ int db_main(em_State *emotions, qu_queue *notifications,
   return UT_ERR_NONE;
 }
 
-int db_emotions(em_State *emotions, qu_queue *notifications,
+int db_emotions(em_State *emotions, qu_Queue *notifications,
                 ph_handle *phhandle) {
                   
   const char *action_menu[] = {"get", "set", "update"};
@@ -126,7 +126,7 @@ int db_emotions(em_State *emotions, qu_queue *notifications,
   return UT_ERR_NONE;
 }
 
-int db_events(em_State *emotions, qu_queue *notifications,
+int db_events(em_State *emotions, qu_Queue *notifications,
               ph_handle *phhandle) {
                 
   in_input_type input_event;
@@ -185,7 +185,7 @@ int db_events(em_State *emotions, qu_queue *notifications,
   return UT_ERR_NONE;
 }
 
-int db_modes(em_State *emotions, qu_queue *notifications,
+int db_modes(em_State *emotions, qu_Queue *notifications,
              ph_handle *phhandle) {
                
   const char *menu[] = {"react", "sleep", "demo", "debug", "guess"};

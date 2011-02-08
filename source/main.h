@@ -108,5 +108,5 @@ int main(void);
  * @arg phhandle The handle used to access the phidgets
  * @return A ut_error_code. Passes back errors from child modes.
  */ 
-ut_ErrorCode mn_run(mn_mode mode, em_State *emotions, qu_queue *notifications, ph_handle *phhandle);
+ut_ErrorCode mn_run(mn_mode mode, em_State *emotions, qu_Queue *notifications, ph_handle *phhandle);
 #endif

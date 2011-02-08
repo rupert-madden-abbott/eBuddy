@@ -52,12 +52,12 @@ typedef struct nt_message {
 typedef struct nt_arg {
   nt_token app;
   nt_token user;
-  qu_queue *queue;
+  qu_Queue *queue;
   const char *config;
 } nt_arg;
 
-int nt_init(qu_queue *queue, const char *config);
-int nt_destroy(qu_queue *queue);
+int nt_init(qu_Queue *queue, const char *config);
+int nt_destroy(qu_Queue *queue);
 int nt_authenticate(const nt_token app, nt_token *user, const char *config, 
                     cf_json *root);
 int nt_request_token(const char *uri, nt_token app, nt_token *user);

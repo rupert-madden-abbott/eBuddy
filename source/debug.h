@@ -54,7 +54,7 @@
  * @arg phhandle The handle used to access the phidgets
  * @return A ut_error_code. Passes back errors from child modes.
  */
-ut_ErrorCode db_main(em_State *emotions, qu_queue *notifications,
+ut_ErrorCode db_main(em_State *emotions, qu_Queue *notifications,
                      ph_handle *phhandle);
 
 /**
@@ -68,7 +68,7 @@ ut_ErrorCode db_main(em_State *emotions, qu_queue *notifications,
  * @arg phhandle The handle used to access the phidgets
  * @return A ut_error_code. Passes back errors from child modes.
  */
-ut_ErrorCode db_emotions(em_State *emotions, qu_queue *notifications,
+ut_ErrorCode db_emotions(em_State *emotions, qu_Queue *notifications,
                          ph_handle *phhandle);
 
 /**
@@ -81,7 +81,7 @@ ut_ErrorCode db_emotions(em_State *emotions, qu_queue *notifications,
  * @arg phhandle The handle used to access the phidgets
  * @return A ut_error_code. Passes back errors from child modes.
  */
-ut_ErrorCode db_events(em_State *emotions, qu_queue *notifications,
+ut_ErrorCode db_events(em_State *emotions, qu_Queue *notifications,
                        ph_handle *phhandle);
 
 /**
@@ -93,7 +93,7 @@ ut_ErrorCode db_events(em_State *emotions, qu_queue *notifications,
  * @arg phhandle The handle used to access the phidgets
  * @return A ut_error_code. Passes back errors from child modes.
  */
-ut_ErrorCode db_modes(em_State *emotions, qu_queue *notifications,
+ut_ErrorCode db_modes(em_State *emotions, qu_Queue *notifications,
                       ph_handle *phhandle);
 
 /**
