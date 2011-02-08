@@ -16,12 +16,39 @@
 #endif
 #endif
 
+/**
+ * @define UT_MIN
+ *
+ * The number of seconds in a minute
+ */
 #define UT_MIN (60)
+
+/**
+ * @define UT_HOUR
+ *
+ * The number of seconds in an hour
+ */
 #define UT_HOUR (60*60)
+
+/**
+ * @define UT_DAY
+ *
+ * The number of seconds in a day
+ */
 #define UT_DAY (24*60*60)
 
+/**
+ * @define UT_EPOCH_YEAR
+ *
+ * The year of the unix epoch
+ */
 #define UT_EPOCH_YEAR 1900
 
+/**
+ * @define UT_MICRO
+ *
+ * The number of micro seconds in a second
+ */
 #define UT_MICRO 1000
 
 /**
