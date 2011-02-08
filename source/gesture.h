@@ -44,7 +44,7 @@
  *@define GS_STARTPOS_
  *default postions of servos
  */
-#define GS_STARTPOS_HEAD 110
+#define GS_STARTPOS_HEAD 103
 #define GS_STARTPOS_TORSO 110
 #define GS_STARTPOS_RIGHTARM 200
 #define GS_STARTPOS_LEFTARM 20
