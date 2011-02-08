@@ -29,6 +29,24 @@
 //number of inputs excluding inpt_none
 #define IN_NUM_INPUTS 11
 
+/**
+ * The input types
+ * 
+ * @enum INPT_NONE indicates that there is no input.
+ * @enum INPT_BOLTS indicates the BOLTS rfid tag has been detected.
+ * @enum INPT_OIL indicates the OIL rfid tag has been detected.
+ * @enum INPT_BATTERY indicates the BATTERY rfid tag has been detected.
+ * @enum INPT_FORCE indicates that the force  sensor is pressed.
+ * @enum INPT_DARK indicates that there is no light.
+ * @enum INPT_RIGHT_HAND indicates that the right hand is touched.
+ * @enum INPT_LEFT_HAND indicates that the left hand is touched.
+ * @enum INPT_POWER_ON indicates that the on button is pressed.
+ * @enum INPT_POWER_OFF indicates that the off button is pressed.
+ * @enum INPT_DEMO indicates that the demo rfid tag has been detected.
+ * @enum INPT_DEBUG indicates that the debug rfid tag has been detected.
+ * 
+ */
+
 enum in_input_type{
 INPT_NONE = 0,
 INPT_BOLTS = 1,
