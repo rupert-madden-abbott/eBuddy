@@ -68,6 +68,7 @@ void cf_free(cf_Json *root);
 
 ///@{
 /**
+ * @name Get Functions
  * Each function returns a value (of the relevant type) stored inside the JSON 
  * object @p root based on its @p key. In the case of arrays, @p key is the 
  * index of the value.
@@ -100,6 +101,8 @@ char *cf_get_nstring(const cf_Json *root, const char *key, int buffer);
 
 ///@{
 /**
+ * @name Set functions
+ *
  * Each function sets a value, named @p key,  in @p root of the relevant type. 
  * 
  * If there is already a value named @p key, that value is overwritten.
