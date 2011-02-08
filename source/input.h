@@ -24,7 +24,7 @@
 #define IN_FORCE 0
 #define IN_LIGHT 3
 #define IN_POWER_ON 0
-#define IN_POWER_OFF 1
+#define IN_POWER_OFF 2
 
 //number of inputs excluding inpt_none
 #define IN_NUM_INPUTS 11

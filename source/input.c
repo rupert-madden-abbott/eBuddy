@@ -25,8 +25,9 @@ int in_kit_input_init(CPhidgetInterfaceKitHandle ifKit)
                                                     NULL);
     CPhidgetInterfaceKit_set_OnSensorChange_Handler (ifKit,
                                                      in_kit_SensorChangeHandler,
-                                                     NULL);
-    return 0;
+                                                  NULL);
+  in_set_input(8);
+  return 0;
 }
 
 int in_last_input;
