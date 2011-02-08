@@ -76,7 +76,7 @@ utility.o: source/utility.c source/utility.h
 
   
 # TESTS
-test: queue_test config_test notify_test
+test: queue_test config_test notify_test emotion_test
 
 queue_test: queue_test.o queue.o
 	$(CC) $(CFLAGS) build/queue_test.o build/queue.o $(LIB) $(LIB_LINUX) -o build/queue_test
