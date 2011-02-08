@@ -23,7 +23,7 @@ int dm_main(em_State *emotions, qu_Queue *notifications, ph_handle *phhandle) {
       printf("%s\n", message->text);
       gsi_eyeflash(phhandle);
       gsi_raise_arms(phhandle);
-      gsi_sound("7", 1);
+      gsi_sound("computing", 1);
       gsi_printLCD(message->text, phhandle);
       
       fflush(stdout);
