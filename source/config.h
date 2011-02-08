@@ -18,10 +18,10 @@
 
 
 /**
- * @struct cf_json
+ * @typedef cf_Json
  * Represents a JSON structure (Renamed to maintain a consistent public API)
  */
-typedef json_t cf_json;
+typedef json_t cf_Json;
 
 /**
  * Allocate and return a JSON structure from either a file or a string. This
@@ -36,7 +36,7 @@ typedef json_t cf_json;
  * @param  input A path to a json file or a JSON formatted string
  * @return NULL on error or the JSON object parsed from @p input
  */
-cf_json *cf_read(const char *input);
+cf_Json *cf_read(const char *input);
 
 /**
  * Writes a JSON object into the file specified by @p path. If @p path already
@@ -47,12 +47,16 @@ cf_json *cf_read(const char *input);
  * @param  path The path of the file to be written to
  * @return error code: ERR_JSON_ENCODE
  */
-int cf_write(const cf_json *root, const char *path);
+int cf_write(const cf_Json *root, const char *path);
 
 /**
  * Creates a JSON object from a JSON formatted string and writes it to a file
+ *
+ * @param str The JSON string
+ * @param path The path of the file to write to
+ * @return The string as a JSON object or NULL on error
  */
-cf_json *cf_create(const char *str, const char *path);
+cf_Json *cf_create(const char *str, const char *path);
 
 /**
  * Performs cleanup when a JSON object is finished with.
@@ -60,7 +64,7 @@ cf_json *cf_create(const char *str, const char *path);
  * @param  root The JSON object to be destroyed
  * @return void
  */
-void cf_free(cf_json *root);
+void cf_free(cf_Json *root);
 
 ///@{
 /**
@@ -76,14 +80,23 @@ void cf_free(cf_json *root);
  * @param  key  The name or index of the @p value to return
  * @return NULL, 0 or 0.0 on error or the value named @p key
  */
-cf_json *cf_get_object(const cf_json *root, const char *key);
-cf_json *cf_get_array(const cf_json *root, int key);
-char *cf_get_string(const cf_json *root, const char *key);
-int cf_get_integer(const cf_json *root, const char *key);
-double cf_get_double(const cf_json *root, const char *key);
+cf_Json *cf_get_object(const cf_Json *root, const char *key);
+cf_Json *cf_get_array(const cf_Json *root, int key);
+char *cf_get_string(const cf_Json *root, const char *key);
+int cf_get_integer(const cf_Json *root, const char *key);
+double cf_get_double(const cf_Json *root, const char *key);
 ///@}
 
-char *cf_get_nstring(const cf_json *root, const char *key, int buffer);
+/**
+ * A buffered version of cf_get_string. If the accessed string is longer than
+ * the buffer, an error will be returned. No truncation occurs.
+ * 
+ * @param root The JSON object containing the @p value to be decoded
+ * @param key The name or index of the @p value to return
+ * @param buffer The maximum length of the source string to return
+ * @return The value named @p key or NULL on error
+ */
+char *cf_get_nstring(const cf_Json *root, const char *key, int buffer);
 
 ///@{
 /**
@@ -99,10 +112,10 @@ char *cf_get_nstring(const cf_json *root, const char *key, int buffer);
  * @param  value The value to be stored in @p root
  * @return error code: ERR_JSON_ENCODE
  */
-int cf_set_object(cf_json *root, const char *key, cf_json *value);
-int cf_set_string(cf_json *root, const char *key, const char *value);
-int cf_set_integer(cf_json *root, const char *key, int value);
-int cf_set_double(cf_json *root, const char *key, double value);
+int cf_set_object(cf_Json *root, const char *key, cf_Json *value);
+int cf_set_string(cf_Json *root, const char *key, const char *value);
+int cf_set_integer(cf_Json *root, const char *key, int value);
+int cf_set_double(cf_Json *root, const char *key, double value);
 ///@}
 
 /**
@@ -112,6 +125,6 @@ int cf_set_double(cf_json *root, const char *key, double value);
  * @param  root A JSON object
  * @return error code: ERR_JSON_ENCODE
  */
-int cf_printf(const cf_json *root);
+int cf_printf(const cf_Json *root);
 
 #endif

@@ -2,6 +2,6 @@
  "object": {
   "string": "a string"
  },
- "int": 5,
- "double": 9.4000000000000004
+ "double": 9.4000000000000004,
+ "int": 5
 }

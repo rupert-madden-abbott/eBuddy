@@ -7,9 +7,10 @@
 int main(void) {
   int i, rc;
   double d;
-  const char *json_string = "[{\"object\":{\"string\":\"a string\"},\"int\":5,\""
-                            "double\":9.4}]", *s, *s2;
-  cf_json *root, *file_root, *array, *object;
+  const char *json_string = "[{\"object\":{\"string\":\"a string\"},\"int\":5,"
+                            "\"double\":9.4}]";
+  char *s, *s2;
+  cf_Json *root, *file_root, *array, *object;
 
   array = cf_read(json_string);
   if(!array) fail("Failed to read JSON string");
