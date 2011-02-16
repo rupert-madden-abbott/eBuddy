@@ -26,7 +26,7 @@ int in_kit_input_init(CPhidgetInterfaceKitHandle ifKit)
     CPhidgetInterfaceKit_set_OnSensorChange_Handler (ifKit,
                                                      in_kit_SensorChangeHandler,
                                                   NULL);
-  in_set_input(8);
+    in_set_input(INPT_POWER_ON);
   return 0;
 }
 
@@ -38,8 +38,8 @@ int in_RFID_TagHandler(CPhidgetRFIDHandle RFID, void *usrptr,
 	//turn on the Onboard LED
 	CPhidgetRFID_setLEDOn(RFID, 1);
 	
-	printf("Tag Read: %02x%02x%02x%02x%02x\n", TagVal[0], TagVal[1],
- 		TagVal[2], TagVal[3], TagVal[4]);
+	//printf("Tag Read: %02x%02x%02x%02x%02x\n", TagVal[0], TagVal[1],
+ 		//TagVal[2], TagVal[3], TagVal[4]);
 	in_RFID_savetag(TagVal[0]+TagVal[1]+TagVal[2]+TagVal[3]+TagVal[4]);
 	return 0;
 }
@@ -51,8 +51,8 @@ int in_RFID_TagLostHandler(CPhidgetRFIDHandle RFID, void *usrptr,
 	//turn off the Onboard LED
 	CPhidgetRFID_setLEDOn(RFID, 0);
 
-	printf("Tag Lost: %02x%02x%02x%02x%02x\n", TagVal[0], TagVal[1],
-                TagVal[2], TagVal[3], TagVal[4]);
+	//printf("Tag Lost: %02x%02x%02x%02x%02x\n", TagVal[0], TagVal[1],
+               // TagVal[2], TagVal[3], TagVal[4]);
 	return 0;
 }
 
@@ -65,19 +65,19 @@ if(tagv==IN_DISC)
 			in_set_input(INPT_OIL);//oil
 		
 	}
-if(tagv==IN_CARDONE)
+if(tagv==IN_TAGONE)
 	{
 		
 			in_set_input(INPT_BATTERY);//battery
 		
 	}
-if(tagv==IN_CARDTWO)
+if(tagv==IN_KEYFOBONE)
 	{
 		
 			in_set_input(INPT_DEMO);//DEMO
 		
 	}
-if(tagv==IN_KEYFOBONE)
+if(tagv==IN_TAGTWO)
 	{
 	
 			in_set_input(INPT_BOLTS);//nuts and bolts
@@ -87,6 +87,12 @@ if(tagv==IN_KEYFOBTWO)
 	{
 	
 			in_set_input(INPT_DEBUG);//DEBUG
+		
+	}
+if(tagv==IN_TAGTHREE)
+	{
+	
+			in_set_input(INPT_CLEAN);//DEBUG
 		
 	}
 

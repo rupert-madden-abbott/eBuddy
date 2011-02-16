@@ -98,6 +98,17 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {gsi_shake_head,   "...",            "",     0},
    
    MN_NONE},  
+
+  //Clean
+  {{EM_ACTION_UPDATE,   MN_EM_CLEAN,  25},
+   {EM_ACTION_UPDATE,   MN_EM_NONE,   0},
+   
+   {gsi_shake_head,   "*squeak*",       "",     0},
+   {gsi_turn,         "ahhh",           "",     0},
+   {gsi_turn,         "thats better",   "",     0},
+   
+   MN_NONE},
+
   
   //Force sensor
   {{EM_ACTION_UPDATE,   MN_EM_SOCIAL, 20},
@@ -118,6 +129,7 @@ const rc_InputAction RC_IN_ACTION[IN_NUM_INPUTS] = {
    {gsi_raise_arms,   "yaaawn",         "",     0},
    
    MN_SLEEP},
+
   
   //Left hand
   {{EM_ACTION_NONE,     MN_EM_FUN,    0},

@@ -15,6 +15,9 @@
 
 #define IN_PRESS 400
 #define IN_DISC 386
+#define IN_TAGONE 255
+#define IN_TAGTWO 245
+#define IN_TAGTHREE 259
 #define IN_CARDONE 601
 #define IN_CARDTWO 558
 #define IN_KEYFOBONE 252
@@ -27,7 +30,7 @@
 #define IN_POWER_OFF 2
 
 //number of inputs excluding inpt_none
-#define IN_NUM_INPUTS 11
+#define IN_NUM_INPUTS 12
 
 /**
  * The input types
@@ -52,14 +55,16 @@ INPT_NONE = 0,
 INPT_BOLTS = 1,
 INPT_OIL = 2,
 INPT_BATTERY = 3,
-INPT_FORCE = 4,
-INPT_DARK = 5,
-INPT_LEFT_HAND = 6,
-INPT_RIGHT_HAND = 7,
-INPT_POWER_ON = 8,
-INPT_POWER_OFF = 9,
-INPT_DEMO = 10,
-INPT_DEBUG = 11
+INPT_CLEAN = 4,
+INPT_FORCE = 5,
+INPT_DARK = 6,
+INPT_LEFT_HAND = 7,
+INPT_RIGHT_HAND = 8,
+INPT_POWER_ON = 9,
+INPT_POWER_OFF = 10,
+INPT_DEMO = 11,
+INPT_DEBUG = 12
+
 };
 typedef enum in_input_type in_input_type;
 

@@ -48,6 +48,10 @@ int gsi_react(const gsi_Reaction *resp, ph_handle *handle) {
   return error;
 }
 
+int gsi_turn(ph_handle *handle) {
+  return gs_turn(handle->servohandle);
+}
+
 int gsi_happy_level1(ph_handle *handle) {
   return gs_dance_basic(handle->servohandle);
 }
@@ -103,9 +107,6 @@ int gsi_printLCD(const char* str, ph_handle *handle) {
    
 }
 
-int gsi_turn(ph_handle *handle) {
-  return gs_turn(handle->servohandle);
-}
 
 int gsi_shake_head(ph_handle *handle) {
     

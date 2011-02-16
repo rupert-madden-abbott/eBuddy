@@ -13,6 +13,7 @@
 //Demo mode
 int dm_main(em_State *emotions, qu_Queue *notifications, ph_handle *phhandle) {
   nt_Message *message;
+  in_input_type input_event;
 
   while(1) {
     sleep(1);
@@ -28,11 +29,23 @@ int dm_main(em_State *emotions, qu_Queue *notifications, ph_handle *phhandle) {
       
       fflush(stdout);
     }
-      if(in_get_input() == INPT_BATTERY)
-	{
-            
-		gsi_happy_level1(phhandle);
-	}
+
+    input_event = in_get_input();
+
+      if(input_event == INPT_BATTERY) {
+        gsi_happy_level1(phhandle);
+      }
+
+      else if(input_event == INPT_DEMO) {
+        gsi_eyeflash(phhandle);
+        gsi_printLCD("Exit demo", phhandle);    
+        return(UT_ERR_NONE);
+      }
+
+      else if(input_event == INPT_POWER_OFF) {    
+        return(UT_ERR_CLOSE);
+      }
+    
   }
 
 

@@ -65,7 +65,7 @@ int gs_dance_basic(CPhidgetAdvancedServoHandle servo) {
     usleep(UT_MICRO * 500);
     GS_SETPOS (servo, GS_SERVO_RIGHTARM, GS_STARTPOS_RIGHTARM);
     usleep(UT_MICRO * 500);;
-    GS_SETPOS (servo, GS_SERVO_HEAD, 100);
+    GS_SETPOS (servo, GS_SERVO_HEAD, 20);
     GS_SETPOS (servo, GS_SERVO_LEFTARM, 100);
     usleep(UT_MICRO * 500);
     GS_SETPOS (servo, GS_SERVO_HEAD, GS_STARTPOS_HEAD);

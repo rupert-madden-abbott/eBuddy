@@ -101,6 +101,7 @@ notify_test.o: test/notify_test.c test/test.h source/notify.h
 
 demo_test.o: test/demo_test.c test/test.h source/main.h
 	$(CC) $(CFLAGS) -c test/demo_test.c -o build/demo_test.o $(INCLUDE)
+
 	
 clean:
 	@rm -rf build/*

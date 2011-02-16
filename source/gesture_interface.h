@@ -66,6 +66,7 @@ int gsi_raise_left(ph_handle *handle);
 int gsi_raise_right(ph_handle *handle);
 int gsi_wave_left(ph_handle *handle);
 int gsi_wave_right(ph_handle *handle);
+int gsi_turn(ph_handle *handle);
 
 ///@}
 
