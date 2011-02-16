@@ -88,7 +88,7 @@ typedef struct nt_response {
  * @member id The id of the notification, used to ensure it is sent only once
  */
 typedef struct nt_message {
-  int  error;
+  ut_ErrorCode  error;
   char app[NT_APP_MAX];
   char text[NT_TEXT_MAX];
   char user[NT_USER_MAX];

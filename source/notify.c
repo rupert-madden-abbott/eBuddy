@@ -333,12 +333,8 @@ void *nt_poll(void *queue) {
   //Poll for tweets every 20 seconds
   while(1) {
     tweet = nt_get_tweet(NT_TWITTER_POLL, app, user, tweet);
-    if(!tweet) {
-      cf_free(root);
-      tweet->error = UT_ERR_UNKNOWN;
-      qu_push(queue, tweet);
-      return NULL;
-    }
+    sleep(20);
+    if(!tweet) break;
     
     if(strcmp(tweet->id, last_tweet)) {
       strncpy(last_tweet, tweet->id, NT_ID_MAX);
@@ -347,7 +343,7 @@ void *nt_poll(void *queue) {
       tweet->error = UT_ERR_NONE;
       qu_push(queue, tweet);
     }
-    sleep(20);
+    
   }
   
   return NULL;
